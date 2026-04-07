@@ -52,151 +52,100 @@ const homeContent = {
 
 const StrategyCore = React.memo(function StrategyCore() {
     const group = useRef<THREE.Group>(null);
-    const gear = useRef<THREE.Group>(null);
+    const ring1 = useRef<THREE.Group>(null);
+    const ring2 = useRef<THREE.Group>(null);
+    const floatingShapes = useRef<THREE.Group>(null);
     
     useFrame((state) => {
         if(group.current) {
-            // Continuous isometric spin
-            group.current.rotation.y = state.clock.elapsedTime * 0.4;
+            group.current.rotation.y = state.clock.elapsedTime * 0.15;
+            group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
         }
-        if(gear.current) {
-            // Gear spins rapidly
-            gear.current.rotation.z = -state.clock.elapsedTime * 2;
+        if(ring1.current && ring2.current) {
+            ring1.current.rotation.x = state.clock.elapsedTime * 0.4;
+            ring1.current.rotation.y = state.clock.elapsedTime * 0.2;
+            ring2.current.rotation.y = -state.clock.elapsedTime * 0.3;
+            ring2.current.rotation.z = state.clock.elapsedTime * 0.15;
+        }
+        if(floatingShapes.current) {
+            floatingShapes.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.1;
         }
     });
 
     return (
-        <Float speed={2} rotationIntensity={0.1} floatIntensity={0.5}>
-            <group ref={group} position={[0, -0.5, 0]}>
-                
-                {/* The Isometric Floating Base / Podium */}
-                <mesh position={[0, -1, 0]}>
-                    <cylinderGeometry args={[2.5, 2.5, 0.2, 64]} />
-                    <meshStandardMaterial color="#3b82f6" roughness={0.4} metalness={0.1} />
+        <Float speed={2.5} rotationIntensity={0.2} floatIntensity={1.5}>
+            <group ref={group} scale={[1.3, 1.3, 1.3]}>
+                {/* Central Glass Structure */}
+                <mesh>
+                    <boxGeometry args={[1.5, 1.5, 1.5]} />
+                    <MeshTransmissionMaterial 
+                        samples={16} 
+                        thickness={2.5} 
+                        roughness={0.05} 
+                        chromaticAberration={0.08} 
+                        anisotropy={0.5}
+                        distortion={0.3} 
+                        distortionScale={0.5} 
+                        color="#e0f2fe" 
+                    />
                 </mesh>
 
-                {/* Main Presentation Board */}
-                <group position={[0, 0.8, -0.5]}>
-                    {/* Backing Board */}
-                    <mesh>
-                        <boxGeometry args={[3.2, 2.2, 0.2]} />
-                        <meshStandardMaterial color="#64748b" roughness={0.5} />
-                    </mesh>
-                    {/* Blue Frame */}
-                    <mesh position={[0, 0, -0.05]}>
-                        <boxGeometry args={[3.4, 2.4, 0.15]} />
-                        <meshStandardMaterial color="#0ea5e9" roughness={0.3} metalness={0.4} />
-                    </mesh>
+                {/* Inner Glowing Core */}
+                <mesh>
+                    <octahedronGeometry args={[0.6]} />
+                    <meshStandardMaterial color="#f97316" emissive="#ea580c" emissiveIntensity={2.5} wireframe={true} />
+                </mesh>
+                <pointLight intensity={50} color="#f97316" distance={6} />
 
-                    {/* Left: Bar Chart */}
-                    <group position={[-0.8, -0.2, 0.15]}>
-                        <mesh position={[-0.4, 0.3, 0]}><boxGeometry args={[0.2, 0.6, 0.1]} /><meshStandardMaterial color="#f97316" roughness={0.2} /></mesh>
-                        <mesh position={[0, 0.4, 0]}><boxGeometry args={[0.2, 0.8, 0.1]} /><meshStandardMaterial color="#f97316" roughness={0.2} /></mesh>
-                        <mesh position={[0.4, 0.65, 0]}><boxGeometry args={[0.2, 1.3, 0.1]} /><meshStandardMaterial color="#f97316" roughness={0.2} /></mesh>
-                        {/* Trend Arrow */}
-                        <mesh position={[0.15, 0.9, 0.1]} rotation={[0, 0, Math.PI/4]}>
-                            <cylinderGeometry args={[0.03, 0.03, 1.4, 8]} />
-                            <meshStandardMaterial color="#0ea5e9" emissive="#0ea5e9" emissiveIntensity={2} />
-                        </mesh>
-                        <mesh position={[0.65, 1.4, 0.1]} rotation={[0, 0, -Math.PI/4]}>
-                            <coneGeometry args={[0.1, 0.2, 8]} />
-                            <meshStandardMaterial color="#0ea5e9" emissive="#0ea5e9" emissiveIntensity={2} />
-                        </mesh>
-                    </group>
-
-                    {/* Top Left: Spinning Gear */}
-                    <group ref={gear} position={[-0.8, 0.6, 0.15]}>
-                        <mesh>
-                            <torusGeometry args={[0.3, 0.1, 16, 32]} />
-                            <meshStandardMaterial color="#cbd5e1" roughness={0.3} metalness={0.6} />
-                        </mesh>
-                        {[...Array(6)].map((_, i) => (
-                            <mesh key={i} rotation={[0, 0, (i * Math.PI) / 3]} position={[Math.cos((i * Math.PI) / 3)*0.35, Math.sin((i * Math.PI) / 3)*0.35, 0]}>
-                                <boxGeometry args={[0.15, 0.15, 0.15]} />
-                                <meshStandardMaterial color="#cbd5e1" roughness={0.3} metalness={0.6} />
-                            </mesh>
-                        ))}
-                    </group>
-
-                    {/* Right: UI Cards */}
-                    <mesh position={[0.8, 0.5, 0.15]}>
-                        <boxGeometry args={[1.2, 0.4, 0.05]} />
-                        <meshStandardMaterial color="#94a3b8" roughness={0.3} />
+                {/* Orbital Ring 1: Technical */}
+                <group ref={ring1}>
+                    <mesh rotation={[Math.PI/2, 0, 0]}>
+                        <torusGeometry args={[1.8, 0.04, 32, 100]} />
+                        <meshStandardMaterial color="#38bdf8" metalness={0.9} roughness={0.1} />
                     </mesh>
-                    <mesh position={[0.8, -0.1, 0.15]}>
-                        <boxGeometry args={[1.2, 0.4, 0.05]} />
-                        <meshStandardMaterial color="#94a3b8" roughness={0.3} />
+                    <mesh position={[1.8, 0, 0]}>
+                        <sphereGeometry args={[0.15, 32, 32]} />
+                        <meshStandardMaterial color="#38bdf8" emissive="#0ea5e9" emissiveIntensity={2} />
                     </mesh>
                 </group>
 
-                {/* Left Desk / Laptop Station */}
-                <group position={[-1.2, -0.5, 0.8]} rotation={[0, Math.PI/4, 0]}>
-                    <mesh position={[0, -0.4, 0]}>
-                        <cylinderGeometry args={[0.4, 0.4, 0.1, 32]} />
-                        <meshStandardMaterial color="#f59e0b" roughness={0.3} />
+                {/* Orbital Ring 2: Abstract */}
+                <group ref={ring2}>
+                    <mesh rotation={[Math.PI/3, 0, 0]}>
+                        <torusGeometry args={[2.3, 0.02, 32, 100]} />
+                        <meshStandardMaterial color="#ffffff" metalness={1} roughness={0} opacity={0.6} transparent />
                     </mesh>
-                    {/* Laptop Screen */}
-                    <mesh position={[0, 0.2, -0.2]} rotation={[-Math.PI/8, 0, 0]}>
-                        <boxGeometry args={[0.8, 0.6, 0.05]} />
-                        <meshStandardMaterial color="#0f172a" />
-                    </mesh>
-                    {/* Glowing Keyboard */}
-                    <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[0.8, 0.05, 0.5]} />
-                        <meshStandardMaterial color="#cbd5e1" />
-                    </mesh>
-                    {/* Holographic glowing screen face */}
-                    <mesh position={[0, 0.2, -0.17]}>
-                        <planeGeometry args={[0.7, 0.5]} />
-                        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={1} />
+                    <mesh position={[0, 2.3, 0]}>
+                        <icosahedronGeometry args={[0.2]} />
+                        <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={2} />
                     </mesh>
                 </group>
 
-                {/* Right Desk / Laptop Station */}
-                <group position={[1.2, -0.5, 0.8]} rotation={[0, -Math.PI/4, 0]}>
-                    <mesh position={[0, -0.4, 0]}>
-                        <cylinderGeometry args={[0.4, 0.4, 0.1, 32]} />
-                        <meshStandardMaterial color="#f59e0b" roughness={0.3} />
+                {/* Floating Geometric Elements (Data points) */}
+                <group ref={floatingShapes}>
+                    {/* Pillar */}
+                    <mesh position={[-1.4, 1.2, 0.5]} rotation={[0.4, 0.5, 0.5]}>
+                        <cylinderGeometry args={[0.12, 0.12, 0.8, 32]} />
+                        <meshStandardMaterial color="#8b5cf6" metalness={0.7} roughness={0.15} />
                     </mesh>
-                    <mesh position={[0, 0.2, -0.2]} rotation={[-Math.PI/8, 0, 0]}>
-                        <boxGeometry args={[0.8, 0.6, 0.05]} />
-                        <meshStandardMaterial color="#0f172a" />
+                    {/* Pyramid */}
+                    <mesh position={[1.5, -0.8, 0.8]} rotation={[0.2, 1, 0.5]}>
+                        <coneGeometry args={[0.25, 0.7, 4]} />
+                        <meshStandardMaterial color="#14b8a6" metalness={0.6} roughness={0.2} emissive="#0d9488" emissiveIntensity={0.5} />
                     </mesh>
-                    <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[0.8, 0.05, 0.5]} />
-                        <meshStandardMaterial color="#cbd5e1" />
-                    </mesh>
-                    <mesh position={[0, 0.2, -0.17]}>
-                        <planeGeometry args={[0.7, 0.5]} />
-                        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={1} />
-                    </mesh>
-                </group>
-
-                {/* Front Center Plant/Decoration */}
-                <group position={[0, -0.6, 1.5]}>
-                    {/* Pot */}
-                    <mesh position={[0, -0.2, 0]}>
-                        <cylinderGeometry args={[0.3, 0.2, 0.4, 16]} />
-                        <meshStandardMaterial color="#0ea5e9" metalness={0.5} roughness={0.2} />
-                    </mesh>
-                    {/* Leaves */}
-                    <mesh position={[0, 0.1, 0]}>
-                        <sphereGeometry args={[0.3, 16, 16]} />
-                        <meshStandardMaterial color="#22c55e" roughness={0.8} />
-                    </mesh>
-                    <mesh position={[-0.1, 0.3, 0.1]}>
-                        <sphereGeometry args={[0.2, 16, 16]} />
-                        <meshStandardMaterial color="#22c55e" roughness={1} />
-                    </mesh>
-                    <mesh position={[0.2, 0.2, -0.1]}>
-                        <sphereGeometry args={[0.15, 16, 16]} />
-                        <meshStandardMaterial color="#22c55e" roughness={1} />
+                    {/* Ringlet */}
+                    <mesh position={[-1, -1.2, -0.6]}>
+                        <torusGeometry args={[0.25, 0.06, 16, 64]} />
+                        <meshStandardMaterial color="#ec4899" metalness={0.8} roughness={0.1} />
                     </mesh>
                 </group>
-
+                
+                {/* Firefly ambient energy */}
+                <Sparkles count={150} scale={6} size={4} speed={0.5} opacity={0.8} color="#f97316" />
+                <Sparkles count={100} scale={7} size={2} speed={0.8} opacity={0.6} color="#38bdf8" />
             </group>
         </Float>
-    )
+    );
 });
 
 const RealisticScales = React.memo(function RealisticScales() {
