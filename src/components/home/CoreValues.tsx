@@ -70,35 +70,95 @@ export const CoreValues = () => {
 
                                 {/* Curvy Dashed Connector (Hidden on last item) */}
                                 {!isLast && (
-                                    <div className="w-full h-24 md:h-32 relative flex justify-center opacity-40 dark:opacity-60 overflow-hidden my-4 md:my-0">
+                                    <div className="w-full h-24 md:h-32 relative flex justify-center overflow-visible my-4 md:my-0">
+                                        
                                         {/* Desktop Alternating S-Curve */}
                                         <svg className="hidden md:block absolute top-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ transform: isEven ? 'scaleX(1)' : 'scaleX(-1)' }}>
+                                            <defs>
+                                                <linearGradient id={`pulse-${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stopColor="transparent" />
+                                                    <stop offset="50%" stopColor="#14B8A6" />
+                                                    <stop offset="100%" stopColor="transparent" />
+                                                </linearGradient>
+                                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                                </filter>
+                                            </defs>
+                                            
+                                            {/* Base Dim Track */}
                                             <motion.path 
-                                                initial={{ pathLength: 0, opacity: 0 }}
-                                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                                viewport={{ once: false }}
-                                                transition={{ duration: 1.5, ease: "easeInOut" }}
+                                                initial={{ pathLength: 0 }}
+                                                whileInView={{ pathLength: 1 }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 1.5, ease: "easeOut" }}
                                                 d="M 22.5,0 C 22.5,50 77.5,50 77.5,100" 
                                                 fill="none" 
-                                                stroke="currentColor" 
+                                                className="stroke-gray-200 dark:stroke-white/10" 
                                                 strokeWidth="1.5" 
                                                 strokeDasharray="4 4" 
-                                                className="text-brand-300 dark:text-brand-700/60"
+                                            />
+                                            
+                                            {/* Infinite Flowing Energy pulse */}
+                                            <motion.path 
+                                                d="M 22.5,0 C 22.5,50 77.5,50 77.5,100" 
+                                                fill="none" 
+                                                stroke={`url(#pulse-${i})`} 
+                                                strokeWidth="3.5" 
+                                                strokeLinecap="round"
+                                                filter="url(#glow)"
+                                                initial={{ pathLength: 0.1, pathOffset: 0, opacity: 0 }}
+                                                whileInView={{ opacity: 1 }}
+                                                animate={{ pathOffset: 1 }}
+                                                transition={{ 
+                                                    opacity: { duration: 0.5 },
+                                                    pathOffset: { duration: 2.5, ease: "linear", repeat: Infinity, delay: i * 0.3 } 
+                                                }}
                                             />
                                         </svg>
+
                                         {/* Mobile Straight Dashed Line */}
                                         <svg className="md:hidden absolute top-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                            <defs>
+                                                <linearGradient id={`pulse-mob-${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stopColor="transparent" />
+                                                    <stop offset="50%" stopColor="#14B8A6" />
+                                                    <stop offset="100%" stopColor="transparent" />
+                                                </linearGradient>
+                                                <filter id="glow-mob" x="-20%" y="-20%" width="140%" height="140%">
+                                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                                </filter>
+                                            </defs>
+                                            
+                                            {/* Base Dim Track */}
                                             <motion.path 
-                                                initial={{ pathLength: 0, opacity: 0 }}
-                                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                                viewport={{ once: false }}
-                                                transition={{ duration: 1, ease: "easeInOut" }}
+                                                initial={{ pathLength: 0 }}
+                                                whileInView={{ pathLength: 1 }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 1 }}
                                                 d="M 50,0 L 50,100" 
                                                 fill="none" 
-                                                stroke="currentColor" 
+                                                className="stroke-gray-200 dark:stroke-white/10"
                                                 strokeWidth="1.5" 
                                                 strokeDasharray="4 4" 
-                                                className="text-brand-300 dark:text-brand-700/60"
+                                            />
+                                            
+                                            {/* Infinite Flowing Energy pulse */}
+                                            <motion.path 
+                                                d="M 50,0 L 50,100" 
+                                                fill="none" 
+                                                stroke={`url(#pulse-mob-${i})`} 
+                                                strokeWidth="4" 
+                                                strokeLinecap="round"
+                                                filter="url(#glow-mob)"
+                                                initial={{ pathLength: 0.2, pathOffset: 0, opacity: 0 }}
+                                                whileInView={{ opacity: 1 }}
+                                                animate={{ pathOffset: 1 }}
+                                                transition={{ 
+                                                    opacity: { duration: 0.5 },
+                                                    pathOffset: { duration: 2, ease: "linear", repeat: Infinity, delay: i * 0.2 } 
+                                                }}
                                             />
                                         </svg>
                                     </div>
