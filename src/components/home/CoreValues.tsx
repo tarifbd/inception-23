@@ -75,58 +75,60 @@ export const CoreValues = () => {
                                         {/* Desktop Alternating S-Curve */}
                                         <svg className="hidden md:block absolute top-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ transform: isEven ? 'scaleX(1)' : 'scaleX(-1)' }}>
                                             <defs>
-                                                <linearGradient id={`pulse-${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                                                    <stop offset="0%" stopColor="transparent" />
-                                                    <stop offset="50%" stopColor="#14B8A6" />
-                                                    <stop offset="100%" stopColor="transparent" />
-                                                </linearGradient>
-                                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                                <filter id={`glow-obj-${i}`} x="-50%" y="-50%" width="200%" height="200%">
+                                                    <feGaussianBlur stdDeviation="2" result="blur" />
                                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                                                 </filter>
                                             </defs>
                                             
-                                            {/* Base Dim Track */}
+                                            {/* Base Precision Track with exactly rounded right angles */}
                                             <motion.path 
                                                 initial={{ pathLength: 0 }}
                                                 whileInView={{ pathLength: 1 }}
                                                 viewport={{ once: true }}
                                                 transition={{ duration: 1.5, ease: "easeOut" }}
-                                                d="M 22.5,0 L 22.5,50 L 77.5,50 L 77.5,100" 
+                                                d="M 22.5,0 L 22.5,45 Q 22.5,50 27.5,50 L 72.5,50 Q 77.5,50 77.5,55 L 77.5,100" 
                                                 fill="none" 
                                                 className="stroke-gray-200 dark:stroke-white/10" 
-                                                strokeWidth="1.5" 
-                                                strokeDasharray="4 4" 
+                                                strokeWidth="1" 
+                                                strokeLinecap="round" 
                                             />
                                             
-                                            {/* Infinite Flowing Energy pulse */}
-                                            <motion.path 
-                                                d="M 22.5,0 L 22.5,50 L 77.5,50 L 77.5,100" 
-                                                fill="none" 
-                                                stroke={`url(#pulse-${i})`} 
-                                                strokeWidth="3.5" 
-                                                strokeLinecap="round"
-                                                filter="url(#glow)"
-                                                initial={{ pathLength: 0.1, pathOffset: 0, opacity: 0 }}
-                                                whileInView={{ opacity: 1 }}
-                                                animate={{ pathOffset: 1 }}
-                                                transition={{ 
-                                                    opacity: { duration: 0.5 },
-                                                    pathOffset: { duration: 2.5, ease: "linear", repeat: Infinity, delay: i * 0.3 } 
-                                                }}
-                                            />
+                                            {/* Primary Moving Energy Core */}
+                                            <circle r="1.5" fill="#14B8A6" filter={`url(#glow-obj-${i})`}>
+                                                <animateMotion 
+                                                    dur="2s" 
+                                                    repeatCount="indefinite" 
+                                                    path="M 22.5,0 L 22.5,45 Q 22.5,50 27.5,50 L 72.5,50 Q 77.5,50 77.5,55 L 77.5,100" 
+                                                />
+                                            </circle>
+                                            
+                                            {/* Moving Energy Tail Part 1 */}
+                                            <circle r="0.8" fill="#5EEAD4" filter={`url(#glow-obj-${i})`}>
+                                                <animateMotion 
+                                                    dur="2s" 
+                                                    repeatCount="indefinite" 
+                                                    begin="0.1s"
+                                                    path="M 22.5,0 L 22.5,45 Q 22.5,50 27.5,50 L 72.5,50 Q 77.5,50 77.5,55 L 77.5,100" 
+                                                />
+                                            </circle>
+                                            
+                                            {/* Moving Energy Tail Part 2 */}
+                                            <circle r="0.5" fill="#CCFBF1">
+                                                <animateMotion 
+                                                    dur="2s" 
+                                                    repeatCount="indefinite" 
+                                                    begin="0.2s"
+                                                    path="M 22.5,0 L 22.5,45 Q 22.5,50 27.5,50 L 72.5,50 Q 77.5,50 77.5,55 L 77.5,100" 
+                                                />
+                                            </circle>
                                         </svg>
 
-                                        {/* Mobile Straight Dashed Line */}
+                                        {/* Mobile Straight Line */}
                                         <svg className="md:hidden absolute top-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                                             <defs>
-                                                <linearGradient id={`pulse-mob-${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                                                    <stop offset="0%" stopColor="transparent" />
-                                                    <stop offset="50%" stopColor="#14B8A6" />
-                                                    <stop offset="100%" stopColor="transparent" />
-                                                </linearGradient>
-                                                <filter id="glow-mob" x="-20%" y="-20%" width="140%" height="140%">
-                                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                                <filter id={`glow-obj-mob-${i}`} x="-50%" y="-50%" width="200%" height="200%">
+                                                    <feGaussianBlur stdDeviation="2" result="blur" />
                                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                                                 </filter>
                                             </defs>
@@ -140,26 +142,28 @@ export const CoreValues = () => {
                                                 d="M 50,0 L 50,100" 
                                                 fill="none" 
                                                 className="stroke-gray-200 dark:stroke-white/10"
-                                                strokeWidth="1.5" 
-                                                strokeDasharray="4 4" 
+                                                strokeWidth="1" 
+                                                strokeLinecap="round" 
                                             />
                                             
-                                            {/* Infinite Flowing Energy pulse */}
-                                            <motion.path 
-                                                d="M 50,0 L 50,100" 
-                                                fill="none" 
-                                                stroke={`url(#pulse-mob-${i})`} 
-                                                strokeWidth="4" 
-                                                strokeLinecap="round"
-                                                filter="url(#glow-mob)"
-                                                initial={{ pathLength: 0.2, pathOffset: 0, opacity: 0 }}
-                                                whileInView={{ opacity: 1 }}
-                                                animate={{ pathOffset: 1 }}
-                                                transition={{ 
-                                                    opacity: { duration: 0.5 },
-                                                    pathOffset: { duration: 2, ease: "linear", repeat: Infinity, delay: i * 0.2 } 
-                                                }}
-                                            />
+                                            {/* Mobile Energy Core */}
+                                            <circle r="1.5" fill="#14B8A6" filter={`url(#glow-obj-mob-${i})`}>
+                                                <animateMotion 
+                                                    dur="1.5s" 
+                                                    repeatCount="indefinite" 
+                                                    path="M 50,0 L 50,100" 
+                                                />
+                                            </circle>
+                                            
+                                            {/* Mobile Energy Tail */}
+                                            <circle r="0.8" fill="#5EEAD4" filter={`url(#glow-obj-mob-${i})`}>
+                                                <animateMotion 
+                                                    dur="1.5s" 
+                                                    repeatCount="indefinite" 
+                                                    begin="0.1s"
+                                                    path="M 50,0 L 50,100" 
+                                                />
+                                            </circle>
                                         </svg>
                                     </div>
                                 )}
