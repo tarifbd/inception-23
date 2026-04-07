@@ -92,7 +92,7 @@ export const CoreValues = () => {
                                                 whileInView={{ pathLength: 1 }}
                                                 viewport={{ once: true }}
                                                 transition={{ duration: 1.5, ease: "easeOut" }}
-                                                d="M 22.5,0 C 22.5,50 77.5,50 77.5,100" 
+                                                d="M 22.5,0 L 22.5,50 L 77.5,50 L 77.5,100" 
                                                 fill="none" 
                                                 className="stroke-gray-200 dark:stroke-white/10" 
                                                 strokeWidth="1.5" 
@@ -101,7 +101,7 @@ export const CoreValues = () => {
                                             
                                             {/* Infinite Flowing Energy pulse */}
                                             <motion.path 
-                                                d="M 22.5,0 C 22.5,50 77.5,50 77.5,100" 
+                                                d="M 22.5,0 L 22.5,50 L 77.5,50 L 77.5,100" 
                                                 fill="none" 
                                                 stroke={`url(#pulse-${i})`} 
                                                 strokeWidth="3.5" 
