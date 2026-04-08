@@ -52,24 +52,17 @@ const homeContent = {
 
 const StrategyCore = React.memo(function StrategyCore() {
     const group = useRef<THREE.Group>(null);
-    const crown = useRef<THREE.Group>(null);
-    const rings = useRef<THREE.Group>(null);
+    const magGlass = useRef<THREE.Group>(null);
     
     useFrame((state) => {
         if(group.current) {
-            group.current.rotation.y = state.clock.elapsedTime * 0.15; // Majestic monumental spin
+            group.current.rotation.y = state.clock.elapsedTime * 0.15; // Slow showcase spin
         }
-        if(crown.current) {
-            // Crown hovers and rotates autonomously
-            crown.current.position.y = 3.2 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
-            crown.current.rotation.y = -state.clock.elapsedTime * 0.5;
-        }
-        if(rings.current) {
-             // Dynamic orbital fluctuation
-             rings.current.children.forEach((mesh, index) => {
-                 mesh.rotation.x = Math.sin(state.clock.elapsedTime * 0.5 + index) * 0.15;
-                 mesh.rotation.z = Math.cos(state.clock.elapsedTime * 0.5 + index) * 0.15;
-             });
+        if (magGlass.current) {
+            // Hover and gently scan over the graph
+            magGlass.current.position.y = 2.0 + Math.sin(state.clock.elapsedTime * 2) * 0.15;
+            magGlass.current.position.x = Math.cos(state.clock.elapsedTime * 0.8) * 0.6;
+            magGlass.current.rotation.z = Math.sin(state.clock.elapsedTime * 1.5) * 0.1;
         }
     });
 
@@ -77,87 +70,93 @@ const StrategyCore = React.memo(function StrategyCore() {
         <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
             <group ref={group} scale={[0.9, 0.9, 0.9]} position={[0, -1.2, 0]}>
                 
-                {/* --- THE GRAND PEDESTAL (FOUNDATION) --- */}
+                {/* --- 1. THE MAHOGANY/SLATE DESK PODIUM --- */}
                 <mesh position={[0, -0.4, 0]}>
-                    <cylinderGeometry args={[1.8, 2.2, 0.6, 64]} />
-                    <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+                    <cylinderGeometry args={[2.5, 2.7, 0.6, 64]} />
+                    <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
                 </mesh>
                 <mesh position={[0, 0, 0]}>
-                    <cylinderGeometry args={[1.6, 1.8, 0.25, 64]} />
-                    <meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} emissive="#ca8a04" emissiveIntensity={0.2} />
+                    <cylinderGeometry args={[2.3, 2.5, 0.2, 64]} />
+                    <meshStandardMaterial color="#FFD700" roughness={0.2} metalness={1} />
                 </mesh>
 
-                {/* --- THE ASCENDING GLASS MONOLITH (STRATEGY STEM) --- */}
-                <group position={[0, 1.4, 0]}>
-                    {/* Inner glowing energy rod (Data/Intelligence) */}
-                    <mesh>
-                        <cylinderGeometry args={[0.25, 0.25, 2.8, 64]} />
-                        <meshStandardMaterial color="#f97316" emissive="#ea580c" emissiveIntensity={3} />
-                    </mesh>
-                    <pointLight intensity={50} color="#f97316" distance={8} />
+                {/* --- 2. THE ASCENDING SOLID GOLD & SLATE GRAPH --- */}
+                <group position={[0, 0, 0.2]}>
+                    {/* Pillar 1 */}
+                    <group position={[-1.2, 0.1, 0]}>
+                        <mesh position={[0, 0.4, 0]}><boxGeometry args={[0.5, 0.8, 0.5]} /><meshStandardMaterial color="#1e293b" roughness={0.7} metalness={0.3} /></mesh>
+                        <mesh position={[0, 0.9, 0]}><boxGeometry args={[0.5, 0.2, 0.5]} /><meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} /></mesh>
+                    </group>
+                    
+                    {/* Pillar 2 */}
+                    <group position={[-0.4, 0.1, 0]}>
+                        <mesh position={[0, 0.7, 0]}><boxGeometry args={[0.5, 1.4, 0.5]} /><meshStandardMaterial color="#1e293b" roughness={0.7} metalness={0.3} /></mesh>
+                        <mesh position={[0, 1.5, 0]}><boxGeometry args={[0.5, 0.2, 0.5]} /><meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} /></mesh>
+                    </group>
+                    
+                    {/* Pillar 3 */}
+                    <group position={[0.4, 0.1, 0]}>
+                        <mesh position={[0, 1.1, 0]}><boxGeometry args={[0.5, 2.2, 0.5]} /><meshStandardMaterial color="#1e293b" roughness={0.7} metalness={0.3} /></mesh>
+                        <mesh position={[0, 2.3, 0]}><boxGeometry args={[0.5, 0.2, 0.5]} /><meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} /></mesh>
+                    </group>
+                    
+                    {/* Pillar 4 (The Ultimate Target) */}
+                    <group position={[1.2, 0.1, 0]}>
+                        <mesh position={[0, 1.6, 0]}><boxGeometry args={[0.5, 3.2, 0.5]} /><meshStandardMaterial color="#1e293b" roughness={0.7} metalness={0.3} /></mesh>
+                        {/* Double stacked gold wealth at the peak */}
+                        <mesh position={[0, 3.3, 0]}><boxGeometry args={[0.5, 0.2, 0.5]} /><meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} emissive="#ca8a04" emissiveIntensity={0.2} /></mesh>
+                        <mesh position={[0, 3.52, 0]}><boxGeometry args={[0.5, 0.2, 0.5]} /><meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} emissive="#ca8a04" emissiveIntensity={0.2} /></mesh>
+                    </group>
 
-                    {/* Tremendously refractive outer glass shell */}
-                    <mesh>
-                        <cylinderGeometry args={[0.8, 1.3, 2.6, 64]} />
+                    {/* Physical Red Growth Arrow traversing the graph */}
+                    <group position={[-1.7, 0.3, 0.3]} rotation={[0, 0, -Math.PI/3.5]}>
+                        <mesh position={[0, 2.2, 0]}>
+                            <cylinderGeometry args={[0.08, 0.08, 4.4, 32]} />
+                            <meshStandardMaterial color="#ef4444" metalness={0.4} roughness={0.3} emissive="#ef4444" emissiveIntensity={0.2} />
+                        </mesh>
+                        <mesh position={[0, 4.6, 0]}>
+                            <coneGeometry args={[0.25, 0.5, 32]} />
+                            <meshStandardMaterial color="#ef4444" metalness={0.4} roughness={0.3} emissive="#ef4444" emissiveIntensity={0.5} />
+                        </mesh>
+                    </group>
+                </group>
+
+                {/* --- 3. THE MAGNIFYING GLASS (ANALYSIS / AUDIT) --- */}
+                {/* Floating magically over the peak */}
+                <group ref={magGlass} position={[0, 2.5, 1.5]} rotation={[-Math.PI/6, Math.PI/6, 0]}>
+                    {/* Classic Wood Handle */}
+                    <mesh position={[0, -1.4, 0]}>
+                        <cylinderGeometry args={[0.15, 0.15, 1.2, 32]} />
+                        <meshStandardMaterial color="#451a03" metalness={0.1} roughness={0.8} /> {/* Deep mahogany */}
+                    </mesh>
+                    {/* Brass Binding/Collar */}
+                    <mesh position={[0, -0.7, 0]}>
+                        <cylinderGeometry args={[0.18, 0.18, 0.3, 32]} />
+                        <meshStandardMaterial color="#d97706" metalness={1} roughness={0.2} />
+                    </mesh>
+                    {/* Solid Gold Rim */}
+                    <mesh position={[0, 0.5, 0]} rotation={[Math.PI/2, 0, 0]}>
+                        <torusGeometry args={[0.9, 0.12, 32, 64]} />
+                        <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.1} />
+                    </mesh>
+                    {/* The Optical Lens (Thick, highly refractive glass) */}
+                    <mesh position={[0, 0.5, 0]} rotation={[Math.PI/2, 0, 0]}>
+                        <cylinderGeometry args={[0.88, 0.88, 0.08, 64]} />
                         <MeshTransmissionMaterial 
                             samples={16} 
-                            thickness={3} 
-                            roughness={0.02} 
-                            chromaticAberration={0.06} 
-                            color="#e0f2fe" 
-                            anisotropy={0.5}
-                            distortion={0.2}
-                            distortionScale={0.5}
+                            thickness={4} 
+                            roughness={0} 
+                            chromaticAberration={0.1} 
+                            color="#f0f9ff" 
+                            distortion={0.5} 
+                            distortionScale={0.8} 
+                            ior={1.8} 
                         />
                     </mesh>
                 </group>
 
-                {/* --- FLOATING ORBITAL RINGS (BUSINESS DYNAMICS) --- */}
-                <group ref={rings} position={[0, 1.4, 0]}>
-                    <mesh position={[0, -0.8, 0]}>
-                        <torusGeometry args={[1.5, 0.06, 32, 100]} />
-                        <meshStandardMaterial color="#38bdf8" roughness={0.1} metalness={0.9} />
-                    </mesh>
-                    <mesh position={[0, 0, 0]}>
-                        <torusGeometry args={[1.1, 0.05, 32, 100]} />
-                        <meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} emissive="#eab308" emissiveIntensity={0.5} />
-                    </mesh>
-                    <mesh position={[0, 0.8, 0]}>
-                        <torusGeometry args={[0.9, 0.04, 32, 100]} />
-                        <meshStandardMaterial color="#bae6fd" roughness={0.1} metalness={0.9} />
-                    </mesh>
-                </group>
-
-                {/* --- THE MAJESTIC CROWN (LEADERSHIP / ENDGAME) --- */}
-                <group ref={crown} position={[0, 3.2, 0]}>
-                    {/* Crown Base */}
-                    <mesh position={[0, 0, 0]}>
-                        <cylinderGeometry args={[0.7, 0.5, 0.35, 64]} />
-                        <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.05} emissive="#ca8a04" emissiveIntensity={0.3} />
-                    </mesh>
-                    {/* Floating Sovereign Orb */}
-                    <mesh position={[0, 0.6, 0]}>
-                        <sphereGeometry args={[0.35, 64, 64]} />
-                        <MeshTransmissionMaterial samples={16} thickness={2} roughness={0} chromaticAberration={0.08} color="#0ea5e9" />
-                    </mesh>
-                    {/* Inner glowing focal point */}
-                    <mesh position={[0, 0.6, 0]}>
-                        <sphereGeometry args={[0.15, 32, 32]} />
-                        <meshStandardMaterial color="#f97316" emissive="#ea580c" emissiveIntensity={5} />
-                    </mesh>
-                    
-                    {/* Golden Spire Arches */}
-                    {[0, 1, 2, 3].map((i) => (
-                        <mesh key={i} position={[Math.cos(i*Math.PI/2)*0.55, 0.5, Math.sin(i*Math.PI/2)*0.55]} rotation={[0, -i*Math.PI/2, Math.PI/6]}>
-                             <cylinderGeometry args={[0.06, 0.12, 0.8, 32]} />
-                             <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.05} />
-                        </mesh>
-                    ))}
-                </group>
-
-                {/* --- AMBIENT MAGIC --- */}
-                <Sparkles count={200} scale={8} size={4} speed={0.4} opacity={0.6} color="#FFD700" />
-                <Sparkles count={100} scale={6} size={6} speed={0.8} opacity={0.8} color="#0ea5e9" />
+                {/* Ambient Particles */}
+                <Sparkles count={100} scale={6} size={4} speed={0.5} opacity={0.6} color="#FFD700" />
             </group>
         </Float>
     );
