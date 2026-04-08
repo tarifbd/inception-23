@@ -52,110 +52,112 @@ const homeContent = {
 
 const StrategyCore = React.memo(function StrategyCore() {
     const group = useRef<THREE.Group>(null);
-    const knight = useRef<THREE.Group>(null);
-    const graph = useRef<THREE.Group>(null);
+    const crown = useRef<THREE.Group>(null);
+    const rings = useRef<THREE.Group>(null);
     
     useFrame((state) => {
         if(group.current) {
-            // Elegant showcase rotation
-            group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.5 - 0.2;
+            group.current.rotation.y = state.clock.elapsedTime * 0.15; // Majestic monumental spin
         }
-        if(knight.current) {
-            // Gentle hovering for the chess piece
-            knight.current.position.y = 0.5 + Math.sin(state.clock.elapsedTime * 1.5) * 0.1;
+        if(crown.current) {
+            // Crown hovers and rotates autonomously
+            crown.current.position.y = 3.2 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+            crown.current.rotation.y = -state.clock.elapsedTime * 0.5;
+        }
+        if(rings.current) {
+             // Dynamic orbital fluctuation
+             rings.current.children.forEach((mesh, index) => {
+                 mesh.rotation.x = Math.sin(state.clock.elapsedTime * 0.5 + index) * 0.15;
+                 mesh.rotation.z = Math.cos(state.clock.elapsedTime * 0.5 + index) * 0.15;
+             });
         }
     });
 
     return (
-        <Float speed={1.5} rotationIntensity={0.15} floatIntensity={0.5}>
-            <group ref={group} scale={[0.85, 0.85, 0.85]} position={[0, -0.2, 0]}>
+        <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
+            <group ref={group} scale={[0.9, 0.9, 0.9]} position={[0, -1.2, 0]}>
                 
-                {/* --- 1. THE EXECUTIVE BRIEFCASE --- */}
-                <group position={[-1.2, -0.8, 0]} rotation={[0.1, -0.4, 0]}>
-                    {/* Main Leather Body */}
+                {/* --- THE GRAND PEDESTAL (FOUNDATION) --- */}
+                <mesh position={[0, -0.4, 0]}>
+                    <cylinderGeometry args={[1.8, 2.2, 0.6, 64]} />
+                    <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+                </mesh>
+                <mesh position={[0, 0, 0]}>
+                    <cylinderGeometry args={[1.6, 1.8, 0.25, 64]} />
+                    <meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} emissive="#ca8a04" emissiveIntensity={0.2} />
+                </mesh>
+
+                {/* --- THE ASCENDING GLASS MONOLITH (STRATEGY STEM) --- */}
+                <group position={[0, 1.4, 0]}>
+                    {/* Inner glowing energy rod (Data/Intelligence) */}
                     <mesh>
-                        <boxGeometry args={[2.5, 1.8, 0.7]} />
-                        <meshStandardMaterial color="#0f172a" roughness={0.7} />
+                        <cylinderGeometry args={[0.25, 0.25, 2.8, 64]} />
+                        <meshStandardMaterial color="#f97316" emissive="#ea580c" emissiveIntensity={3} />
                     </mesh>
-                    {/* Aluminum Trims */}
-                    <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[2.55, 1.85, 0.6]} />
-                        <meshStandardMaterial color="#e2e8f0" metalness={0.9} roughness={0.1} />
-                    </mesh>
-                    <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[2.6, 1.7, 0.65]} />
-                        <meshStandardMaterial color="#e2e8f0" metalness={0.9} roughness={0.1} />
-                    </mesh>
-                    {/* Handle */}
-                    <mesh position={[0, 1.05, 0]}>
-                        <torusGeometry args={[0.35, 0.08, 16, 32, Math.PI]} />
-                        <meshStandardMaterial color="#0f172a" roughness={0.5} />
-                    </mesh>
-                    {/* Golden Clasps */}
-                    <mesh position={[-0.8, 0.95, 0.36]}>
-                        <boxGeometry args={[0.2, 0.15, 0.05]} />
-                        <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.1} />
-                    </mesh>
-                    <mesh position={[0.8, 0.95, 0.36]}>
-                        <boxGeometry args={[0.2, 0.15, 0.05]} />
-                        <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.1} />
+                    <pointLight intensity={50} color="#f97316" distance={8} />
+
+                    {/* Tremendously refractive outer glass shell */}
+                    <mesh>
+                        <cylinderGeometry args={[0.8, 1.3, 2.6, 64]} />
+                        <MeshTransmissionMaterial 
+                            samples={16} 
+                            thickness={3} 
+                            roughness={0.02} 
+                            chromaticAberration={0.06} 
+                            color="#e0f2fe" 
+                            anisotropy={0.5}
+                            distortion={0.2}
+                            distortionScale={0.5}
+                        />
                     </mesh>
                 </group>
 
-                {/* --- 2. THE STRATEGY CHESS KING --- */}
-                <group ref={knight} position={[1.4, 0.5, 1.2]} rotation={[0.1, 0, 0]}>
-                    <mesh position={[0, -1, 0]}>
-                        <cylinderGeometry args={[0.7, 0.8, 0.2, 64]} />
-                        <MeshTransmissionMaterial samples={16} thickness={2} roughness={0.1} chromaticAberration={0.05} color="#e0f2fe" />
-                    </mesh>
+                {/* --- FLOATING ORBITAL RINGS (BUSINESS DYNAMICS) --- */}
+                <group ref={rings} position={[0, 1.4, 0]}>
                     <mesh position={[0, -0.8, 0]}>
-                        <cylinderGeometry args={[0.5, 0.7, 0.3, 64]} />
-                        <MeshTransmissionMaterial samples={16} thickness={2} roughness={0.1} chromaticAberration={0.05} color="#bae6fd" />
+                        <torusGeometry args={[1.5, 0.06, 32, 100]} />
+                        <meshStandardMaterial color="#38bdf8" roughness={0.1} metalness={0.9} />
                     </mesh>
-                    <mesh position={[0, 0.2, 0]}>
-                        <cylinderGeometry args={[0.2, 0.4, 2.0, 64]} />
-                        <MeshTransmissionMaterial samples={16} thickness={2.5} roughness={0.05} chromaticAberration={0.08} color="#38bdf8" />
+                    <mesh position={[0, 0, 0]}>
+                        <torusGeometry args={[1.1, 0.05, 32, 100]} />
+                        <meshStandardMaterial color="#FFD700" roughness={0.1} metalness={1} emissive="#eab308" emissiveIntensity={0.5} />
                     </mesh>
-                    <mesh position={[0, 1.4, 0]}>
-                        <cylinderGeometry args={[0.5, 0.2, 0.4, 64]} />
-                        <MeshTransmissionMaterial samples={16} thickness={2} roughness={0.1} chromaticAberration={0.05} color="#0ea5e9" />
-                    </mesh>
-                    {/* Crown Cross (Solid Gold) */}
-                    <mesh position={[0, 1.8, 0]}>
-                        <boxGeometry args={[0.5, 0.1, 0.1]} />
-                        <meshStandardMaterial color="#FFD700" emissive="#ca8a04" emissiveIntensity={1} metalness={1} roughness={0.1} />
-                    </mesh>
-                    <mesh position={[0, 1.9, 0]}>
-                        <boxGeometry args={[0.1, 0.5, 0.1]} />
-                        <meshStandardMaterial color="#FFD700" emissive="#ca8a04" emissiveIntensity={1} metalness={1} roughness={0.1} />
-                    </mesh>
-                    {/* Internal Core Light */}
-                    <pointLight position={[0, 0.5, 0]} intensity={15} color="#0ea5e9" distance={5} />
-                </group>
-
-                {/* --- 3. ASCENDING DATA GRAPH --- */}
-                <group ref={graph} position={[0, 0.5, -1.5]} rotation={[0.1, -0.2, 0]}>
-                    <mesh position={[-1.2, -0.4, 0]}>
-                        <cylinderGeometry args={[0.2, 0.2, 0.8, 32]} />
-                        <meshStandardMaterial color="#e0f2fe" metalness={0.2} roughness={0.1} />
-                    </mesh>
-                    <mesh position={[-0.4, 0.1, 0]}>
-                        <cylinderGeometry args={[0.2, 0.2, 1.8, 32]} />
-                        <meshStandardMaterial color="#bae6fd" metalness={0.2} roughness={0.1} />
-                    </mesh>
-                    <mesh position={[0.4, 0.8, 0]}>
-                        <cylinderGeometry args={[0.2, 0.2, 3.2, 32]} />
-                        <meshStandardMaterial color="#38bdf8" metalness={0.3} roughness={0.1} emissive="#0ea5e9" emissiveIntensity={0.5} />
-                    </mesh>
-                    <mesh position={[1.2, 1.8, 0]}>
-                        <cylinderGeometry args={[0.2, 0.2, 5.2, 32]} />
-                        <meshStandardMaterial color="#0ea5e9" metalness={0.4} roughness={0.1} emissive="#0284c7" emissiveIntensity={1} />
+                    <mesh position={[0, 0.8, 0]}>
+                        <torusGeometry args={[0.9, 0.04, 32, 100]} />
+                        <meshStandardMaterial color="#bae6fd" roughness={0.1} metalness={0.9} />
                     </mesh>
                 </group>
 
-                {/* Ambient Particles */}
-                <Sparkles count={150} scale={8} size={3} speed={0.4} opacity={0.5} color="#38bdf8" />
-                <Sparkles count={50} scale={6} size={5} speed={0.8} opacity={0.8} color="#FFD700" />
+                {/* --- THE MAJESTIC CROWN (LEADERSHIP / ENDGAME) --- */}
+                <group ref={crown} position={[0, 3.2, 0]}>
+                    {/* Crown Base */}
+                    <mesh position={[0, 0, 0]}>
+                        <cylinderGeometry args={[0.7, 0.5, 0.35, 64]} />
+                        <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.05} emissive="#ca8a04" emissiveIntensity={0.3} />
+                    </mesh>
+                    {/* Floating Sovereign Orb */}
+                    <mesh position={[0, 0.6, 0]}>
+                        <sphereGeometry args={[0.35, 64, 64]} />
+                        <MeshTransmissionMaterial samples={16} thickness={2} roughness={0} chromaticAberration={0.08} color="#0ea5e9" />
+                    </mesh>
+                    {/* Inner glowing focal point */}
+                    <mesh position={[0, 0.6, 0]}>
+                        <sphereGeometry args={[0.15, 32, 32]} />
+                        <meshStandardMaterial color="#f97316" emissive="#ea580c" emissiveIntensity={5} />
+                    </mesh>
+                    
+                    {/* Golden Spire Arches */}
+                    {[0, 1, 2, 3].map((i) => (
+                        <mesh key={i} position={[Math.cos(i*Math.PI/2)*0.55, 0.5, Math.sin(i*Math.PI/2)*0.55]} rotation={[0, -i*Math.PI/2, Math.PI/6]}>
+                             <cylinderGeometry args={[0.06, 0.12, 0.8, 32]} />
+                             <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.05} />
+                        </mesh>
+                    ))}
+                </group>
+
+                {/* --- AMBIENT MAGIC --- */}
+                <Sparkles count={200} scale={8} size={4} speed={0.4} opacity={0.6} color="#FFD700" />
+                <Sparkles count={100} scale={6} size={6} speed={0.8} opacity={0.8} color="#0ea5e9" />
             </group>
         </Float>
     );
