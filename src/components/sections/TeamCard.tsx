@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Linkedin } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import type { TeamMember } from '@/lib/constants/team';
 import { serviceThemes } from '@/lib/constants/theme';
 
@@ -14,6 +14,11 @@ type TeamCardProps = {
 
 export function TeamCard({ member, index = 0 }: TeamCardProps) {
   const theme = serviceThemes[member.themeKey];
+  const socialLinks = [
+    { label: 'LinkedIn', href: member.linkedinHref, icon: Linkedin },
+    { label: 'Email', href: member.emailHref, icon: Mail },
+    { label: 'GitHub', href: member.githubHref, icon: Github },
+  ];
 
   return (
     <motion.article
@@ -21,30 +26,42 @@ export function TeamCard({ member, index = 0 }: TeamCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.32, delay: index * 0.025 }}
       whileHover={{ y: -5 }}
-      className={`group relative overflow-hidden rounded-[1.6rem] border bg-white p-3 shadow-sm transition hover:shadow-xl hover:shadow-slate-950/10 ${theme.border}`}
+      className={`group relative flex min-h-full flex-col overflow-hidden rounded-[1.75rem] border bg-white p-3 shadow-sm transition hover:shadow-2xl hover:shadow-slate-950/10 ${theme.border}`}
     >
       <div className={`absolute -right-14 -top-14 h-36 w-36 rounded-full blur-2xl ${theme.surface}`} />
-      <div className={`relative overflow-hidden rounded-[1.25rem] bg-gradient-to-br ${theme.gradientSoft}`}>
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.78),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.9),transparent_28%)]" />
-        <Link
-          href={member.linkedinHref}
-          aria-label={`${member.name} LinkedIn`}
-          className="absolute right-3 top-3 z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/70 bg-white/80 text-slate-500 shadow-sm backdrop-blur transition hover:border-brand-950 hover:bg-brand-950 hover:text-white"
-        >
-          <Linkedin size={15} />
-        </Link>
-        <div className="relative mx-auto aspect-[5/3] w-full max-w-[360px]">
+
+      <div className="relative overflow-hidden rounded-[1.35rem] border border-white bg-slate-50 shadow-inner">
+        <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradientSoft}`} />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.76),transparent_42%)]" />
+        <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image
             src={member.imageSrc}
-            alt={`${member.name} profile illustration`}
+            alt={`${member.name} profile`}
             fill
             sizes="(min-width: 1280px) 31vw, (min-width: 768px) 46vw, 92vw"
-            className="object-contain px-4 pt-4 transition duration-500 group-hover:scale-[1.04]"
+            className="object-cover transition duration-700 group-hover:scale-[1.06]"
           />
+        </div>
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
+          <span className={`rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] shadow-sm ${theme.bg} ${theme.text}`}>
+            {member.category.replace('-', ' ')}
+          </span>
+          <div className="flex gap-1.5">
+            {socialLinks.map(({ label, href, icon: Icon }) => (
+              <Link
+                key={label}
+                href={href}
+                aria-label={`${member.name} ${label}`}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-600 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-950 hover:bg-brand-950 hover:text-white"
+              >
+                <Icon size={14} />
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="relative px-2 pb-2 pt-5">
+      <div className="relative flex flex-1 flex-col px-2 pb-2 pt-5">
         <div className="flex items-start gap-4">
           <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-sm font-black shadow-lg ${theme.icon}`}>
             {member.initials}
@@ -55,14 +72,13 @@ export function TeamCard({ member, index = 0 }: TeamCardProps) {
           </div>
         </div>
         <p className="mt-5 text-sm leading-7 text-slate-600">{member.bio}</p>
-      </div>
-
-      <div className="relative flex flex-wrap gap-2 px-2 pb-2">
-        {member.expertise.map((tag) => (
-          <span key={tag} className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] ${theme.bg} ${theme.text}`}>
-            {tag}
-          </span>
-        ))}
+        <div className="mt-auto flex flex-wrap gap-2 pt-6">
+          {member.expertise.map((tag) => (
+            <span key={tag} className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] ${theme.bg} ${theme.text}`}>
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </motion.article>
   );

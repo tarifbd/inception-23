@@ -12,6 +12,8 @@ export type TeamMember = {
   initials: string;
   themeKey: ServiceKey;
   linkedinHref: string;
+  emailHref: string;
+  githubHref: string;
   imageSrc: string;
 };
 
@@ -25,26 +27,16 @@ export const teamMembers: TeamMember[] = [
   {
     id: 'khadimul-hasan',
     category: 'management',
-    name: 'Khadimul Hasan',
-    role: 'Management Lead',
+    name: 'K M Khadimul Hasan',
+    role: 'Managing Partner & Founder',
     expertise: ['Strategy', 'Governance', 'Growth'],
     bio: 'Guides management discipline, operating priorities, and strategic accountability.',
     initials: 'KH',
     themeKey: 'consultancy',
     linkedinHref: '#',
-    imageSrc: '/team/team-management.svg',
-  },
-  {
-    id: 'gaizi-faisal',
-    category: 'management',
-    name: 'Gaizi Faisal',
-    role: 'Management Partner',
-    expertise: ['Risk', 'Legal', 'Operations'],
-    bio: 'Connects business decisions with compliance, documentation, and operating continuity.',
-    initials: 'GF',
-    themeKey: 'legal',
-    linkedinHref: '#',
-    imageSrc: '/team/team-advisor.svg',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: '/team/team-management.png',
   },
   {
     id: 'mahmudul-hasan',
@@ -56,7 +48,23 @@ export const teamMembers: TeamMember[] = [
     initials: 'MH',
     themeKey: 'it',
     linkedinHref: '#',
-    imageSrc: '/team/team-technology.svg',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: '/team/team-technology.png',
+  },
+  {
+    id: 'gaizi-faisal',
+    category: 'management',
+    name: 'Gaizi Faisal',
+    role: 'Management Partner',
+    expertise: ['Risk', 'Legal', 'Operations'],
+    bio: 'Connects business decisions with compliance, documentation, and operating continuity.',
+    initials: 'GF',
+    themeKey: 'legal',
+    linkedinHref: '#',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: '/team/team-advisor.png',
   },
   ...Array.from({ length: 3 }, (_, index) => ({
     id: `management-seat-${index + 4}`,
@@ -68,7 +76,9 @@ export const teamMembers: TeamMember[] = [
     initials: `M${index + 4}`,
     themeKey: 'consultancy' as const,
     linkedinHref: '#',
-    imageSrc: '/team/team-management.svg',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: '/team/team-management.png',
   })),
   {
     id: 'km-khairul-hasan-arif',
@@ -80,7 +90,9 @@ export const teamMembers: TeamMember[] = [
     initials: 'KA',
     themeKey: 'consultancy',
     linkedinHref: '#',
-    imageSrc: '/team/team-advisor.svg',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: '/team/team-advisor.png',
   },
   ...Array.from({ length: 9 }, (_, index) => ({
     id: `advisor-consultant-seat-${index + 2}`,
@@ -92,7 +104,9 @@ export const teamMembers: TeamMember[] = [
     initials: `AC${index + 2}`,
     themeKey: (index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative') as ServiceKey,
     linkedinHref: '#',
-    imageSrc: index % 4 === 0 ? '/team/team-technology.svg' : index % 4 === 1 ? '/team/team-management.svg' : index % 4 === 2 ? '/team/team-advisor.svg' : '/team/team-creative.svg',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: index % 4 === 0 ? '/team/team-technology.png' : index % 4 === 1 ? '/team/team-management.png' : index % 4 === 2 ? '/team/team-advisor.png' : '/team/team-creative.png',
   })),
   ...Array.from({ length: 10 }, (_, index) => ({
     id: `executive-seat-${index + 1}`,
@@ -104,6 +118,8 @@ export const teamMembers: TeamMember[] = [
     initials: `E${index + 1}`,
     themeKey: (index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative') as ServiceKey,
     linkedinHref: '#',
-    imageSrc: index % 4 === 0 ? '/team/team-technology.svg' : index % 4 === 1 ? '/team/team-management.svg' : index % 4 === 2 ? '/team/team-advisor.svg' : '/team/team-creative.svg',
+    emailHref: 'mailto:hello@inception23.com',
+    githubHref: '#',
+    imageSrc: index % 4 === 0 ? '/team/team-technology.png' : index % 4 === 1 ? '/team/team-management.png' : index % 4 === 2 ? '/team/team-advisor.png' : '/team/team-creative.png',
   })),
 ];
