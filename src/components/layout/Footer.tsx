@@ -1,89 +1,218 @@
 'use client';
 
-import { useAppStore } from '@/lib/store';
+import { FormEvent, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle2, Linkedin, Mail, MapPin, Phone, Send, ShieldCheck } from 'lucide-react';
+import { serviceCategories } from '@/lib/constants/service-categories';
+import { industriesMenu, insightsMenu, solutionMenu } from '@/lib/constants/navigation';
 
-import { ArrowRight, Linkedin, Twitter, Github, Mail } from 'lucide-react';
+const footerCompanyLinks = [
+  { label: 'About', href: '/about' },
+  { label: 'Team', href: '/#team' },
+  { label: 'Process', href: '/#process' },
+  { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Contact', href: '/contact' },
+];
 
-export const Footer = () => {
-    const { lang } = useAppStore();
-    return (
-        <footer className="relative bg-night-950 text-white overflow-hidden border-t border-white/5 pt-32 pb-8">
-            {/* Massive Background Typography */}
-            <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.02] select-none">
-                <h1 className="font-serif font-black text-[22vw] leading-none whitespace-nowrap">INCEPTION 23</h1>
+const trustPoints = [
+  'Confidential advisory intake',
+  'Strategy, systems, legal, finance, and creative under one roof',
+  'Bangladesh-aware execution with global-grade structure',
+];
+
+export function Footer() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+  const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!email.trim()) return;
+
+    setStatus('submitting');
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) throw new Error('Newsletter request failed');
+      setEmail('');
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    } finally {
+      window.setTimeout(() => setStatus('idle'), 3600);
+    }
+  };
+
+  return (
+    <footer className="relative overflow-hidden border-t border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_42%,#eef7fb_100%)] text-brand-950">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      <div className="pointer-events-none absolute -left-28 top-20 h-80 w-80 rounded-full bg-cyan-200/35 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-16 h-80 w-80 rounded-full bg-emerald-200/35 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:py-20">
+        <div className="rounded-[2rem] border border-white/80 bg-white/82 p-5 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
+            <div className="flex flex-col justify-between gap-10">
+              <div>
+                <Link href="/" className="inline-flex items-center gap-4 focus:outline-none focus:ring-4 focus:ring-brand-700/15">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-white p-2 shadow-lg shadow-slate-950/10 ring-1 ring-slate-200">
+                    <Image
+                      src="/inception23-mark.png"
+                      alt="Inception 23 mark"
+                      width={112}
+                      height={112}
+                      className="h-full w-full object-contain"
+                    />
+                  </span>
+                  <span className="min-w-0 leading-none">
+                    <span className="block text-xl font-black uppercase tracking-[0.28em] text-brand-950 sm:text-2xl">
+                      Inception 23
+                    </span>
+                    <span className="mt-2 block text-[0.55rem] font-black uppercase tracking-[0.2em] text-slate-500 sm:text-[0.62rem]">
+                      Where <span className="text-orange-600">new beginnings</span> create the future
+                    </span>
+                  </span>
+                </Link>
+
+                <h2 className="mt-10 max-w-3xl font-serif text-4xl font-black leading-[1.02] text-brand-950 sm:text-5xl lg:text-6xl">
+                  Advisory clarity for companies ready to move with discipline.
+                </h2>
+                <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+                  Inception 23 brings technology, management, finance, documentation, legal support, and creative execution into one premium operating partner.
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                {trustPoints.map((point) => (
+                  <div key={point} className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+                    <CheckCircle2 className="mb-3 text-emerald-600" size={18} />
+                    <p className="text-sm font-bold leading-6 text-slate-700">{point}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div suppressHydrationWarning className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-24 border-b border-white/10 pb-24">
-                    {/* Brand Column */}
-                    <div className="lg:col-span-4">
-                        <span className="font-serif text-3xl font-bold tracking-tight mb-8 block text-white drop-shadow-md">
-                            INCEPTION<span className="text-brand-500"> 23</span>
-                        </span>
-                        <p className="text-gray-400 text-lg leading-relaxed max-w-sm font-light mb-10">
-                            {lang === 'en' ? 'Global strategic advisory, legal support, and digital transformation for the world\'s leading institutions.' : 'বাণিজ্যিক কৌশল, আইনি সহায়তা এবং প্রযুক্তির মাধ্যমে সফলতার পথনির্দেশ।'}
-                        </p>
-                        <form className="relative max-w-sm group mb-8">
-                            <input type="email" placeholder={lang === 'en' ? "Subscribe to Insights" : "ইমেইল লিখুন"} className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-6 pr-14 text-sm outline-none focus:border-brand-500 focus:bg-white/10 transition-all text-white placeholder-gray-500 shadow-inner" />
-                            <button className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-brand-600 rounded-full flex items-center justify-center hover:bg-brand-500 transition-colors shadow-lg shadow-brand-500/30">
-                                <ArrowRight size={16} />
-                            </button>
-                        </form>
-                        <div className="flex gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-brand-600 hover:border-transparent transition-all hover:-translate-y-1"><Linkedin size={18} /></a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-brand-600 hover:border-transparent transition-all hover:-translate-y-1"><Twitter size={18} /></a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-brand-600 hover:border-transparent transition-all hover:-translate-y-1"><Github size={18} /></a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-brand-600 hover:border-transparent transition-all hover:-translate-y-1"><Mail size={18} /></a>
-                        </div>
-                    </div>
+            <div className="rounded-[1.6rem] border border-slate-200 bg-brand-950 p-6 text-white shadow-2xl shadow-brand-950/15 sm:p-8">
+              <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-300">Start a confidential brief</p>
+              <h3 className="mt-5 font-serif text-3xl font-black leading-tight sm:text-4xl">
+                Tell us where the business needs clarity, control, or acceleration.
+              </h3>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-brand-950 transition hover:-translate-y-1 hover:shadow-xl hover:shadow-white/10"
+                >
+                  Book a Consultation
+                  <ArrowRight size={17} className="transition group-hover:translate-x-1" />
+                </Link>
+                <Link
+                  href="/services"
+                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:-translate-y-1 hover:bg-white/10"
+                >
+                  Explore Services
+                </Link>
+              </div>
 
-                    {/* Navigation Columns */}
-                    <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-8">
-                        <div>
-                            <h4 className="font-bold mb-8 uppercase tracking-[0.2em] text-xs text-brand-500">{lang === 'en' ? 'Services' : 'সেবাসমূহ'}</h4>
-                            <ul className="space-y-4 text-sm font-medium text-gray-400">
-                                {['Corporate Strategy', 'M&A Advisory', 'Legal Frameworks', 'Cloud Infrastructure'].map((item, i) => (
-                                    <li key={i}><a href="#" className="hover:text-white transition-colors relative group block w-fit"><span className="relative z-10">{item}</span><span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-brand-500 transition-all duration-300 group-hover:w-full"></span></a></li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold mb-8 uppercase tracking-[0.2em] text-xs text-brand-500">{lang === 'en' ? 'Industries' : 'শিল্পখাত'}</h4>
-                            <ul className="space-y-4 text-sm font-medium text-gray-400">
-                                {['Financial Services', 'Healthcare', 'Energy', 'Public Sector'].map((item, i) => (
-                                    <li key={i}><a href="#" className="hover:text-white transition-colors relative group block w-fit"><span className="relative z-10">{item}</span><span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-brand-500 transition-all duration-300 group-hover:w-full"></span></a></li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold mb-8 uppercase tracking-[0.2em] text-xs text-brand-500">{lang === 'en' ? 'Firm' : 'প্রতিষ্ঠান'}</h4>
-                            <ul className="space-y-4 text-sm font-medium text-gray-400">
-                                {['About Us', 'Leadership', 'Careers', 'Contact'].map((item, i) => (
-                                    <li key={i}><a href="#" className="hover:text-white transition-colors relative group block w-fit"><span className="relative z-10">{item}</span><span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-brand-500 transition-all duration-300 group-hover:w-full"></span></a></li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold mb-8 uppercase tracking-[0.2em] text-xs text-brand-500">{lang === 'en' ? 'Offices' : 'অফিস'}</h4>
-                            <ul className="space-y-4 text-sm font-medium text-gray-400">
-                                <li>New York</li>
-                                <li>London</li>
-                                <li>Dubai</li>
-                                <li>Dhaka</li>
-                            </ul>
-                        </div>
-                    </div>
+              <form onSubmit={handleSubscribe} className="mt-8 rounded-3xl border border-white/10 bg-white/[0.06] p-3">
+                <label htmlFor="footer-email" className="mb-3 block px-2 text-xs font-black uppercase tracking-[0.2em] text-white/55">
+                  Insight dispatch
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    id="footer-email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@company.com"
+                    required
+                    disabled={status === 'submitting'}
+                    className="min-h-12 flex-1 rounded-full border border-white/10 bg-white px-5 text-sm font-bold text-brand-950 outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-300/20 disabled:cursor-not-allowed disabled:opacity-70"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === 'submitting'}
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-cyan-400 px-5 text-sm font-black uppercase tracking-[0.12em] text-brand-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {status === 'submitting' ? 'Sending' : 'Subscribe'}
+                    <Send size={15} />
+                  </button>
                 </div>
-
-                <div className="flex flex-col md:flex-row justify-between items-center text-xs font-bold tracking-wider text-gray-600">
-                    <p>&copy; {new Date().getFullYear()} INCEPTION 23 INC. {lang === 'en' ? 'ALL RIGHTS RESERVED.' : 'সর্বস্বত্ব সংরক্ষিত।'}</p>
-                    <div className="flex gap-8 mt-6 md:mt-0">
-                        <a href="#" className="hover:text-gray-400 transition-colors">PRIVACY POLICY</a>
-                        <a href="#" className="hover:text-gray-400 transition-colors">TERMS OF USE</a>
-                        <a href="#" className="hover:text-gray-400 transition-colors">COOKIE SETTINGS</a>
-                    </div>
-                </div>
+                {status === 'success' ? <p className="mt-3 px-2 text-sm font-bold text-emerald-300">Subscribed. Thank you.</p> : null}
+                {status === 'error' ? <p className="mt-3 px-2 text-sm font-bold text-rose-300">Could not subscribe. Please try again.</p> : null}
+              </form>
             </div>
-        </footer>
-    );
-};
+          </div>
+        </div>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_1.95fr]">
+          <div className="rounded-[1.6rem] border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">Contact</p>
+            <div className="mt-5 grid gap-4 text-sm font-bold text-slate-600">
+              <a href="mailto:hello@inception23.com" className="flex items-center gap-3 transition hover:text-brand-950">
+                <Mail size={18} className="text-cyan-600" />
+                hello@inception23.com
+              </a>
+              <a href="tel:+8801XXXXXXXXX" className="flex items-center gap-3 transition hover:text-brand-950">
+                <Phone size={18} className="text-emerald-600" />
+                +880 1XXX-XXXXXX
+              </a>
+              <span className="flex items-center gap-3">
+                <MapPin size={18} className="text-purple-600" />
+                Dhaka, Bangladesh
+              </span>
+            </div>
+            <div className="mt-6 flex gap-3">
+              <a href="#" aria-label="LinkedIn" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
+                <Linkedin size={18} />
+              </a>
+              <a href="mailto:hello@inception23.com" aria-label="Email" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
+                <Mail size={18} />
+              </a>
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
+            <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
+            <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
+            <FooterColumn title="Company" links={[...footerCompanyLinks, ...insightsMenu.slice(0, 1)]} />
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-5 border-t border-slate-200 pt-6 text-xs font-black uppercase tracking-[0.16em] text-slate-500 md:flex-row md:items-center md:justify-between">
+          <p>&copy; {new Date().getFullYear()} Inception 23. All rights reserved.</p>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/privacy" className="transition hover:text-brand-950">Privacy</Link>
+            <Link href="/terms" className="transition hover:text-brand-950">Terms</Link>
+            <span className="inline-flex items-center gap-2 text-emerald-700">
+              <ShieldCheck size={14} />
+              Confidential by design
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function FooterColumn({ title, links }: { title: string; links: Array<{ label: string; href: string }> }) {
+  return (
+    <nav className="rounded-[1.6rem] border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur" aria-label={title}>
+      <h3 className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">{title}</h3>
+      <ul className="mt-5 space-y-3">
+        {links.map((link) => (
+          <li key={`${title}-${link.label}`}>
+            <Link href={link.href} className="group inline-flex items-start gap-2 text-sm font-bold leading-6 text-slate-600 transition hover:text-brand-950">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-300 transition group-hover:bg-cyan-500" />
+              <span>{link.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}

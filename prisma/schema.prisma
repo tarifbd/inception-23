@@ -1,0 +1,383 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ServiceCategory {
+  id          String        @id
+  slug        String?       @unique
+  labelEn     String
+  labelBn     String
+  summary     String        @default("")
+  colorTheme  String        @default("brand")
+  order       Int           @default(0)
+  isActive    Boolean       @default(true)
+  services    ServiceItem[]
+  caseStudies CaseStudy[]
+}
+
+model ServiceItem {
+  id         String          @id @default(uuid())
+  categoryId String
+  category   ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  titleEn    String
+  titleBn    String
+  descEn     String
+  descBn     String
+  icon       String
+  theme      String
+  order      Int             @default(0)
+}
+
+model Service {
+  id          String         @id @default(uuid())
+  slug        String         @unique
+  title       String
+  eyebrow     String
+  summary     String
+  description String
+  colorTheme  String
+  lottie      String?
+  order       Int            @default(0)
+  isActive    Boolean        @default(true)
+  detail      ServiceDetail?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ServiceDetail {
+  id           String   @id @default(uuid())
+  serviceId    String   @unique
+  service      Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  problems     String
+  solutions    String
+  process      String
+  deliverables String
+  useCases     String
+  cta          String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CaseStudy {
+  id          String          @id @default(uuid())
+  titleEn     String
+  titleBn     String
+  clientEn    String
+  clientBn    String
+  categoryId  String
+  category    ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  summaryEn   String
+  summaryBn   String
+  metricsEn   String
+  metricsBn   String
+  challengeEn String
+  challengeBn String
+  solutionEn  String
+  solutionBn  String
+  img         String
+  order       Int             @default(0)
+  isActive    Boolean         @default(true)
+}
+
+model Inquiry {
+  id              String   @id @default(uuid())
+  name            String
+  email           String
+  company         String?
+  serviceInterest String?
+  message         String
+  createdAt       DateTime @default(now())
+}
+
+model ContactSubmission {
+  id              String   @id @default(uuid())
+  name            String
+  email           String
+  company         String?
+  serviceInterest String?
+  message         String
+  status          String   @default("new")
+  createdAt       DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  subscribedAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String
+  category    String
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  quote     String
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  group     String
+  bio       String?
+  photo     String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  group     String   @default("general")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AiSetting {
+  id                 String   @id @default("default")
+  provider           String   @default("disabled")
+  defaultModel       String?
+  isEnabled          Boolean  @default(false)
+  temperature        Float    @default(0.7)
+  maxTokens          Int      @default(1200)
+  systemPrompt       String   @default("You are a helpful ecommerce AI assistant. Return practical, accurate, production-ready content.")
+  safetyMode         String   @default("standard")
+  monthlyTokenLimit  Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model AiGenerationLog {
+  id              String   @id @default(uuid())
+  userId          String?
+  provider        String
+  model           String?
+  featureType     String
+  inputSummary    String
+  outputSummary   String?
+  tokenInput      Int?
+  tokenOutput     Int?
+  estimatedCost   Float?
+  status          String
+  errorMessage    String?
+  createdAt       DateTime @default(now())
+
+  @@index([featureType])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AiTemplate {
+  id               String   @id @default(uuid())
+  name             String
+  featureType      String
+  promptTemplate   String
+  outputSchemaJson String?
+  isActive         Boolean  @default(true)
+  createdBy        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([featureType])
+}
+
+model AiGeneratedContent {
+  id                String   @id @default(uuid())
+  featureType       String
+  relatedEntityType String?
+  relatedEntityId   String?
+  title             String
+  contentJson       String?
+  contentText       String?
+  status            String   @default("DRAFT")
+  generatedBy       String?
+  approvedBy        String?
+  appliedAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([featureType])
+  @@index([relatedEntityType, relatedEntityId])
+  @@index([status])
+}
+
+model AiAgentIntegration {
+  id            String        @id @default(uuid())
+  name          String
+  provider      String
+  agentType     String
+  description   String
+  endpointUrl   String?
+  apiKeyEnvName String?
+  isEnabled     Boolean       @default(false)
+  configJson    String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  tasks         AiAgentTask[]
+
+  @@index([agentType])
+  @@index([isEnabled])
+}
+
+model AiAgentTask {
+  id                 String              @id @default(uuid())
+  agentIntegrationId String?
+  agentIntegration   AiAgentIntegration? @relation(fields: [agentIntegrationId], references: [id], onDelete: SetNull)
+  taskType           String
+  status             String              @default("PENDING")
+  inputJson          String
+  outputJson         String?
+  errorMessage       String?
+  startedAt          DateTime?
+  completedAt        DateTime?
+  createdBy          String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@index([status])
+  @@index([taskType])
+}
+
+model SeoMetadata {
+  id                    String     @id @default(uuid())
+  entityType            String
+  entityId              String?
+  seoTitle              String
+  metaDescription       String
+  metaKeywords          String?
+  slug                  String
+  canonicalUrl          String?
+  robotsIndex           Boolean    @default(true)
+  robotsFollow          Boolean    @default(true)
+  ogTitle               String?
+  ogDescription         String?
+  ogImage               String?
+  twitterTitle          String?
+  twitterDescription    String?
+  twitterImage          String?
+  focusKeyword          String?
+  secondaryKeywordsJson String?
+  schemaType            String?
+  schemaJson            String?
+  hreflangJson          String?
+  seoScore              Int?
+  lastAuditedAt         DateTime?
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+
+  @@unique([entityType, entityId])
+  @@index([slug])
+  @@index([seoScore])
+}
+
+model SeoAudit {
+  id              String   @id @default(uuid())
+  entityType      String
+  entityId        String?
+  url             String?
+  score           Int
+  status          String
+  issuesJson      String
+  suggestionsJson String
+  auditedBy       String?
+  createdAt       DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model SeoRedirect {
+  id         String   @id @default(uuid())
+  sourcePath String   @unique
+  targetPath String
+  statusCode Int      @default(301)
+  isActive   Boolean  @default(true)
+  hitCount   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model SeoInternalLink {
+  id               String   @id @default(uuid())
+  sourceEntityType String
+  sourceEntityId   String
+  targetEntityType String
+  targetEntityId   String
+  anchorText       String
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([sourceEntityType, sourceEntityId])
+  @@index([targetEntityType, targetEntityId])
+}
+
+model SeoImageAlt {
+  id         String   @id @default(uuid())
+  entityType String
+  entityId   String
+  imageUrl   String
+  altText    String
+  titleText  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([entityType, entityId])
+}
+
+model SeoSitemapEntry {
+  id               String    @id @default(uuid())
+  url              String    @unique
+  entityType       String?
+  entityId         String?
+  priority         Float     @default(0.7)
+  changeFrequency  String    @default("weekly")
+  includeInSitemap Boolean   @default(true)
+  lastModified     DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([includeInSitemap])
+}
+
+model SeoSetting {
+  id                     String   @id @default("default")
+  siteName               String   @default("Inception 23")
+  defaultTitle           String   @default("Inception 23")
+  titleTemplate          String   @default("%s | Inception 23")
+  defaultMetaDescription String   @default("Premium advisory, consulting, AI, legal, management, and creative solutions.")
+  defaultOgImage         String?
+  robotsTxt              String   @default("User-agent: *\nAllow: /\nSitemap: /sitemap.xml")
+  enableAutoSitemap      Boolean  @default(true)
+  enableSchemaMarkup     Boolean  @default(true)
+  enableOpenGraph        Boolean  @default(true)
+  enableTwitterCards     Boolean  @default(true)
+  enableCanonicalUrls    Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}

@@ -3,8 +3,42 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --font-inter: "Inter", "Segoe UI", Arial, sans-serif;
+    --font-playfair: "Playfair Display", Georgia, serif;
+  }
+
   body {
     @apply bg-white dark:bg-night-950 text-gray-900 dark:text-gray-100 transition-colors duration-500 antialiased;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: 0;
+  }
+
+  p,
+  li {
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+  }
+
+  section {
+    scroll-margin-top: 96px;
+  }
+
+  section:not(:first-of-type) {
+    content-visibility: auto;
+    contain-intrinsic-size: 760px;
   }
   
   /* Smooth scrolling for anchor links */
@@ -29,4 +63,7 @@
 }
 .dark ::-webkit-scrollbar-thumb {
   background: #334155;
+}
+body {
+  overflow-x: hidden;
 }
