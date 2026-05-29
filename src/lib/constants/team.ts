@@ -36,7 +36,7 @@ export const teamMembers: TeamMember[] = [
     linkedinHref: '#',
     emailHref: 'mailto:hello@inception23.com',
     githubHref: '#',
-    imageSrc: '/team/team-management.png',
+    imageSrc: '/team/team-management.jpg',
   },
   {
     id: 'mahmudul-hasan',
