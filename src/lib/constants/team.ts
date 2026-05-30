@@ -64,7 +64,7 @@ export const teamMembers: TeamMember[] = [
     linkedinHref: '#',
     emailHref: 'mailto:hello@inception23.com',
     githubHref: '#',
-    imageSrc: '/team/team-advisor.png',
+    imageSrc: '/team/team-advisor.jpeg',
   },
   ...Array.from({ length: 3 }, (_, index) => ({
     id: `management-seat-${index + 4}`,
