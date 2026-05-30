@@ -30,29 +30,30 @@ export function TeamCard({ member, index = 0 }: TeamCardProps) {
     >
       <div className={`absolute -right-14 -top-14 h-36 w-36 rounded-full blur-2xl ${theme.surface}`} />
 
-      <div className="relative overflow-hidden rounded-[1.35rem] border border-white bg-slate-50 shadow-inner">
+      <div className="relative overflow-hidden rounded-[1.35rem] border border-white bg-slate-50 p-3 shadow-inner">
         <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradientSoft}`} />
         <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.76),transparent_42%)]" />
-        <div className="relative aspect-[16/10] w-full overflow-hidden">
+        <div className="relative w-full overflow-hidden rounded-[1.15rem] bg-white/65">
           <Image
             src={member.imageSrc}
             alt={`${member.name} profile`}
-            fill
+            width={960}
+            height={1120}
             sizes="(min-width: 1280px) 31vw, (min-width: 768px) 46vw, 92vw"
-            className="object-cover transition duration-700 group-hover:scale-[1.06]"
+            className="h-auto max-h-[520px] w-full rounded-[1.15rem] object-contain object-center transition duration-700 group-hover:scale-[1.018]"
           />
         </div>
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
+        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
           <span className={`rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] shadow-sm ${theme.bg} ${theme.text}`}>
             {member.category.replace('-', ' ')}
           </span>
-          <div className="flex gap-1.5">
+          <div className="flex shrink-0 gap-2">
             {socialLinks.map(({ label, href, icon: Icon }) => (
               <Link
                 key={label}
                 href={href}
                 aria-label={`${member.name} ${label}`}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-600 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-950 hover:bg-brand-950 hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:-translate-y-0.5 hover:border-brand-950 hover:bg-brand-950 hover:text-white"
               >
                 <Icon size={14} />
               </Link>
