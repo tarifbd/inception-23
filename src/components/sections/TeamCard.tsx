@@ -33,14 +33,14 @@ export function TeamCard({ member, index = 0 }: TeamCardProps) {
       <div className="relative overflow-hidden rounded-[1.35rem] border border-white bg-slate-50 p-3 shadow-inner">
         <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradientSoft}`} />
         <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.76),transparent_42%)]" />
-        <div className="relative w-full overflow-hidden rounded-[1.15rem] bg-white/65">
+        <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-[1.15rem] bg-white/65">
           <Image
             src={member.imageSrc}
             alt={`${member.name} profile`}
             width={960}
-            height={1120}
+            height={720}
             sizes="(min-width: 1280px) 31vw, (min-width: 768px) 46vw, 92vw"
-            className="h-auto max-h-[520px] w-full rounded-[1.15rem] object-contain object-center transition duration-700 group-hover:scale-[1.018]"
+            className="h-full w-full rounded-[1.15rem] object-contain object-center transition duration-700 group-hover:scale-[1.018]"
           />
         </div>
         <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
