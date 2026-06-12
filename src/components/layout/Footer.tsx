@@ -3,7 +3,22 @@
 import { FormEvent, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Linkedin, Mail, MapPin, Phone, Send, ShieldCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Clock3,
+  Facebook,
+  Globe2,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+  ShieldCheck,
+  Youtube,
+} from 'lucide-react';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { industriesMenu, insightsMenu, solutionMenu } from '@/lib/constants/navigation';
 
@@ -20,6 +35,19 @@ const trustPoints = [
   'Confidential advisory intake',
   'Strategy, systems, legal, finance, and creative under one roof',
   'Bangladesh-aware execution with global-grade structure',
+];
+
+const footerSocialLinks = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: Linkedin },
+  { label: 'Facebook', href: 'https://www.facebook.com', icon: Facebook },
+  { label: 'Instagram', href: 'https://www.instagram.com', icon: Instagram },
+  { label: 'YouTube', href: 'https://www.youtube.com', icon: Youtube },
+];
+
+const contactHighlights = [
+  { label: 'Business hours', value: 'Sunday - Thursday, 9:00 AM - 6:00 PM', icon: Clock3 },
+  { label: 'Response time', value: 'Replies within one business day', icon: MessageCircle },
+  { label: 'Service coverage', value: 'Bangladesh-based, working with clients worldwide', icon: Globe2 },
 ];
 
 export function Footer() {
@@ -150,9 +178,15 @@ export function Footer() {
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_1.95fr]">
-          <div className="rounded-none border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur">
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">Contact</p>
-            <div className="mt-5 grid gap-4 text-sm font-bold text-slate-600">
+          <div className="flex flex-col rounded-none border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">Contact</p>
+              <h3 className="mt-4 font-serif text-2xl font-black leading-tight text-brand-950">
+                Start with a clear, confidential conversation.
+              </h3>
+            </div>
+
+            <div className="mt-6 grid gap-4 text-sm font-bold text-slate-600">
               <a href="mailto:hello@inception23.com" className="flex items-center gap-3 transition hover:text-brand-950">
                 <Mail size={18} className="text-cyan-600" />
                 hello@inception23.com
@@ -166,13 +200,56 @@ export function Footer() {
                 Dhaka, Bangladesh
               </span>
             </div>
-            <div className="mt-6 flex gap-3">
-              <a href="#" aria-label="LinkedIn" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
-                <Linkedin size={18} />
-              </a>
-              <a href="mailto:hello@inception23.com" aria-label="Email" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
-                <Mail size={18} />
-              </a>
+
+            <div className="mt-7">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Connect with us</p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                {footerSocialLinks.map(({ label, href, icon: Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950"
+                  >
+                    <Icon size={18} />
+                  </a>
+                ))}
+                <a href="mailto:hello@inception23.com" aria-label="Email" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
+                  <Mail size={18} />
+                </a>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-5 border-t border-slate-200 pt-7">
+              {contactHighlights.map(({ label, value, icon: Icon }) => (
+                <div key={label} className="grid grid-cols-[2.5rem_1fr] gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center border border-slate-200 bg-slate-50 text-brand-700">
+                    <Icon size={18} />
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{label}</p>
+                    <p className="mt-1 text-sm font-bold leading-6 text-slate-700">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-auto pt-8">
+              <div className="border border-brand-950 bg-brand-950 p-5 text-white">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-300">Have a project in mind?</p>
+                <p className="mt-3 text-sm font-bold leading-6 text-white/75">
+                  Share the challenge, timeline, and outcome you need. We will help define the next practical step.
+                </p>
+                <Link
+                  href="/contact"
+                  className="group mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:text-cyan-300"
+                >
+                  Send a project brief
+                  <ArrowRight size={15} className="transition group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
           </div>
 
