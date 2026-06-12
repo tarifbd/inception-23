@@ -14,11 +14,23 @@ export function TechStackSection({ content }: { content: HomepageSectionContent 
       />
       <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {techStackGroups.map((group) => (
-          <article key={group.id} className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10">
-            <h3 className="text-lg font-black text-brand-950">{group.title}</h3>
+          <article
+            key={group.id}
+            className="group relative overflow-hidden rounded-[1.5rem] border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"
+            style={{ borderColor: group.border }}
+          >
+            <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full opacity-70 blur-2xl transition group-hover:opacity-100" style={{ backgroundColor: group.soft }} />
+            <div className="relative flex items-center gap-3">
+              <span className="h-3 w-3 rounded-full shadow-sm" style={{ backgroundColor: group.accent, boxShadow: `0 0 0 6px ${group.soft}` }} />
+              <h3 className="text-lg font-black text-brand-950">{group.title}</h3>
+            </div>
             <div className="mt-5 flex flex-wrap gap-2">
               {group.tools.map((tool) => (
-                <span key={tool} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.13em] text-slate-600 transition hover:border-brand-700/30 hover:bg-brand-50 hover:text-brand-950">
+                <span
+                  key={tool}
+                  className="relative rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.13em] text-slate-700 transition hover:-translate-y-0.5"
+                  style={{ borderColor: group.border, backgroundColor: group.soft }}
+                >
                   {tool}
                 </span>
               ))}
