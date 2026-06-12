@@ -9,6 +9,8 @@ export type MainServicesAmbushItem = {
   eyebrow: string;
   description: string;
   href: string;
+  image: string;
+  imageAlt: string;
   accent: string;
   softAccent: string;
   textClass: string;
@@ -19,8 +21,10 @@ export type MainServicesAmbushItem = {
   services: string[];
 };
 
-const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'accent' | 'softAccent' | 'textClass' | 'borderClass' | 'badgeClass' | 'proof' | 'outcome'>> = {
+const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'imageAlt' | 'accent' | 'softAccent' | 'textClass' | 'borderClass' | 'badgeClass' | 'proof' | 'outcome'>> = {
   it: {
+    image: '/main-services/it-ai-solutions.png',
+    imageAlt: 'AI, cloud, data dashboards, and connected business automation systems',
     accent: '#0891b2',
     softAccent: 'rgba(8,145,178,0.12)',
     textClass: 'text-cyan-700',
@@ -30,6 +34,8 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'accent' | 's
     outcome: 'Turn scattered operations into measurable digital systems.',
   },
   consultancy: {
+    image: '/main-services/management-finance.png',
+    imageAlt: 'Management strategy, financial reporting, controls, and growth planning system',
     accent: '#059669',
     softAccent: 'rgba(5,150,105,0.12)',
     textClass: 'text-emerald-700',
@@ -39,6 +45,8 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'accent' | 's
     outcome: 'Build operating clarity for leadership, compliance, and scale.',
   },
   legal: {
+    image: '/main-services/legal-support.png',
+    imageAlt: 'Legal documentation, compliance controls, governance, and secure records',
     accent: '#6d28d9',
     softAccent: 'rgba(109,40,217,0.12)',
     textClass: 'text-violet-700',
@@ -48,6 +56,8 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'accent' | 's
     outcome: 'Protect decisions with careful records and governance support.',
   },
   creative: {
+    image: '/main-services/creative-execution.png',
+    imageAlt: 'Brand design, visual identity, content production, and creative campaign studio',
     accent: '#f97316',
     softAccent: 'rgba(249,115,22,0.14)',
     textClass: 'text-orange-700',
