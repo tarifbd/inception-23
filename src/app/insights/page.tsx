@@ -13,14 +13,14 @@ export default function InsightsPage() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-      <section className="pt-40 pb-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="pb-16 pt-28 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Insights" title="Structured thinking for decisive operators." description="SEO-ready article listing prepared for a future CMS or admin-managed blog system." />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
             {insights.map((post) => (
-              <article key={post.slug} className="rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <article key={post.slug} className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-7 lg:rounded-[1.75rem] lg:p-8">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">{post.category}</p>
-                <h2 className="mt-8 font-serif text-3xl font-black text-brand-950">{post.title}</h2>
+                <h2 className="mt-6 break-words font-serif text-2xl font-black leading-tight text-brand-950 sm:mt-8 sm:text-3xl">{post.title}</h2>
                 <p className="mt-4 text-sm leading-7 text-slate-600">{post.summary}</p>
               </article>
             ))}

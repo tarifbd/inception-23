@@ -3,13 +3,27 @@
 @tailwind utilities;
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   :root {
     --font-inter: "Inter", "Segoe UI", Arial, sans-serif;
     --font-playfair: "Playfair Display", Georgia, serif;
   }
 
+  html {
+    min-width: 0;
+    overflow-x: clip;
+    @apply scroll-smooth;
+  }
+
   body {
-    @apply bg-white dark:bg-night-950 text-gray-900 dark:text-gray-100 transition-colors duration-500 antialiased;
+    min-width: 0;
+    overflow-x: clip;
+    @apply bg-white text-gray-900 antialiased;
   }
 
   img,
@@ -41,9 +55,19 @@
     contain-intrinsic-size: 760px;
   }
   
-  /* Smooth scrolling for anchor links */
-  html {
-    @apply scroll-smooth;
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  @media (max-width: 767px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
   }
 }
 
@@ -64,6 +88,90 @@
 .dark ::-webkit-scrollbar-thumb {
   background: #334155;
 }
-body {
-  overflow-x: hidden;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.cms-rich-editor:empty::before {
+  color: #94a3b8;
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+
+.cms-rich-editor h2,
+.cms-public-content h2 {
+  margin: 1.75rem 0 0.75rem;
+  color: #18032f;
+  font-family: var(--font-playfair);
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.cms-rich-editor h3,
+.cms-public-content h3 {
+  margin: 1.5rem 0 0.65rem;
+  color: #18032f;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.cms-rich-editor p,
+.cms-public-content p {
+  margin: 0.8rem 0;
+}
+
+.cms-rich-editor ul,
+.cms-rich-editor ol,
+.cms-public-content ul,
+.cms-public-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.cms-rich-editor ul,
+.cms-public-content ul {
+  list-style: disc;
+}
+
+.cms-rich-editor ol,
+.cms-public-content ol {
+  list-style: decimal;
+}
+
+.cms-rich-editor blockquote,
+.cms-public-content blockquote {
+  margin: 1.5rem 0;
+  border-left: 4px solid #06b6d4;
+  background: #ecfeff;
+  padding: 1rem 1.25rem;
+  color: #155e75;
+  font-weight: 700;
+}
+
+.cms-rich-editor a,
+.cms-public-content a {
+  color: #0e7490;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cms-rich-editor img,
+.cms-public-content img {
+  margin: 1.5rem auto;
+  max-height: 680px;
+  border-radius: 1.25rem;
+  object-fit: cover;
 }

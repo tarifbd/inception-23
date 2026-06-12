@@ -19,6 +19,7 @@ import {
   Eye,
   Inbox,
   Mail,
+  PanelsTopLeft,
   Plus,
   RefreshCw,
   Save,
@@ -89,8 +90,20 @@ const inputClass = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.
 const labelClass = 'text-[11px] font-bold uppercase tracking-wider text-gray-500';
 const cardClass = 'rounded-lg border border-gray-200 bg-white shadow-sm';
 
-const tabs: Array<{ id: TabId; label: string; icon: React.ElementType }> = [
+function readList<T>(payload: unknown): T[] {
+  if (Array.isArray(payload)) return payload as T[];
+
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    const data = (payload as { data?: unknown }).data;
+    if (Array.isArray(data)) return data as T[];
+  }
+
+  return [];
+}
+
+const tabs: Array<{ id: TabId | 'website'; label: string; icon: React.ElementType; href?: string }> = [
   { id: 'overview', label: 'Overview', icon: BarChart3 },
+  { id: 'website', label: 'Website CMS', icon: PanelsTopLeft, href: '/admin/website' },
   { id: 'pillars', label: 'Pillars', icon: Settings },
   { id: 'services', label: 'Services', icon: ClipboardList },
   { id: 'cases', label: 'Case Studies', icon: BookOpen },
@@ -128,6 +141,7 @@ const emptyCase = (categoryId: string): CaseStudy => ({
 });
 
 export default function AdminPanel() {
+  const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [categories, setCategories] = useState<Category[]>([]);
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
@@ -187,10 +201,17 @@ export default function AdminPanel() {
         fetch('/api/newsletter'),
       ]);
 
-      if (configRes.ok) setCategories(await configRes.json());
-      if (casesRes.ok) setCaseStudies(await casesRes.json());
-      if (inquiriesRes.ok) setInquiries(await inquiriesRes.json());
-      if (subscribersRes.ok) setSubscribers(await subscribersRes.json());
+      const [configPayload, casesPayload, inquiriesPayload, subscribersPayload] = await Promise.all([
+        configRes.json(),
+        casesRes.json(),
+        inquiriesRes.json(),
+        subscribersRes.json(),
+      ]);
+
+      setCategories(configRes.ok ? readList<Category>(configPayload) : []);
+      setCaseStudies(casesRes.ok ? readList<CaseStudy>(casesPayload) : []);
+      setInquiries(inquiriesRes.ok ? readList<Inquiry>(inquiriesPayload) : []);
+      setSubscribers(subscribersRes.ok ? readList<Subscriber>(subscribersPayload) : []);
     } catch (error) {
       console.error('Admin fetch error:', error);
       showToast('Could not load admin data.', 'error');
@@ -200,6 +221,7 @@ export default function AdminPanel() {
   }, []);
 
   useEffect(() => {
+    setMounted(true);
     const hadDarkClass = document.documentElement.classList.contains('dark');
     document.documentElement.classList.remove('dark');
     fetchData();
@@ -385,6 +407,8 @@ export default function AdminPanel() {
 
   const activeTabLabel = tabs.find((tab) => tab.id === activeTab)?.label ?? 'Admin';
 
+  if (!mounted) return null;
+
   return (
     <main className="min-h-screen bg-gray-50 text-gray-950">
       <div className="flex min-h-screen flex-col lg:flex-row">
@@ -408,7 +432,6 @@ export default function AdminPanel() {
                 <ArrowLeft size={14} />
                 Return to site
               </Link>
-
               <div className="mb-6 grid gap-2">
                 <Link href="/admin/ai-studio" className="inline-flex items-center gap-2 rounded-lg border border-cyan-200 bg-cyan-50 px-3 py-2 text-xs font-black uppercase tracking-wider text-cyan-800 transition hover:border-cyan-400">
                   <Activity size={14} />
@@ -418,9 +441,13 @@ export default function AdminPanel() {
                   <Search size={14} />
                   Advanced SEO
                 </Link>
+                <Link href="/admin/resources" className="inline-flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-black uppercase tracking-wider text-violet-800 transition hover:border-violet-400">
+                  <BookOpen size={14} />
+                  Resource Portal
+                </Link>
               </div>
 
-              <nav className="space-y-1">
+              <nav className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:block lg:space-y-1">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -437,20 +464,30 @@ export default function AdminPanel() {
                               ? subscribers.length
                               : undefined;
 
+                  const itemClass = `flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold transition ${
+                    isActive
+                      ? 'bg-brand-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950'
+                  }`;
+
+                  if (tab.href) {
+                    return (
+                      <Link key={tab.id} href={tab.href} className={itemClass}>
+                        <span className="flex items-center gap-3"><Icon size={16} />{tab.label}</span>
+                      </Link>
+                    );
+                  }
+
                   return (
                     <button
                       key={tab.id}
                       onClick={() => {
-                        setActiveTab(tab.id);
+                        setActiveTab(tab.id as TabId);
                         setSelectedCase(null);
                         setSelectedService(null);
                         setQuery('');
                       }}
-                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold transition ${
-                        isActive
-                          ? 'bg-brand-600 text-white shadow-sm'
-                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950'
-                      }`}
+                      className={itemClass}
                     >
                       <span className="flex items-center gap-3">
                         <Icon size={16} />
@@ -467,7 +504,7 @@ export default function AdminPanel() {
               </nav>
             </div>
 
-            <div className="mt-8 space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs text-gray-600">
+            <div className="mt-8 hidden space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs text-gray-600 lg:block">
               <div className="flex items-center justify-between">
                 <span className="font-bold">Database</span>
                 <span className="flex items-center gap-1 font-black text-emerald-700">
@@ -486,7 +523,7 @@ export default function AdminPanel() {
           </div>
         </aside>
 
-        <section className="flex-1 p-4 sm:p-6 lg:p-8">
+        <section className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
           <header className="mb-6 flex flex-col gap-4 border-b border-gray-200 pb-5 xl:flex-row xl:items-center xl:justify-between">
             <div>
               <div className="text-xs font-black uppercase tracking-widest text-brand-700">Light Console</div>
@@ -542,12 +579,8 @@ export default function AdminPanel() {
                       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                         {tabs.slice(1).map((tab) => {
                           const Icon = tab.icon;
-                          return (
-                            <button
-                              key={tab.id}
-                              onClick={() => setActiveTab(tab.id)}
-                              className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-left transition hover:border-brand-400 hover:bg-white hover:shadow-sm"
-                            >
+                          const content = (
+                            <>
                               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-brand-700 shadow-sm">
                                 <Icon size={18} />
                               </span>
@@ -555,6 +588,28 @@ export default function AdminPanel() {
                                 <span className="block text-sm font-black text-gray-950">{tab.label}</span>
                                 <span className="block text-xs text-gray-500">Open module</span>
                               </span>
+                            </>
+                          );
+
+                          if (tab.href) {
+                            return (
+                              <Link
+                                key={tab.id}
+                                href={tab.href}
+                                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-left transition hover:border-brand-400 hover:bg-white hover:shadow-sm"
+                              >
+                                {content}
+                              </Link>
+                            );
+                          }
+
+                          return (
+                            <button
+                              key={tab.id}
+                              onClick={() => setActiveTab(tab.id as TabId)}
+                              className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-left transition hover:border-brand-400 hover:bg-white hover:shadow-sm"
+                            >
+                              {content}
                             </button>
                           );
                         })}

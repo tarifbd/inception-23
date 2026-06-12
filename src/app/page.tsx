@@ -3,6 +3,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { HeroWrapper } from '@/components/home/HeroWrapper';
 import { LandingPageSections } from '@/components/sections';
+import { getHomepageContent } from '@/lib/homepage-content';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Inception 23 | Advisory, Consulting & Solution Company',
@@ -15,12 +18,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const content = await getHomepageContent();
+
   return (
     <main className="min-h-screen bg-white text-brand-950 selection:bg-brand-700 selection:text-white">
       <Header />
-      <HeroWrapper />
-      <LandingPageSections />
+      {content.hero.enabled ? <HeroWrapper content={content.hero} /> : null}
+      <LandingPageSections sections={content.sections} />
       <Footer />
     </main>
   );

@@ -37,13 +37,13 @@ export default function AboutPage() {
     <main className="min-h-screen overflow-x-hidden bg-white text-brand-950">
       <Header />
 
-      <section className="relative overflow-hidden bg-[#f8fafc] pt-36 pb-20 md:pt-44 md:pb-28">
+      <section className="relative overflow-hidden bg-[#f8fafc] pb-16 pt-28 sm:pb-20 sm:pt-36 md:pb-28 md:pt-44">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(13,1,33,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(13,1,33,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_16%,rgba(34,211,238,0.12),transparent_30%),radial-gradient(circle_at_82%_20%,rgba(16,185,129,0.1),transparent_28%),radial-gradient(circle_at_76%_86%,rgba(124,58,237,0.09),transparent_30%)]" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
           <div>
             <p className="mb-5 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">About Inception 23</p>
-            <h1 className="max-w-5xl font-serif text-[clamp(2.6rem,5.5vw,6rem)] font-black leading-[1.02] tracking-normal text-brand-950">
+            <h1 className="max-w-5xl break-words font-serif text-[clamp(2.25rem,5.5vw,6rem)] font-black leading-[1.06] tracking-normal text-brand-950 sm:leading-[1.02]">
               Advisory, systems, and market execution for decisive companies.
             </h1>
             <p className="mt-7 max-w-3xl text-base leading-8 text-slate-600 md:text-lg">
@@ -77,9 +77,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="mission" className="bg-white py-20 md:py-28">
-        <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-6 lg:grid-cols-2">
-          <article className="rounded-[2rem] border border-slate-200 bg-slate-50/70 p-7 shadow-sm md:p-9">
+      <section id="mission" className="bg-white py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5 shadow-sm sm:p-7 md:rounded-[2rem] md:p-9">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Mission</p>
             <h2 className="mt-4 font-serif text-[clamp(2.1rem,4vw,4.4rem)] font-black leading-[1.04] text-brand-950">
               Turn advisory into operating advantage.
@@ -88,7 +88,7 @@ export default function AboutPage() {
               Our mission is to help organizations install the strategy, systems, documents, dashboards, and creative assets required to move faster with control.
             </p>
           </article>
-          <article className="rounded-[2rem] border border-slate-200 bg-white p-7 shadow-xl shadow-slate-950/6 md:p-9">
+          <article className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/6 sm:p-7 md:rounded-[2rem] md:p-9">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Vision</p>
             <h2 className="mt-4 font-serif text-[clamp(2.1rem,4vw,4.4rem)] font-black leading-[1.04] text-brand-950">
               A trusted transformation partner.
@@ -100,15 +100,15 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="bg-slate-50 py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Values</p>
             <h2 className="font-serif text-[clamp(2.2rem,4.6vw,4.8rem)] font-black leading-[1.02] text-brand-950">
               How we operate.
             </h2>
           </div>
-          <div className="mt-12 grid gap-5 md:grid-cols-4">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
             {values.map((value, index) => {
               const theme = serviceThemes[index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative'];
               return (
@@ -124,8 +124,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-20 md:py-28">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[0.95fr_1.15fr] lg:items-start">
+      <section className="bg-white py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.15fr] lg:items-start lg:px-8">
           <div className="lg:sticky lg:top-28">
             <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Expertise areas</p>
             <h2 className="font-serif text-[clamp(2.2rem,4.6vw,4.8rem)] font-black leading-[1.02] text-brand-950">
@@ -146,8 +146,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="bg-slate-50 py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Why Inception 23</p>
             <h2 className="font-serif text-[clamp(2.2rem,4.6vw,4.8rem)] font-black leading-[1.02] text-brand-950">
@@ -168,8 +168,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="bg-white py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <div className="max-w-3xl">
               <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Team model</p>
@@ -195,8 +195,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="bg-slate-50 py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Process</p>
             <h2 className="font-serif text-[clamp(2.2rem,4.6vw,4.8rem)] font-black leading-[1.02] text-brand-950">

@@ -11,7 +11,7 @@ type AdminModuleShellProps = {
   nav?: Array<{ href: string; label: string }>;
 };
 
-export const adminInputClass = 'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10';
+export const adminInputClass = 'min-w-0 w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-base text-gray-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 sm:text-sm';
 export const adminLabelClass = 'text-[11px] font-bold uppercase tracking-wider text-gray-500';
 export const adminCardClass = 'rounded-lg border border-gray-200 bg-white shadow-sm';
 export const adminButtonClass = 'inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-xs font-black uppercase tracking-wider text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60';
@@ -28,11 +28,11 @@ export function AdminModuleShell({ title, eyebrow, children, nav = [] }: AdminMo
               Admin panel
             </Link>
             <div className="text-xs font-black uppercase tracking-widest text-brand-700">{eyebrow}</div>
-            <h1 className="mt-1 font-serif text-3xl font-black tracking-tight text-gray-950">{title}</h1>
+            <h1 className="mt-1 break-words font-serif text-2xl font-black tracking-tight text-gray-950 sm:text-3xl">{title}</h1>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:overflow-visible lg:pb-0">
             {nav.map((item) => (
-              <Link key={item.href} href={item.href} className={adminSecondaryButtonClass}>
+              <Link key={item.href} href={item.href} className={`${adminSecondaryButtonClass} shrink-0`}>
                 {item.label}
               </Link>
             ))}

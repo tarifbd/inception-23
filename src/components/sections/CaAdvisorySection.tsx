@@ -2,20 +2,21 @@ import { CheckCircle2 } from 'lucide-react';
 import { caAdvisoryFocus } from '@/lib/constants/solutions';
 import { serviceThemes } from '@/lib/constants/theme';
 import { AnimatedSection } from './AnimatedSection';
+import type { HomepageSectionContent } from '@/lib/homepage-content';
 
-export function CaAdvisorySection() {
+export function CaAdvisorySection({ content }: { content: HomepageSectionContent }) {
   const theme = serviceThemes.consultancy;
 
   return (
     <AnimatedSection id="ca-advisory" className="bg-gradient-to-b from-white to-emerald-50/50">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-center">
         <div className="rounded-[2rem] border border-emerald-200 bg-white/86 p-6 shadow-xl shadow-emerald-950/5 backdrop-blur-xl md:p-8">
-          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-emerald-700">CA, tax, VAT, customs & business advisory</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-emerald-700">{content.eyebrow}</p>
           <h3 className="mt-4 font-serif text-[clamp(2rem,4vw,4.1rem)] font-black leading-[1.03] text-brand-950">
-            Serious finance control for serious business decisions.
+            {content.title}
           </h3>
           <p className="mt-5 text-base leading-8 text-slate-600">
-            This pillar is designed for businesses that need accounting discipline, statutory readiness, internal control, performance reporting, and practical advisory support without losing momentum.
+            {content.description}
           </p>
           <div className="mt-7 grid gap-3 sm:grid-cols-3">
             {['Compliance', 'Reporting', 'Growth control'].map((item) => (

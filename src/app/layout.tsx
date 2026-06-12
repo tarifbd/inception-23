@@ -12,9 +12,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // suppressHydrationWarning is critical here. 
-    // It prevents crashes caused by browser extensions (like the bis_skin_checked error)
-    // and dark mode/language mismatches on initial load.
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans relative" suppressHydrationWarning>
         {children}

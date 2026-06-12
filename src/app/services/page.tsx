@@ -12,14 +12,14 @@ export default function ServicesPage() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-      <section className="pt-40 pb-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="pb-16 pt-28 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Services"
             title="Premium advisory and solution systems."
             description="Each service pillar has a distinct operating purpose and visual language, designed to help leadership teams move with clarity."
           />
-          <div className="mt-14">
+          <div className="mt-10 sm:mt-14">
             <ServicesGrid />
           </div>
         </div>

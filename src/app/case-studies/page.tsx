@@ -13,8 +13,8 @@ export default function CaseStudiesPage() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-      <section className="pt-40 pb-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="pb-16 pt-28 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Case studies" title="Project highlights with measurable intent." description="Prepared as a future database-driven portfolio with service filters and detail pages." />
           <div className="mt-8 flex flex-wrap gap-2">
             {services.map((service) => (
@@ -23,13 +23,13 @@ export default function CaseStudiesPage() {
               </span>
             ))}
           </div>
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
             {caseStudies.map((study) => {
               const service = services.find((item) => item.slug === study.serviceSlug);
               return (
-                <article key={study.slug} className={`rounded-[1.75rem] border ${service?.theme.border} bg-white p-8 shadow-sm`}>
+                <article key={study.slug} className={`rounded-[1.5rem] border ${service?.theme.border} bg-white p-5 shadow-sm sm:p-7 lg:rounded-[1.75rem] lg:p-8`}>
                   <p className={`text-xs font-black uppercase tracking-[0.22em] ${service?.theme.text}`}>{study.service}</p>
-                  <h2 className="mt-8 font-serif text-3xl font-black text-brand-950">{study.title}</h2>
+                  <h2 className="mt-6 break-words font-serif text-2xl font-black leading-tight text-brand-950 sm:mt-8 sm:text-3xl">{study.title}</h2>
                   <p className="mt-4 text-sm leading-7 text-slate-600">{study.summary}</p>
                   <p className="mt-8 rounded-full bg-slate-50 px-4 py-3 text-sm font-black text-brand-950">{study.metric}</p>
                 </article>

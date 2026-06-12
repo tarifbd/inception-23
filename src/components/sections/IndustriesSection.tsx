@@ -2,14 +2,15 @@ import { industries } from '@/lib/constants/industries';
 import { AnimatedSection } from './AnimatedSection';
 import { IndustryCard } from './IndustryCard';
 import { SectionHeader } from './SectionHeader';
+import type { HomepageSectionContent } from '@/lib/homepage-content';
 
-export function IndustriesSection() {
+export function IndustriesSection({ content }: { content: HomepageSectionContent }) {
   return (
     <AnimatedSection id="industries" className="bg-slate-50">
       <SectionHeader
-        eyebrow="Industries we serve"
-        title="Built for operators, founders, and professional teams."
-        description="The same integrated model adapts to different sectors: business control, digital systems, compliance awareness, and market clarity."
+        eyebrow={content.eyebrow}
+        title={content.title}
+        description={content.description}
         align="center"
       />
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

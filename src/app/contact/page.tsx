@@ -12,7 +12,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-white text-brand-950">
       <Header />
-      <div className="pt-20 md:pt-24">
+      <div className="pt-16 sm:pt-20 md:pt-24">
         <ContactBriefSection />
       </div>
       <Footer />

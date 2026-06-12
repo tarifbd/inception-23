@@ -23,7 +23,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[90] bg-white/90 backdrop-blur-2xl lg:hidden"
+          className="fixed inset-0 z-[90] overflow-hidden bg-white/95 backdrop-blur-2xl xl:hidden"
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(34,211,238,0.15),transparent_32%),radial-gradient(circle_at_88%_14%,rgba(16,185,129,0.13),transparent_28%),radial-gradient(circle_at_70%_95%,rgba(244,63,94,0.1),transparent_30%)]" />
           <motion.div
@@ -31,10 +31,10 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             animate={{ y: 0 }}
             exit={{ y: -18 }}
             transition={{ duration: 0.24 }}
-            className="relative flex h-full flex-col overflow-y-auto px-5 pb-8 pt-5"
+            className="relative flex h-[100svh] flex-col overflow-y-auto overscroll-contain px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] sm:px-5"
           >
-            <div className="mb-6 flex items-center justify-between">
-              <Link href="/" onClick={onClose} className="flex items-center gap-3">
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <Link href="/" onClick={onClose} className="flex min-w-0 items-center gap-3">
                 <span className="flex h-12 w-12 shrink-0 items-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200">
                   <Image
                     src="/inception23-mark.png"
@@ -46,11 +46,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                     sizes="48px"
                   />
                 </span>
-                <span className="min-w-0 leading-none">
-                  <span className="block whitespace-nowrap text-base font-black uppercase tracking-[0.22em] text-brand-950">
+                <span className="min-w-0 overflow-hidden leading-none">
+                  <span className="block truncate text-sm font-black uppercase tracking-[0.18em] text-brand-950 min-[380px]:text-base min-[380px]:tracking-[0.22em]">
                     Inception 23
                   </span>
-                  <span className="mt-1 block whitespace-nowrap text-[0.44rem] font-black uppercase tracking-[0.18em] text-slate-500">
+                  <span className="mt-1 block truncate text-[0.4rem] font-black uppercase tracking-[0.12em] text-slate-500 min-[380px]:text-[0.44rem]">
                     Where <span className="text-orange-600">new beginnings</span> create the future
                   </span>
                 </span>

@@ -7,7 +7,7 @@ export default async function RedirectsPage() {
 
   return (
     <AdminModuleShell title="Redirect Manager" eyebrow="SEO route control" nav={seoNav}>
-      <div className={`${adminCardClass} overflow-hidden`}>
+      <div className={`${adminCardClass} overflow-x-auto`}>
         <table className="w-full min-w-[720px] text-left">
           <thead className="border-b border-gray-200 bg-gray-50 text-[11px] font-black uppercase tracking-wider text-gray-500">
             <tr><th className="px-5 py-3">Source</th><th className="px-5 py-3">Target</th><th className="px-5 py-3">Code</th><th className="px-5 py-3">Hits</th><th className="px-5 py-3">Active</th></tr>

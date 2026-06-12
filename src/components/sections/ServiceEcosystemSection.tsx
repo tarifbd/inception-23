@@ -6,8 +6,9 @@ import { serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
 import type { ServiceKey } from '@/lib/constants/theme';
 import { ServiceCategoryTabs } from './service-ecosystem/ServiceCategoryTabs';
 import { ServiceEcosystemPanel } from './service-ecosystem/ServiceEcosystemPanel';
+import type { HomepageSectionContent } from '@/lib/homepage-content';
 
-export function ServiceEcosystemSection() {
+export function ServiceEcosystemSection({ content }: { content: HomepageSectionContent }) {
   const [activeKey, setActiveKey] = useState<ServiceKey>(
     serviceEcosystemCategories[0].key
   );
@@ -58,14 +59,13 @@ export function ServiceEcosystemSection() {
           className="mb-6 lg:hidden"
         >
           <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">
-            Service ecosystem
+            {content.eyebrow}
           </p>
           <h2 className="font-serif text-[clamp(2rem,8vw,3.5rem)] font-black leading-[1.02] tracking-normal text-brand-950">
-            Every capability grouped for fast strategic clarity.
+            {content.title}
           </h2>
           <p className="mt-5 text-base leading-8 text-slate-600">
-            Use the category system to see how advisory, systems, documentation,
-            finance, compliance, and creative execution fit together.
+            {content.description}
           </p>
         </motion.div>
 
@@ -85,15 +85,13 @@ export function ServiceEcosystemSection() {
           <aside className="hidden lg:sticky lg:top-28 lg:block lg:self-start">
             <div className="flex flex-col">
               <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">
-                Service ecosystem
+                {content.eyebrow}
               </p>
               <h2 className="font-serif text-[clamp(2.35rem,3.5vw,3.5rem)] font-black leading-[1.02] tracking-normal text-brand-950">
-                Every capability grouped for fast strategic clarity.
+                {content.title}
               </h2>
               <p className="mt-5 text-base leading-8 text-slate-600 md:text-lg">
-                Use the category system to see how advisory, systems,
-                documentation, finance, compliance, and creative execution fit
-                together.
+                {content.description}
               </p>
               <ServiceCategoryTabs
                 categories={serviceEcosystemCategories}

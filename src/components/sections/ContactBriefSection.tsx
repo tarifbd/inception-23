@@ -7,6 +7,7 @@ import { subServices } from '@/lib/constants/sub-services';
 import type { ServiceKey } from '@/lib/constants/theme';
 import { serviceThemes } from '@/lib/constants/theme';
 import { GradientBackground } from './GradientBackground';
+import { defaultHomepageContent, type HomepageSectionContent } from '@/lib/homepage-content';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 type SelectKey = 'mainService' | 'subService' | 'budget';
@@ -103,7 +104,11 @@ function CustomSelect({
   );
 }
 
-export function ContactBriefSection() {
+export function ContactBriefSection({
+  content = defaultHomepageContent.sections.find((section) => section.key === 'contact')!,
+}: {
+  content?: HomepageSectionContent;
+}) {
   const [state, setState] = useState<FormState>('idle');
   const [message, setMessage] = useState('');
   const [serviceKey, setServiceKey] = useState<ServiceKey | ''>('');
@@ -172,19 +177,19 @@ export function ContactBriefSection() {
   }
 
   return (
-    <section id="inquiry" className="relative overflow-hidden bg-white py-20 md:py-28">
+    <section id="inquiry" className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
       <GradientBackground />
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-700/20 bg-white/75 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-brand-700 shadow-sm">
             <span className={`h-2 w-2 rounded-full ${activeTheme.dot}`} />
-            Get in touch
+            {content.eyebrow}
           </div>
-          <h2 className="font-serif text-[clamp(2.3rem,4.8vw,5rem)] font-black leading-[1.02] text-brand-950">
-            Start your transformation.
+          <h2 className="break-words font-serif text-[clamp(2.05rem,4.8vw,5rem)] font-black leading-[1.06] text-brand-950 sm:leading-[1.02]">
+            {content.title}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
-            Tell us what you need. Select a main service first, then choose the exact sub-service so we can route your brief properly.
+            {content.description}
           </p>
         </div>
 
@@ -197,7 +202,7 @@ export function ContactBriefSection() {
                 setOpenSelect(null);
               }
             }}
-            className="rounded-[2rem] border border-slate-200 bg-white/88 p-5 shadow-2xl shadow-slate-950/8 backdrop-blur-xl md:p-7"
+            className="min-w-0 rounded-[1.5rem] border border-slate-200 bg-white/88 p-4 shadow-2xl shadow-slate-950/8 backdrop-blur-xl sm:p-5 md:rounded-[2rem] md:p-7"
           >
             <div className="grid gap-x-6 gap-y-5 md:grid-cols-2">
               <label className="grid gap-2 text-sm font-black text-brand-950">

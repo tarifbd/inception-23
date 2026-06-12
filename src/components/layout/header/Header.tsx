@@ -57,14 +57,14 @@ export function Header() {
       >
         <div className="mx-auto w-full max-w-[1780px] px-3 sm:px-4 2xl:px-6">
           <div
-            className={`relative flex min-h-[72px] items-center justify-between gap-2 rounded-[1.75rem] border px-3 py-2.5 transition-all duration-300 sm:gap-3 sm:px-4 2xl:rounded-full 2xl:px-5 ${
+            className={`relative flex min-h-[68px] items-center justify-between gap-2 rounded-[1.5rem] border px-2.5 py-2 transition-all duration-300 sm:min-h-[72px] sm:gap-3 sm:rounded-[1.75rem] sm:px-4 sm:py-2.5 2xl:rounded-full 2xl:px-5 ${
               scrolled
                 ? 'border-slate-200/90 bg-white/86 shadow-[0_18px_48px_rgba(15,23,42,0.12)] backdrop-blur-2xl'
                 : 'border-white/70 bg-white/66 shadow-[0_12px_34px_rgba(15,23,42,0.08)] backdrop-blur-xl'
             }`}
           >
             <Link href="/" className="group ml-1 flex shrink-0 items-center gap-3 focus:outline-none focus:ring-4 focus:ring-brand-700/15 sm:ml-2 2xl:ml-3">
-              <span className="relative flex h-11 w-11 shrink-0 items-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200/80 transition group-hover:shadow-md 2xl:h-12 2xl:w-12">
+              <span className="relative flex h-10 w-10 shrink-0 items-center overflow-hidden rounded-xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200/80 transition group-hover:shadow-md sm:h-11 sm:w-11 sm:rounded-2xl 2xl:h-12 2xl:w-12">
                 <Image
                   src="/inception23-mark.png"
                   alt="Inception 23 mark"
@@ -76,10 +76,10 @@ export function Header() {
                 />
               </span>
               <span className="hidden min-w-0 leading-none lg:block">
-                <span className="block whitespace-nowrap text-[0.82rem] font-black uppercase tracking-[0.18em] text-brand-950 2xl:text-[1.05rem] 2xl:tracking-[0.24em]">
+                <span className="block whitespace-nowrap text-[0.82rem] font-black uppercase tracking-[0.18em] text-brand-950 min-[1900px]:text-[1.05rem] min-[1900px]:tracking-[0.24em]">
                   Inception 23
                 </span>
-                <span className="mt-1 hidden whitespace-nowrap text-[0.46rem] font-black uppercase tracking-[0.22em] text-slate-500 2xl:block">
+                <span className="mt-1 block whitespace-nowrap text-[0.38rem] font-black uppercase tracking-[0.12em] text-slate-500 min-[1500px]:text-[0.42rem] min-[1500px]:tracking-[0.16em] min-[1900px]:text-[0.46rem] min-[1900px]:tracking-[0.22em]">
                   Where <span className="text-orange-600">new beginnings</span> create the future
                 </span>
               </span>
@@ -87,13 +87,13 @@ export function Header() {
 
             <Link
               href="/"
-              className="mx-2 flex min-w-0 flex-1 flex-col items-center justify-center text-center leading-none focus:outline-none focus:ring-4 focus:ring-brand-700/15 lg:hidden"
+              className="mx-1 hidden min-w-0 flex-1 flex-col items-center justify-center overflow-hidden text-center leading-none focus:outline-none focus:ring-4 focus:ring-brand-700/15 min-[360px]:flex sm:mx-2 lg:hidden"
               aria-label="Inception 23 home"
             >
-              <span className="block max-w-full truncate text-[0.78rem] font-black uppercase tracking-[0.22em] text-brand-950 sm:text-[0.9rem]">
+              <span className="block max-w-full truncate text-[0.7rem] font-black uppercase tracking-[0.16em] text-brand-950 min-[380px]:text-[0.78rem] min-[380px]:tracking-[0.2em] sm:text-[0.9rem]">
                 Inception 23
               </span>
-              <span className="mt-1 block max-w-full truncate text-[0.42rem] font-black uppercase tracking-[0.1em] text-slate-500 sm:text-[0.48rem] sm:tracking-[0.14em]">
+              <span className="mt-1 hidden max-w-full truncate text-[0.4rem] font-black uppercase tracking-[0.08em] text-slate-500 min-[380px]:block sm:text-[0.48rem] sm:tracking-[0.14em]">
                 Where <span className="text-orange-600">new beginnings</span> create the future
               </span>
             </Link>
@@ -101,13 +101,13 @@ export function Header() {
             <DesktopNav activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
             <div className="flex shrink-0 items-center gap-2">
-              <HeaderToggles className="mr-4 hidden xl:flex 2xl:mr-6" />
+              <HeaderToggles className="hidden xl:flex" />
               <HeaderCTA className="hidden xl:inline-flex" />
               <button
                 type="button"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open navigation"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-950 shadow-sm transition hover:border-brand-700/30 hover:bg-brand-50 focus:outline-none focus:ring-4 focus:ring-brand-700/15 xl:hidden"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-950 shadow-sm transition hover:border-brand-700/30 hover:bg-brand-50 focus:outline-none focus:ring-4 focus:ring-brand-700/15 sm:h-11 sm:w-11 xl:hidden"
               >
                 <Menu size={20} />
               </button>

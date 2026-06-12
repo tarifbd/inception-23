@@ -23,6 +23,7 @@ export const mainNav = [
   { label: 'Solutions', href: '#solutions', menu: 'solutions' },
   { label: 'Industries', href: '#industries', menu: 'industries' },
   { label: 'Insights', href: '/insights', menu: 'insights' },
+  { label: 'Resources', href: '/resources' },
   { label: 'About', href: '/about', menu: 'about' },
   { label: 'Contact', href: '/contact' },
 ] as const;

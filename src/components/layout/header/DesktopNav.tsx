@@ -24,7 +24,7 @@ export function DesktopNav({ activeMenu, setActiveMenu }: DesktopNavProps) {
             href={item.href}
             onMouseEnter={() => (menu ? setActiveMenu(menu) : setActiveMenu(null))}
             onFocus={() => (menu ? setActiveMenu(menu) : setActiveMenu(null))}
-            className={`relative inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-[10px] font-black uppercase tracking-[0.08em] transition focus:outline-none focus:ring-4 focus:ring-brand-700/15 min-[1480px]:px-3 min-[1480px]:text-[11px] 2xl:px-4 2xl:text-xs 2xl:tracking-[0.1em] ${
+            className={`relative inline-flex items-center gap-1 rounded-full px-2 py-2 text-[9px] font-black uppercase tracking-[0.06em] transition focus:outline-none focus:ring-4 focus:ring-brand-700/15 min-[1400px]:px-2.5 min-[1400px]:text-[10px] min-[1700px]:px-3 min-[1700px]:text-[11px] min-[1900px]:px-4 min-[1900px]:tracking-[0.1em] ${
               isActive ? 'text-brand-950' : 'text-slate-600 hover:text-brand-950'
             }`}
           >

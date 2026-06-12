@@ -6,8 +6,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BriefcaseBusiness, CheckCircle2, Cpu, Palette, Scale } from 'lucide-react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useAppStore } from '@/lib/store';
+import type { HomepageContent } from '@/lib/homepage-content';
 
-const heroSlides = [
+const heroDesign = [
   {
     id: 'it',
     label: 'IT & AI Solutions',
@@ -74,7 +75,11 @@ const heroSlides = [
   },
 ] as const;
 
-export default function Hero3D() {
+export default function Hero3D({ content }: { content: HomepageContent['hero'] }) {
+  const heroSlides = heroDesign.map((design) => ({
+    ...design,
+    ...(content.slides.find((slide) => slide.id === design.id) ?? {}),
+  }));
   const { activeSlide, setSlide } = useAppStore();
   const safeSlide = activeSlide >= 0 && activeSlide < heroSlides.length ? activeSlide : 0;
   const current = heroSlides[safeSlide];
@@ -91,7 +96,7 @@ export default function Hero3D() {
   }, [safeSlide, setSlide]);
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#f8fafc] pt-28 text-brand-950">
+    <section className="relative min-h-[100svh] overflow-hidden bg-[#f8fafc] pt-24 text-brand-950 sm:pt-28">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(13,1,33,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(13,1,33,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_38%,rgba(255,255,255,0.85),transparent_28%),linear-gradient(90deg,rgba(248,250,252,0.98),rgba(248,250,252,0.78)_48%,rgba(248,250,252,0.22))]" />
       <AnimatePresence mode="wait">
@@ -101,11 +106,11 @@ export default function Hero3D() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.45, ease: 'easeOut' }}
-          className={`absolute right-[4%] top-[18%] h-[38rem] w-[38rem] rounded-full ${current.glow} blur-[72px]`}
+          className={`absolute right-[2%] top-[18%] h-[min(38rem,85vw)] w-[min(38rem,85vw)] rounded-full ${current.glow} blur-[72px]`}
         />
       </AnimatePresence>
 
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-7rem)] max-w-7xl items-center gap-8 px-5 pb-14 sm:px-6 lg:grid-cols-12 lg:gap-8">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 px-4 pb-8 sm:px-6 sm:pb-12 lg:min-h-[calc(100svh-7rem)] lg:grid-cols-12 lg:gap-8 lg:px-8 lg:pb-14">
         <div className="lg:col-span-6">
           <AnimatePresence mode="wait">
             <motion.div
@@ -122,39 +127,39 @@ export default function Hero3D() {
                 <span className="truncate">{current.eyebrow}</span>
               </div>
 
-              <h1 className="max-w-[720px] break-words font-serif text-[clamp(2.35rem,4.7vw,4.9rem)] font-black leading-[1.05] tracking-normal text-brand-950">
+              <h1 className="max-w-[720px] break-words font-serif text-[clamp(2.15rem,4.7vw,4.9rem)] font-black leading-[1.08] tracking-normal text-brand-950 sm:leading-[1.05]">
                 <span className="block max-w-full">{current.title}</span>
                 <span className={`block max-w-full bg-gradient-to-r ${current.gradient} bg-clip-text text-transparent`}>
                   {current.highlight}
                 </span>
               </h1>
 
-              <p className="mt-5 max-w-[680px] text-base leading-8 text-slate-600 sm:text-lg">
+              <p className="mt-5 max-w-[680px] text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
                 {current.copy}
               </p>
 
-              <div className="mt-6 flex max-w-[680px] flex-wrap gap-2.5">
+              <div className="mt-6 grid max-w-[680px] grid-cols-1 gap-2.5 min-[360px]:flex min-[360px]:flex-wrap">
                 {current.chips.map((chip) => (
-                  <span key={chip} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3.5 py-2 text-xs font-black text-slate-700 shadow-sm">
+                  <span key={chip} className="inline-flex min-w-0 items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3.5 py-2 text-xs font-black text-slate-700 shadow-sm">
                     <CheckCircle2 size={15} className={current.accent} />
-                    {chip}
+                    <span className="min-w-0 break-words">{chip}</span>
                   </span>
                 ))}
               </div>
 
               <div className="mt-7 flex max-w-[680px] flex-col gap-3 sm:flex-row">
-                <Link href="/contact" className="inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-950 px-7 py-4 text-sm font-black text-white shadow-xl shadow-brand-950/15 transition hover:-translate-y-0.5 hover:bg-brand-900">
-                  Start a confidential brief <ArrowRight size={18} />
+                <Link href={content.primaryCtaHref} className="inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-950 px-7 py-4 text-sm font-black text-white shadow-xl shadow-brand-950/15 transition hover:-translate-y-0.5 hover:bg-brand-900">
+                  {content.primaryCtaLabel} <ArrowRight size={18} />
                 </Link>
-                <Link href="/services" className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-300 bg-white/55 px-7 py-4 text-sm font-black text-brand-950 transition hover:-translate-y-0.5 hover:border-brand-500">
-                  Explore services
+                <Link href={content.secondaryCtaHref} className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-300 bg-white/55 px-7 py-4 text-sm font-black text-brand-950 transition hover:-translate-y-0.5 hover:border-brand-500">
+                  {content.secondaryCtaLabel}
                 </Link>
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        <div className="relative flex min-h-[340px] items-center justify-center lg:col-span-6 lg:min-h-[560px]">
+        <div className="relative flex min-h-[280px] items-center justify-center sm:min-h-[360px] lg:col-span-6 lg:min-h-[560px]">
           <div className={`absolute inset-8 rounded-full bg-gradient-to-br ${current.gradient} opacity-[0.08] blur-2xl`} />
           <div className="absolute inset-x-10 bottom-12 h-12 rounded-full bg-brand-950/10 blur-2xl" />
 
@@ -165,7 +170,7 @@ export default function Hero3D() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: 0.45, ease: 'easeOut' }}
-              className="relative h-[min(74vw,600px)] w-[min(74vw,600px)]"
+              className="relative h-[clamp(280px,74vw,600px)] w-[clamp(280px,74vw,600px)] max-w-full"
             >
               <DotLottieReact
                 src={current.lottie}
@@ -179,8 +184,8 @@ export default function Hero3D() {
         </div>
       </div>
 
-      <div className="relative z-20 mx-auto -mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-5 px-5 pb-10 sm:px-6">
-        <div className="flex flex-wrap gap-2">
+      <div className="relative z-20 mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 pb-8 sm:-mt-6 sm:px-6 sm:pb-10 lg:px-8">
+        <div className="-mx-1 flex min-w-0 flex-1 gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:pb-0">
           {heroSlides.map((slide, index) => {
             const SlideIcon = slide.Icon;
             const isActive = index === safeSlide;
@@ -188,7 +193,7 @@ export default function Hero3D() {
               <button
                 key={slide.id}
                 onClick={() => setSlide(index)}
-                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] transition ${
+                className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] transition ${
                   isActive
                     ? `border-transparent bg-brand-950 text-white`
                     : 'border-slate-200 bg-white/70 text-slate-500 hover:border-brand-500 hover:text-brand-950'
@@ -201,7 +206,7 @@ export default function Hero3D() {
           })}
         </div>
         <div className="hidden text-xs font-black uppercase tracking-[0.22em] text-slate-400 sm:block">
-          Advisory / Consulting / Solutions
+          {content.footerLabel}
         </div>
       </div>
     </section>

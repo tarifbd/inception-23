@@ -2,16 +2,17 @@ import { whyChooseItems } from '@/lib/constants/why-choose';
 import { LandingIcon } from '@/components/landing/icons';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
+import type { HomepageSectionContent } from '@/lib/homepage-content';
 
-export function WhyChooseSection() {
+export function WhyChooseSection({ content }: { content: HomepageSectionContent }) {
   return (
     <AnimatedSection id="why" className="bg-white">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.25fr] lg:items-start">
         <div className="lg:sticky lg:top-28">
           <SectionHeader
-            eyebrow="Why choose Inception 23"
-            title="A premium partner for business moves that cannot be treated casually."
-            description="We connect board-level thinking with production-grade implementation across business, technology, legal support, finance, and creative systems."
+            eyebrow={content.eyebrow}
+            title={content.title}
+            description={content.description}
           />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">

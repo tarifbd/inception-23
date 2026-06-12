@@ -268,8 +268,8 @@ function SectionIntro({ eyebrow, title, body, service }: { eyebrow: string; titl
         <Sparkles size={14} />
         {eyebrow}
       </div>
-      <h2 className="font-serif text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02] text-brand-950">{title}</h2>
-      <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">{body}</p>
+      <h2 className="break-words font-serif text-[clamp(2rem,5vw,4rem)] font-black leading-[1.06] text-brand-950 sm:leading-[1.02]">{title}</h2>
+      <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:mt-5 sm:leading-8 md:text-lg">{body}</p>
     </motion.div>
   );
 }
@@ -338,9 +338,9 @@ export function ServiceDetailExperience({ service }: Props) {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-white py-20 md:py-28">
+      <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
         <div className={`absolute left-0 top-20 h-72 w-72 rounded-full blur-[90px] ${p.glow}`} />
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro
             service={service}
             eyebrow="Our services"
@@ -355,8 +355,8 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className={`relative overflow-hidden py-20 md:py-28 ${p.soft}`}>
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className={`relative overflow-hidden py-16 sm:py-20 lg:py-28 ${p.soft}`}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow={focus.eyebrow} title={focus.title} body={focus.body} />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {focusItems.map((entry) => (
@@ -366,8 +366,8 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-white py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Why choose Inception 23" title="Designed for trust, speed, and scale." body="Our delivery model combines strategy, product thinking, engineering discipline, and long-term operational support." />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-4 md:grid-cols-2">
             {whyChoose.map((entry) => {
@@ -388,8 +388,8 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-slate-50 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="relative overflow-hidden bg-slate-50 py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Industries we serve" title="Built for multiple operating realities." body="Specialized systems for teams that need clarity, performance, accountability, and market-ready execution." />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {industries.map((entry) => {
@@ -408,8 +408,8 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-white py-20 md:py-28">
-        <div className="mx-auto max-w-5xl px-5 sm:px-6">
+      <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Our process" title="A disciplined transformation journey." body="From discovery to optimization, every phase has a clear decision point, output, and ownership model." />
           <div className="relative mt-14">
             <div className={`absolute bottom-0 left-5 top-0 w-px bg-gradient-to-b ${p.gradient} opacity-30 md:left-1/2`} />
@@ -417,8 +417,8 @@ export function ServiceDetailExperience({ service }: Props) {
               {process.map(([num, title, body], index) => (
                 <motion.div
                   key={num}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -24 : 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-60px' }}
                   transition={{ duration: 0.45, delay: index * 0.04 }}
                   className={`relative grid gap-4 md:grid-cols-[1fr_70px_1fr] ${index % 2 === 0 ? '' : 'md:[&>article]:col-start-3'}`}
@@ -438,15 +438,15 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className={`relative overflow-hidden py-20 md:py-28 ${p.soft}`}>
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className={`relative overflow-hidden py-16 sm:py-20 lg:py-28 ${p.soft}`}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Featured solutions" title={`${category?.shortTitle ?? 'Service'} solutions ready to customize.`} body="Each solution is structured as a strong starting point for a production-grade advisory, documentation, operating, or digital system." />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-5 lg:grid-cols-2">
             {featuredItems.map((entry) => {
               const Icon = entry.icon;
               return (
                 <motion.article key={entry.title} variants={itemMotion} whileHover={{ y: -8 }} className="group rounded-[1.6rem] border border-white bg-white p-6 shadow-sm transition hover:shadow-2xl">
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${p.icon}`}>
                       <Icon size={20} />
                     </div>
@@ -464,8 +464,8 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-white py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Technology stack" title="Modern, production-grade foundations." body="We select tools for speed, reliability, maintainability, and long-term scalability." />
           <div className="mt-12 grid gap-5 md:grid-cols-2">
             {techStacks.map(({ group, tools }) => (
@@ -484,8 +484,8 @@ export function ServiceDetailExperience({ service }: Props) {
         </div>
       </section>
 
-      <section className={`relative overflow-hidden py-20 md:py-28 ${p.soft}`}>
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+      <section className={`relative overflow-hidden py-16 sm:py-20 lg:py-28 ${p.soft}`}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Team structure" title="A modern advisory delivery bench." body="Management, advisors, consultants, and executives work as one accountable delivery system." />
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {teams.map((group, groupIndex) => (

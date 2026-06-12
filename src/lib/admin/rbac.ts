@@ -17,7 +17,11 @@ export type AdminPermission =
   | 'seo.manage_robots'
   | 'seo.manage_settings'
   | 'seo.use_ai'
-  | 'seo.apply_ai_suggestions';
+  | 'seo.apply_ai_suggestions'
+  | 'resources.view'
+  | 'resources.manage'
+  | 'cms.view'
+  | 'cms.manage';
 
 export const aiPermissions: AdminPermission[] = [
   'ai.view',
@@ -43,11 +47,11 @@ export const seoPermissions: AdminPermission[] = [
 ];
 
 export const rolePermissions: Record<string, AdminPermission[]> = {
-  'super-admin': [...aiPermissions, ...seoPermissions],
-  admin: [...aiPermissions, ...seoPermissions],
+  'super-admin': [...aiPermissions, ...seoPermissions, 'resources.view', 'resources.manage', 'cms.view', 'cms.manage'],
+  admin: [...aiPermissions, ...seoPermissions, 'resources.view', 'resources.manage', 'cms.view', 'cms.manage'],
   'seo-manager': [...seoPermissions, 'ai.generate'],
-  'content-manager': ['ai.view', 'ai.generate', 'ai.apply_content', 'seo.view', 'seo.update', 'seo.use_ai'],
-  'marketing-manager': ['ai.view', 'ai.generate', 'ai.apply_content', 'seo.view', 'seo.update', 'seo.use_ai'],
+  'content-manager': ['ai.view', 'ai.generate', 'ai.apply_content', 'seo.view', 'seo.update', 'seo.use_ai', 'resources.view', 'resources.manage', 'cms.view', 'cms.manage'],
+  'marketing-manager': ['ai.view', 'ai.generate', 'ai.apply_content', 'seo.view', 'seo.update', 'seo.use_ai', 'resources.view', 'cms.view'],
   support: [],
 };
 

@@ -12,6 +12,7 @@ const footerCompanyLinks = [
   { label: 'Team', href: '/#team' },
   { label: 'Process', href: '/#process' },
   { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Resources', href: '/resources' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -53,13 +54,13 @@ export function Footer() {
       <div className="pointer-events-none absolute -left-28 top-20 h-80 w-80 rounded-full bg-cyan-200/35 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-16 h-80 w-80 rounded-full bg-emerald-200/35 blur-3xl" />
 
-      <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:py-20">
-        <div className="rounded-[2rem] border border-white/80 bg-white/82 p-5 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-8 lg:p-10">
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+        <div className="rounded-[1.5rem] border border-white/80 bg-white/82 p-4 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:p-8 lg:p-10">
           <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
             <div className="flex flex-col justify-between gap-10">
               <div>
-                <Link href="/" className="inline-flex items-center gap-4 focus:outline-none focus:ring-4 focus:ring-brand-700/15">
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-white p-2 shadow-lg shadow-slate-950/10 ring-1 ring-slate-200">
+                <Link href="/" className="inline-flex min-w-0 items-center gap-3 focus:outline-none focus:ring-4 focus:ring-brand-700/15 sm:gap-4">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-lg shadow-slate-950/10 ring-1 ring-slate-200 sm:h-16 sm:w-16 sm:rounded-3xl">
                     <Image
                       src="/inception23-mark.png"
                       alt="Inception 23 mark"
@@ -69,16 +70,16 @@ export function Footer() {
                     />
                   </span>
                   <span className="min-w-0 leading-none">
-                    <span className="block text-xl font-black uppercase tracking-[0.28em] text-brand-950 sm:text-2xl">
+                    <span className="block truncate text-base font-black uppercase tracking-[0.18em] text-brand-950 min-[380px]:text-lg sm:text-2xl sm:tracking-[0.28em]">
                       Inception 23
                     </span>
-                    <span className="mt-2 block text-[0.55rem] font-black uppercase tracking-[0.2em] text-slate-500 sm:text-[0.62rem]">
+                    <span className="mt-2 block truncate text-[0.45rem] font-black uppercase tracking-[0.12em] text-slate-500 min-[380px]:text-[0.5rem] sm:text-[0.62rem] sm:tracking-[0.2em]">
                       Where <span className="text-orange-600">new beginnings</span> create the future
                     </span>
                   </span>
                 </Link>
 
-                <h2 className="mt-10 max-w-3xl font-serif text-4xl font-black leading-[1.02] text-brand-950 sm:text-5xl lg:text-6xl">
+                <h2 className="mt-8 max-w-3xl break-words font-serif text-[clamp(2.15rem,5vw,3.75rem)] font-black leading-[1.06] text-brand-950 sm:mt-10 sm:leading-[1.02]">
                   Advisory clarity for companies ready to move with discipline.
                 </h2>
                 <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
@@ -96,7 +97,7 @@ export function Footer() {
               </div>
             </div>
 
-            <div className="rounded-[1.6rem] border border-slate-200 bg-brand-950 p-6 text-white shadow-2xl shadow-brand-950/15 sm:p-8">
+            <div className="min-w-0 rounded-[1.5rem] border border-slate-200 bg-brand-950 p-5 text-white shadow-2xl shadow-brand-950/15 sm:rounded-[1.6rem] sm:p-8">
               <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-300">Start a confidential brief</p>
               <h3 className="mt-5 font-serif text-3xl font-black leading-tight sm:text-4xl">
                 Tell us where the business needs clarity, control, or acceleration.
@@ -130,7 +131,7 @@ export function Footer() {
                     placeholder="you@company.com"
                     required
                     disabled={status === 'submitting'}
-                    className="min-h-12 flex-1 rounded-full border border-white/10 bg-white px-5 text-sm font-bold text-brand-950 outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-300/20 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="min-h-12 min-w-0 flex-1 rounded-full border border-white/10 bg-white px-5 text-sm font-bold text-brand-950 outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-300/20 disabled:cursor-not-allowed disabled:opacity-70"
                   />
                   <button
                     type="submit"
@@ -175,7 +176,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 min-[480px]:grid-cols-2 xl:grid-cols-4 xl:gap-6">
             <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
             <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
             <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
@@ -183,7 +184,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-5 border-t border-slate-200 pt-6 text-xs font-black uppercase tracking-[0.16em] text-slate-500 md:flex-row md:items-center md:justify-between">
+        <div className="mt-10 flex flex-col gap-5 border-t border-slate-200 pt-6 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 sm:text-xs sm:tracking-[0.16em] md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} Inception 23. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <Link href="/privacy" className="transition hover:text-brand-950">Privacy</Link>

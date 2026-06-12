@@ -16,8 +16,8 @@ export function SectionHeader({
   return (
     <div className={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
       <p className="mb-3 text-xs font-black uppercase tracking-[0.24em] text-brand-600">{eyebrow}</p>
-      <h2 className="font-serif text-4xl font-black leading-tight text-brand-950 md:text-6xl">{title}</h2>
-      {description ? <p className="mt-5 text-lg leading-8 text-slate-600">{description}</p> : null}
+      <h2 className="break-words font-serif text-[clamp(2rem,5vw,3.75rem)] font-black leading-[1.06] text-brand-950 sm:leading-tight">{title}</h2>
+      {description ? <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">{description}</p> : null}
     </div>
   );
 }
@@ -63,8 +63,8 @@ export function ProcessBand() {
   ];
 
   return (
-    <section className="bg-brand-950 py-24 text-white">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+    <section className="bg-brand-950 py-16 text-white sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="Operating model"
           title="From advisory to execution."
@@ -86,8 +86,8 @@ export function ProcessBand() {
 
 export function CaseStudyPreview() {
   return (
-    <section className="bg-white py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+    <section className="bg-white py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <SectionHeader
             eyebrow="Selected work"
@@ -120,8 +120,8 @@ export function CaseStudyPreview() {
 
 export function InsightPreview() {
   return (
-    <section className="bg-slate-50 py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+    <section className="bg-slate-50 py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader eyebrow="Insights" title="Thinking for decisive leaders." align="center" />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {insights.map((post) => (
@@ -139,8 +139,8 @@ export function InsightPreview() {
 
 export function TestimonialBand() {
   return (
-    <section className="bg-white py-24">
-      <div className="mx-auto grid max-w-7xl gap-5 px-5 sm:px-6 md:grid-cols-2">
+    <section className="bg-white py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
         {testimonials.map((item) => (
           <figure key={item.name} className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-8">
             <blockquote className="font-serif text-3xl font-black leading-tight text-brand-950">&ldquo;{item.quote}&rdquo;</blockquote>
@@ -156,8 +156,8 @@ export function TestimonialBand() {
 
 export function FinalCTA() {
   return (
-    <section className="bg-brand-950 py-24 text-white">
-      <div className="mx-auto max-w-5xl px-5 text-center sm:px-6">
+    <section className="bg-brand-950 py-16 text-white sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
         <p className="mb-4 text-xs font-black uppercase tracking-[0.24em] text-brand-300">Confidential inquiry</p>
         <h2 className="font-serif text-4xl font-black leading-tight md:text-6xl">Build the next operating advantage.</h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/70">

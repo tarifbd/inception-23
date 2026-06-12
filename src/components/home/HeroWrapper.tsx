@@ -1,12 +1,13 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import type { HomepageContent } from '@/lib/homepage-content';
 
 const Hero3D = dynamic(() => import('@/components/home/Hero3D'), { 
   ssr: false,
-  loading: () => <div className="h-screen w-full bg-white dark:bg-night-950" />
+  loading: () => <div className="min-h-[100svh] w-full bg-white" />
 });
 
-export const HeroWrapper = () => {
-  return <Hero3D />;
+export const HeroWrapper = ({ content }: { content: HomepageContent['hero'] }) => {
+  return <Hero3D content={content} />;
 };

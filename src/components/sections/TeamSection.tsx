@@ -6,8 +6,13 @@ import { teamCategories, teamMembers, type TeamCategory } from '@/lib/constants/
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
 import { TeamCard } from './TeamCard';
+import { defaultHomepageContent, type HomepageSectionContent } from '@/lib/homepage-content';
 
-export function TeamSection() {
+export function TeamSection({
+  content = defaultHomepageContent.sections.find((section) => section.key === 'team')!,
+}: {
+  content?: HomepageSectionContent;
+}) {
   const [active, setActive] = useState<TeamCategory>('management');
   const members = useMemo(() => teamMembers.filter((member) => member.category === active), [active]);
   const activeCategory = teamCategories.find((category) => category.id === active) ?? teamCategories[0];
@@ -21,11 +26,11 @@ export function TeamSection() {
     <AnimatedSection id="team" className="bg-white">
       <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
         <SectionHeader
-          eyebrow="Team structure"
-          title="A consulting-grade team model for advisory and execution."
-          description="Structured around leadership, specialist advisory, and delivery execution, ready to grow without changing the design system."
+          eyebrow={content.eyebrow}
+          title={content.title}
+          description={content.description}
         />
-        <div className="grid w-full max-w-2xl grid-cols-1 gap-1.5 rounded-[2rem] border border-slate-200 bg-white p-1.5 shadow-[0_18px_48px_rgba(15,23,42,0.08)] sm:grid-cols-3 md:w-auto">
+        <div className="grid w-full max-w-2xl grid-cols-1 gap-1.5 rounded-[1.5rem] border border-slate-200 bg-white p-1.5 shadow-[0_18px_48px_rgba(15,23,42,0.08)] min-[480px]:grid-cols-3 md:w-auto md:rounded-[2rem]">
           {teamCategories.map((category) => {
             const selected = active === category.id;
             const categoryClass = {

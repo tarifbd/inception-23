@@ -1,14 +1,15 @@
 import { techStackGroups } from '@/lib/constants/tech-stack';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
+import type { HomepageSectionContent } from '@/lib/homepage-content';
 
-export function TechStackSection() {
+export function TechStackSection({ content }: { content: HomepageSectionContent }) {
   return (
     <AnimatedSection id="technology" className="bg-slate-50">
       <SectionHeader
-        eyebrow="Technology stack"
-        title="Modern tools, business systems, and advisory infrastructure."
-        description="The stack reflects how Inception 23 thinks: software, automation, finance control, compliance documentation, analytics, and market experience working together."
+        eyebrow={content.eyebrow}
+        title={content.title}
+        description={content.description}
         align="center"
       />
       <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

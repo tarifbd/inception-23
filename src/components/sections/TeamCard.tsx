@@ -43,17 +43,17 @@ export function TeamCard({ member, index = 0 }: TeamCardProps) {
             className="h-full w-full rounded-[1.15rem] object-contain object-center transition duration-700 group-hover:scale-[1.018]"
           />
         </div>
-        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
-          <span className={`rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] shadow-sm ${theme.bg} ${theme.text}`}>
+        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-2">
+          <span className={`min-w-0 truncate rounded-full px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.12em] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.16em] ${theme.bg} ${theme.text}`}>
             {member.category.replace('-', ' ')}
           </span>
-          <div className="flex shrink-0 gap-2">
+          <div className="flex shrink-0 gap-1.5 sm:gap-2">
             {socialLinks.map(({ label, href, icon: Icon }) => (
               <Link
                 key={label}
                 href={href}
                 aria-label={`${member.name} ${label}`}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:-translate-y-0.5 hover:border-brand-950 hover:bg-brand-950 hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:-translate-y-0.5 hover:border-brand-950 hover:bg-brand-950 hover:text-white sm:h-10 sm:w-10"
               >
                 <Icon size={14} />
               </Link>
@@ -63,12 +63,12 @@ export function TeamCard({ member, index = 0 }: TeamCardProps) {
       </div>
 
       <div className="relative flex flex-1 flex-col px-2 pb-2 pt-5">
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-3 sm:gap-4">
           <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-sm font-black shadow-lg ${theme.icon}`}>
             {member.initials}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-lg font-black leading-tight text-brand-950">{member.name}</h3>
+            <h3 className="break-words text-lg font-black leading-tight text-brand-950">{member.name}</h3>
             <p className={`mt-1 text-[10px] font-black uppercase tracking-[0.16em] ${theme.text}`}>{member.role}</p>
           </div>
         </div>
