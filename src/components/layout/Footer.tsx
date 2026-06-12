@@ -150,7 +150,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_1.95fr]">
-          <div className="rounded-[1.6rem] border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur">
+          <div className="rounded-lg border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">Contact</p>
             <div className="mt-5 grid gap-4 text-sm font-bold text-slate-600">
               <a href="mailto:hello@inception23.com" className="flex items-center gap-3 transition hover:text-brand-950">
@@ -202,7 +202,7 @@ export function Footer() {
 
 function FooterColumn({ title, links }: { title: string; links: Array<{ label: string; href: string }> }) {
   return (
-    <nav className="rounded-[1.6rem] border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur" aria-label={title}>
+    <nav className="rounded-lg border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur" aria-label={title}>
       <h3 className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">{title}</h3>
       <ul className="mt-5 space-y-3">
         {links.map((link) => (
