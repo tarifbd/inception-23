@@ -176,7 +176,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid gap-4 min-[480px]:grid-cols-2 xl:grid-cols-4 xl:gap-6">
+          <div className="grid items-start gap-4 min-[480px]:grid-cols-2 xl:grid-cols-4 xl:gap-6">
             <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
             <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
             <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
