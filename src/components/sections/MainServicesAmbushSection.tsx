@@ -11,7 +11,7 @@ import type { HomepageSectionContent } from '@/lib/homepage-content';
 
 const sectionBackgrounds = ['#f1fbfe', '#f1fbf6', '#f7f3ff', '#fff6ef'];
 
-export function MainServicesAmbushSection({ content }: { content: HomepageSectionContent }) {
+export function MainServicesAmbushSection({ content: _content }: { content: HomepageSectionContent }) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const storyRefs = useRef<HTMLElement[]>([]);
   const imageRefs = useRef<HTMLDivElement[]>([]);
@@ -113,24 +113,7 @@ export function MainServicesAmbushSection({ content }: { content: HomepageSectio
     >
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(13,1,33,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(13,1,33,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
 
-      <div className="mx-auto max-w-7xl px-4 pb-8 pt-20 sm:px-6 sm:pt-24 lg:px-8 lg:pb-0 lg:pt-28">
-        <div className="grid gap-8 border-b border-slate-200/80 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div>
-            <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white/85 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-cyan-500" />
-              {content.eyebrow}
-            </div>
-            <h2 className="mt-7 max-w-4xl font-serif text-[clamp(3rem,7vw,6.8rem)] font-black leading-[0.92] text-brand-950">
-              {content.title}
-            </h2>
-          </div>
-          <p className="max-w-2xl text-base leading-8 text-slate-600 sm:text-lg lg:justify-self-end">
-            {content.description}
-          </p>
-        </div>
-      </div>
-
-      <div className="mx-auto grid w-full max-w-7xl px-4 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:gap-16 lg:px-8">
+      <div className="mx-auto grid w-full max-w-[92rem] px-4 sm:px-6 lg:grid-cols-[0.76fr_1.24fr] lg:gap-10 lg:px-8">
         <div>
           {mainServicesAmbush.map((service, index) => (
             <ServiceStory
@@ -146,7 +129,7 @@ export function MainServicesAmbushSection({ content }: { content: HomepageSectio
 
         <div className="relative hidden lg:block">
           <div className="sticky top-0 flex h-screen items-center py-12">
-            <div className="relative h-[min(72vh,720px)] w-full overflow-hidden rounded-[2rem] border border-white/90 bg-white shadow-[0_32px_100px_rgba(15,23,42,0.16)]">
+            <div className="relative h-[min(74vh,760px)] w-full overflow-hidden rounded-[2rem] border border-white/90 bg-white shadow-[0_32px_100px_rgba(15,23,42,0.16)]">
               {mainServicesAmbush.map((service, index) => (
                 <ServiceImage
                   key={service.key}
@@ -179,7 +162,7 @@ function ServiceStory({
       <div className="w-full">
         <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: service.accent }}>
           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: service.accent }} />
-          Main service · 0{index + 1} / 04
+          Main service - 0{index + 1} / 04
         </div>
 
         <p className="mt-6 text-xs font-black uppercase tracking-[0.18em] text-slate-500">{service.eyebrow}</p>
@@ -211,8 +194,8 @@ function ServiceStory({
           <ArrowUpRight size={16} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </Link>
 
-        <div className="relative mt-10 aspect-[4/3] overflow-hidden rounded-[1.5rem] border border-white/90 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.14)] lg:hidden">
-          <Image src={service.image} alt={service.imageAlt} fill sizes="(max-width: 1023px) 92vw, 1px" className="object-cover" />
+        <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[1.5rem] border border-white/90 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.14)] lg:hidden">
+          <Image src={service.image} alt={service.imageAlt} fill sizes="(max-width: 1023px) 92vw, 1px" className="object-contain p-2" />
           <ServiceImageOverlay service={service} index={index} />
         </div>
       </div>
@@ -236,8 +219,8 @@ function ServiceImage({
         alt={service.imageAlt}
         fill
         priority={index === 0}
-        sizes="(min-width: 1024px) 54vw, 1px"
-        className="object-cover"
+        sizes="(min-width: 1024px) 62vw, 1px"
+        className="object-contain p-4"
       />
       <ServiceImageOverlay service={service} index={index} />
     </div>
