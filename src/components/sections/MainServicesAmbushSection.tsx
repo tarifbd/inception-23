@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { mainServicesAmbush, type MainServicesAmbushItem } from '@/lib/constants/main-services-ambush';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
 
-const sectionBackgrounds = ['#f1fbfe', '#f1fbf6', '#f7f3ff', '#fff6ef'];
+const sectionBackgrounds = ['#ecfeff', '#f1fbf6', '#f7f3ff', '#fff6ef'];
 
 export function MainServicesAmbushSection({ content: _content }: { content: HomepageSectionContent }) {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -28,6 +28,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
       const media = gsap.matchMedia();
 
       media.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+        gsap.set(section, { backgroundColor: sectionBackgrounds[0] });
         gsap.set(images, {
           clipPath: 'inset(0% 0% 0% 0%)',
           scale: 1,
@@ -37,6 +38,16 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
         images.forEach((image, index) => {
           image.style.zIndex = String(images.length - index);
         });
+
+        const colorTriggers = stories.map((story, index) =>
+          ScrollTrigger.create({
+            trigger: story,
+            start: 'top center',
+            end: 'bottom center',
+            onEnter: () => gsap.to(section, { backgroundColor: sectionBackgrounds[index], duration: 0.35, overwrite: 'auto' }),
+            onEnterBack: () => gsap.to(section, { backgroundColor: sectionBackgrounds[index], duration: 0.35, overwrite: 'auto' }),
+          }),
+        );
 
         const transitions = stories.slice(0, -1).map((story, index) => {
           const timeline = gsap.timeline({
@@ -72,7 +83,10 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
           return timeline;
         });
 
-        return () => transitions.forEach((timeline) => timeline.kill());
+        return () => {
+          colorTriggers.forEach((trigger) => trigger.kill());
+          transitions.forEach((timeline) => timeline.kill());
+        };
       });
 
       media.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', () => {
@@ -109,7 +123,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
     <section
       id="main-services-ambush"
       ref={sectionRef}
-      className="relative isolate overflow-clip bg-[#f1fbfe] text-brand-950 transition-colors duration-500"
+      className="relative isolate overflow-clip bg-[#ecfeff] text-brand-950 transition-colors duration-500"
     >
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(13,1,33,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(13,1,33,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
 
