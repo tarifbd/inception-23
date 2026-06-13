@@ -17,6 +17,90 @@ type PageProps = {
   searchParams: Promise<{ search?: string; category?: string; type?: string; page?: string }>;
 };
 
+type ResourceCard = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  resourceType: string;
+  audience: string | null;
+  tagsJson: string;
+  isFeatured: boolean;
+  downloadCount: number;
+  readingMinutes: number | null;
+};
+
+const fallbackResources: ResourceCard[] = [
+  {
+    id: 'fallback-ai-readiness',
+    slug: 'ai-automation-readiness-checklist',
+    title: 'AI & Automation Readiness Checklist',
+    excerpt: 'A practical checklist for identifying where AI, automation, and workflow redesign can create measurable business value.',
+    category: 'Technology & AI',
+    resourceType: 'Checklist',
+    audience: 'Business leaders and operations teams',
+    tagsJson: JSON.stringify(['AI', 'Automation', 'Operations']),
+    isFeatured: true,
+    downloadCount: 0,
+    readingMinutes: 4,
+  },
+  {
+    id: 'fallback-management-control',
+    slug: 'management-control-kpi-framework',
+    title: 'Management Control & KPI Framework',
+    excerpt: 'A simple operating framework for leadership reporting, KPI ownership, review cadence, and management discipline.',
+    category: 'Management & Finance',
+    resourceType: 'Framework',
+    audience: 'Founders, managers, and finance teams',
+    tagsJson: JSON.stringify(['KPI', 'Reporting', 'Finance']),
+    isFeatured: true,
+    downloadCount: 0,
+    readingMinutes: 5,
+  },
+  {
+    id: 'fallback-compliance-register',
+    slug: 'legal-compliance-document-register',
+    title: 'Legal & Compliance Document Register',
+    excerpt: 'A starter structure for tracking agreements, policies, deadlines, case files, risk items, and document ownership.',
+    category: 'Legal & Compliance',
+    resourceType: 'Template',
+    audience: 'Compliance, legal, and admin teams',
+    tagsJson: JSON.stringify(['Documents', 'Compliance', 'Risk']),
+    isFeatured: false,
+    downloadCount: 0,
+    readingMinutes: 3,
+  },
+  {
+    id: 'fallback-brand-launch',
+    slug: 'brand-launch-content-planner',
+    title: 'Brand Launch Content Planner',
+    excerpt: 'A compact planning guide for coordinating brand assets, social posts, landing pages, pitch decks, and campaign messages.',
+    category: 'Creative & Brand',
+    resourceType: 'Guide',
+    audience: 'Marketing and creative teams',
+    tagsJson: JSON.stringify(['Brand', 'Content', 'Campaign']),
+    isFeatured: false,
+    downloadCount: 0,
+    readingMinutes: 4,
+  },
+];
+
+function filterFallbackResources(resources: ResourceCard[], search: string, category: string, type: string) {
+  const normalizedSearch = search.toLowerCase();
+
+  return resources.filter((resource) => {
+    if (category && resource.category !== category) return false;
+    if (type && resource.resourceType !== type) return false;
+    if (!normalizedSearch) return true;
+
+    return [resource.title, resource.excerpt, resource.category, resource.resourceType, resource.audience ?? '', resource.tagsJson]
+      .join(' ')
+      .toLowerCase()
+      .includes(normalizedSearch);
+  });
+}
+
 export default async function ResourcesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const search = params.search?.trim() || '';
@@ -44,15 +128,27 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
       : {}),
   };
 
-  const [resources, totalResources] = await Promise.all([
-    db.resource.findMany({
-      where,
-      orderBy: [{ isFeatured: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
-      skip: (currentPage - 1) * pageSize,
-      take: pageSize,
-    }),
-    db.resource.count({ where }),
-  ]);
+  let resources: ResourceCard[];
+  let totalResources: number;
+
+  try {
+    const [dbResources, dbTotalResources] = await Promise.all([
+      db.resource.findMany({
+        where,
+        orderBy: [{ isFeatured: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
+        skip: (currentPage - 1) * pageSize,
+        take: pageSize,
+      }),
+      db.resource.count({ where }),
+    ]);
+    resources = dbResources;
+    totalResources = dbTotalResources;
+  } catch (error) {
+    console.error('Resource portal database unavailable. Rendering fallback resources.', error);
+    const filteredFallbackResources = filterFallbackResources(fallbackResources, search, category, type);
+    totalResources = filteredFallbackResources.length;
+    resources = filteredFallbackResources.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }
   const totalPages = Math.max(1, Math.ceil(totalResources / pageSize));
   const pageHref = (page: number) => {
     const query = new URLSearchParams();
