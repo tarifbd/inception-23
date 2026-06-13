@@ -144,12 +144,60 @@ const process = [
   ['07', 'Scale', 'Improve performance, security, analytics, adoption, and long-term maintainability.'],
 ];
 
-const techStacks: Array<{ group: string; tools: string[] }> = [
-  { group: 'Frontend', tools: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { group: 'Backend', tools: ['Node.js', 'Next.js API', 'Prisma', 'PostgreSQL', 'REST APIs'] },
-  { group: 'AI & Automation', tools: ['OpenAI', 'LangChain', 'Vector Search', 'RAG', 'Workflow Agents'] },
-  { group: 'Cloud & DevOps', tools: ['Vercel', 'Docker', 'CI/CD', 'Monitoring', 'Cloud Storage'] },
-];
+const serviceFoundations: Record<
+  ServiceDefinition['shortId'],
+  {
+    eyebrow: string;
+    title: string;
+    body: string;
+    groups: Array<{ group: string; tools: string[] }>;
+  }
+> = {
+  it: {
+    eyebrow: 'Technology stack',
+    title: 'Modern, production-grade foundations.',
+    body: 'We select tools for speed, reliability, maintainability, and long-term scalability.',
+    groups: [
+      { group: 'Frontend', tools: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
+      { group: 'Backend', tools: ['Node.js', 'Next.js API', 'Prisma', 'PostgreSQL', 'REST APIs'] },
+      { group: 'AI & Automation', tools: ['OpenAI', 'LangChain', 'Vector Search', 'RAG', 'Workflow Agents'] },
+      { group: 'Cloud & DevOps', tools: ['Vercel', 'Docker', 'CI/CD', 'Monitoring', 'Cloud Storage'] },
+    ],
+  },
+  consultancy: {
+    eyebrow: 'Management toolkit',
+    title: 'Consultancy systems for finance, control, and growth.',
+    body: 'Practical management tools for reporting, planning, compliance coordination, and leadership decisions.',
+    groups: [
+      { group: 'Finance & Control', tools: ['MIS reporting', 'Cash flow models', 'Budget controls', 'Cost tracking', 'Profit analysis'] },
+      { group: 'Tax, VAT & Compliance', tools: ['Tax planning', 'VAT tracking', 'Return calendars', 'Compliance registers', 'Audit support'] },
+      { group: 'Management Systems', tools: ['KPI dashboards', 'SOP frameworks', 'Review cadence', 'Decision logs', 'Internal controls'] },
+      { group: 'Growth Advisory', tools: ['Business diagnostics', 'Feasibility review', 'Market planning', 'Process improvement', 'Leadership reporting'] },
+    ],
+  },
+  legal: {
+    eyebrow: 'Legal support toolkit',
+    title: 'Documentation and compliance foundations.',
+    body: 'Structured legal-support tools for document control, case coordination, policy tracking, and risk visibility.',
+    groups: [
+      { group: 'Document Management', tools: ['Contract logs', 'Document templates', 'Version control', 'Approval trails', 'Evidence records'] },
+      { group: 'Case Coordination', tools: ['Case files', 'Hearing dates', 'Task follow-ups', 'Client notes', 'Status reporting'] },
+      { group: 'Compliance Control', tools: ['Policy registers', 'Risk reviews', 'Deadline tracking', 'Governance checklists', 'Regulatory logs'] },
+      { group: 'Business Legal Support', tools: ['Agreement support', 'Company records', 'Due diligence files', 'Notice tracking', 'Secure archives'] },
+    ],
+  },
+  creative: {
+    eyebrow: 'Creative production toolkit',
+    title: 'Brand, content, and market-facing foundations.',
+    body: 'Creative systems for identity, campaigns, presentation assets, and consistent communication across channels.',
+    groups: [
+      { group: 'Brand System', tools: ['Visual identity', 'Logo systems', 'Color palettes', 'Typography rules', 'Brand guidelines'] },
+      { group: 'Content Production', tools: ['Social media kits', 'Copywriting', 'Campaign calendars', 'Content templates', 'Creative briefs'] },
+      { group: 'Design Assets', tools: ['Pitch decks', 'Brochures', 'Post templates', 'Ad creatives', 'Presentation systems'] },
+      { group: 'Digital Experience', tools: ['Landing pages', 'UX writing', 'Conversion flows', 'Portfolio layouts', 'Market messaging'] },
+    ],
+  },
+};
 
 const teams = [
   {
@@ -335,6 +383,7 @@ export function ServiceDetailExperience({ service }: Props) {
   const focusItems = service.shortId === 'it' ? aiSolutions : buildSubServiceItems(service, 10);
   const featuredItems = buildFeaturedItems(service);
   const focus = focusCopy[service.shortId];
+  const foundation = serviceFoundations[service.shortId];
 
   return (
     <>
@@ -466,9 +515,9 @@ export function ServiceDetailExperience({ service }: Props) {
 
       <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionIntro service={service} eyebrow="Technology stack" title="Modern, production-grade foundations." body="We select tools for speed, reliability, maintainability, and long-term scalability." />
+          <SectionIntro service={service} eyebrow={foundation.eyebrow} title={foundation.title} body={foundation.body} />
           <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {techStacks.map(({ group, tools }) => (
+            {foundation.groups.map(({ group, tools }) => (
               <motion.div key={group} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
                 <h3 className={`text-xs font-black uppercase tracking-[0.22em] ${p.text}`}>{group}</h3>
                 <div className="mt-4 flex flex-wrap gap-2">
