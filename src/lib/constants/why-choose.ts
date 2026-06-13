@@ -10,12 +10,12 @@ export const whyChooseItems: WhyChooseItem[] = [
   {
     title: 'Multidisciplinary expertise',
     description: 'Technology, management, finance, legal support, and creative thinking under one operating lens.',
-    icon: 'Layers3',
+    icon: 'BrainCircuit',
   },
   {
     title: 'Strategy to execution',
     description: 'The work moves from diagnosis to roadmap, system, documentation, interface, and measurable implementation.',
-    icon: 'Workflow',
+    icon: 'Network',
   },
   {
     title: 'Bangladesh-aware, globally relevant',
@@ -25,16 +25,16 @@ export const whyChooseItems: WhyChooseItem[] = [
   {
     title: 'Data-informed decisions',
     description: 'Dashboards, KPIs, reporting frameworks, and decision logs that make leadership conversations sharper.',
-    icon: 'BarChart3',
+    icon: 'ChartNoAxesCombined',
   },
   {
     title: 'Scalable systems',
     description: 'Each solution is designed to survive growth, delegation, compliance pressure, and operational complexity.',
-    icon: 'Rocket',
+    icon: 'CloudCog',
   },
   {
     title: 'Long-term partnership',
     description: 'We stay close to the business model, not just the project scope, so the system keeps improving.',
-    icon: 'Handshake',
+    icon: 'ShieldCheck',
   },
 ];
