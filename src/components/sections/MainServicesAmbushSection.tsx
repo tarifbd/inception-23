@@ -195,8 +195,7 @@ function ServiceStory({
         </Link>
 
         <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[1.5rem] border border-white/90 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.14)] lg:hidden">
-          <Image src={service.image} alt={service.imageAlt} fill sizes="(max-width: 1023px) 92vw, 1px" className="object-contain p-2" />
-          <ServiceImageOverlay service={service} index={index} />
+          <Image src={service.image} alt={service.imageAlt} fill sizes="(max-width: 1023px) 92vw, 1px" className="object-cover" />
         </div>
       </div>
     </article>
@@ -220,28 +219,8 @@ function ServiceImage({
         fill
         priority={index === 0}
         sizes="(min-width: 1024px) 62vw, 1px"
-        className="object-contain p-4"
+        className="object-cover"
       />
-      <ServiceImageOverlay service={service} index={index} />
     </div>
-  );
-}
-
-function ServiceImageOverlay({ service, index }: { service: MainServicesAmbushItem; index: number }) {
-  return (
-    <>
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-white/5" />
-      <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/65">{service.shortTitle}</p>
-            <p className="mt-2 max-w-md text-sm font-bold leading-6 text-white/90">{service.outcome}</p>
-          </div>
-          <span className="shrink-0 rounded-full border border-white/25 bg-slate-950/30 px-3 py-2 text-[10px] font-black tracking-[0.18em] backdrop-blur">
-            0{index + 1} / 04
-          </span>
-        </div>
-      </div>
-    </>
   );
 }
