@@ -10,6 +10,7 @@ import { serviceCategories } from '@/lib/constants/service-categories';
 import { teamCategories } from '@/lib/constants/team';
 import { serviceThemes } from '@/lib/constants/theme';
 import { whyChooseItems } from '@/lib/constants/why-choose';
+import { getWebsiteCollection } from '@/lib/website-collections';
 
 export const metadata: Metadata = {
   title: 'About | Inception 23',
@@ -32,7 +33,16 @@ const expertiseAreas = [
   'Dashboards, operating models, and implementation governance',
 ];
 
-export default function AboutPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function AboutPage() {
+  const [cmsValues, cmsExpertise] = await Promise.all([
+    getWebsiteCollection('aboutValues'),
+    getWebsiteCollection('aboutExpertise'),
+  ]);
+  const displayValues = cmsValues.length ? cmsValues.map((item) => String(item.label || '')).filter(Boolean) : values;
+  const displayExpertiseAreas = cmsExpertise.length ? cmsExpertise.map((item) => String(item.label || '')).filter(Boolean) : expertiseAreas;
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-white text-brand-950">
       <Header />
@@ -109,7 +119,7 @@ export default function AboutPage() {
             </h2>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
-            {values.map((value, index) => {
+            {displayValues.map((value, index) => {
               const theme = serviceThemes[index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative'];
               return (
                 <div key={value} className={`rounded-[1.5rem] border bg-white p-6 shadow-sm ${theme.border}`}>
@@ -136,7 +146,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {expertiseAreas.map((item) => (
+            {displayExpertiseAreas.map((item) => (
               <div key={item} className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 text-sm font-bold leading-6 text-slate-700">
                 <CheckCircle2 className="mt-0.5 shrink-0 text-brand-700" size={18} />
                 {item}

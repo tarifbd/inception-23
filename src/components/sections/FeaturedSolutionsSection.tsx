@@ -4,19 +4,30 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { serviceCategories } from '@/lib/constants/service-categories';
-import { solutions } from '@/lib/constants/solutions';
+import { serviceCategories, type ServiceCategory } from '@/lib/constants/service-categories';
+import { solutions, type Solution } from '@/lib/constants/solutions';
 import { serviceThemes, type ServiceKey } from '@/lib/constants/theme';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
 import { SolutionCard } from './SolutionCard';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
-export function FeaturedSolutionsSection({ content }: { content: HomepageSectionContent }) {
+export function FeaturedSolutionsSection({
+  content,
+  solutions: cmsSolutions,
+  categories,
+}: {
+  content: HomepageSectionContent;
+  solutions?: CollectionRecord[];
+  categories?: CollectionRecord[];
+}) {
   const [activeService, setActiveService] = useState<ServiceKey>('it');
+  const displaySolutions = (cmsSolutions?.length ? cmsSolutions : solutions) as Solution[];
+  const displayCategories = (categories?.length ? categories : serviceCategories) as ServiceCategory[];
   const filteredSolutions = useMemo(
-    () => solutions.filter((solution) => solution.serviceKey === activeService),
-    [activeService],
+    () => displaySolutions.filter((solution) => solution.serviceKey === activeService),
+    [activeService, displaySolutions],
   );
   const visibleSolutions = [...filteredSolutions].sort((a, b) => Number(Boolean(b.image)) - Number(Boolean(a.image))).slice(0, 2);
   const activeTheme = serviceThemes[activeService];
@@ -36,7 +47,7 @@ export function FeaturedSolutionsSection({ content }: { content: HomepageSection
 
       <div className="mt-10 overflow-hidden rounded-[2rem] border border-slate-200 bg-white/82 p-2 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl">
         <div className="grid gap-2 md:grid-cols-4">
-          {serviceCategories.map((category) => {
+          {displayCategories.map((category) => {
             const theme = serviceThemes[category.key];
             const selected = activeService === category.key;
 
@@ -54,7 +65,7 @@ export function FeaturedSolutionsSection({ content }: { content: HomepageSection
                   {category.shortTitle.slice(0, 2)}
                 </span>
                 <span className="mt-3 block text-sm font-black leading-tight text-brand-950">{category.shortTitle}</span>
-                <span className="mt-1 block text-xs font-bold text-slate-500">{solutions.filter((solution) => solution.serviceKey === category.key).length} featured systems</span>
+                <span className="mt-1 block text-xs font-bold text-slate-500">{displaySolutions.filter((solution) => solution.serviceKey === category.key).length} featured systems</span>
               </button>
             );
           })}

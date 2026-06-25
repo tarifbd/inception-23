@@ -2,19 +2,23 @@
 
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { teamCategories, teamMembers, type TeamCategory } from '@/lib/constants/team';
+import { teamCategories, teamMembers, type TeamCategory, type TeamMember } from '@/lib/constants/team';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
 import { TeamCard } from './TeamCard';
 import { defaultHomepageContent, type HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
 export function TeamSection({
   content = defaultHomepageContent.sections.find((section) => section.key === 'team')!,
+  members: cmsMembers,
 }: {
   content?: HomepageSectionContent;
+  members?: CollectionRecord[];
 }) {
   const [active, setActive] = useState<TeamCategory>('management');
-  const members = useMemo(() => teamMembers.filter((member) => member.category === active), [active]);
+  const displayMembers = (cmsMembers?.length ? cmsMembers : teamMembers) as TeamMember[];
+  const members = useMemo(() => displayMembers.filter((member) => member.category === active), [active, displayMembers]);
   const activeCategory = teamCategories.find((category) => category.id === active) ?? teamCategories[0];
   const activeThemeClass = {
     management: 'from-emerald-50 via-white to-teal-50 border-emerald-200/80 text-emerald-700',

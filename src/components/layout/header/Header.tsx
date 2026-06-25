@@ -10,8 +10,23 @@ import { HeaderCTA } from './HeaderCTA';
 import { HeaderToggles } from './HeaderToggles';
 import { MegaMenu, type MenuKind } from './MegaMenu';
 import { MobileNav } from './MobileNav';
+import type { CollectionRecord } from '@/lib/website-collections';
 
-export function Header() {
+type HeaderNavItem = { label: string; href: string; menu?: string };
+
+function normalizeNavigation(records?: CollectionRecord[]): HeaderNavItem[] | undefined {
+  if (!records?.length) return undefined;
+  return records
+    .map((record) => ({
+      label: String(record.label || '').trim(),
+      href: String(record.href || '/').trim() || '/',
+      menu: String(record.menu || '').trim() || undefined,
+    }))
+    .filter((item) => item.label);
+}
+
+export function Header({ navigation }: { navigation?: CollectionRecord[] }) {
+  const navItems = normalizeNavigation(navigation);
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<MenuKind | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -98,7 +113,7 @@ export function Header() {
               </span>
             </Link>
 
-            <DesktopNav activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+            <DesktopNav activeMenu={activeMenu} setActiveMenu={setActiveMenu} navItems={navItems} />
 
             <div className="flex shrink-0 items-center gap-2">
               <HeaderToggles className="hidden xl:flex" />
@@ -120,7 +135,7 @@ export function Header() {
         </div>
       </header>
 
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} navItems={navItems} />
     </>
   );
 }

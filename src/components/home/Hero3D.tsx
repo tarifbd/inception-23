@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BriefcaseBusiness, CheckCircle2, Cpu, Palette, Scale } from 'lucide-react';
@@ -172,13 +173,38 @@ export default function Hero3D({ content }: { content: HomepageContent['hero'] }
               transition={{ duration: 0.45, ease: 'easeOut' }}
               className="relative h-[clamp(280px,74vw,600px)] w-[clamp(280px,74vw,600px)] max-w-full"
             >
-              <DotLottieReact
-                src={current.lottie}
-                loop
-                autoplay
-                className={`h-full w-full object-contain drop-shadow-[0_30px_52px_rgba(13,1,33,0.16)] ${current.lottieClass}`}
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              />
+              {current.visualType === 'image' && current.visualUrl ? (
+                <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-white/80 bg-white shadow-[0_30px_70px_rgba(13,1,33,0.16)]">
+                  <Image
+                    src={current.visualUrl}
+                    alt={current.visualAlt || current.label}
+                    fill
+                    priority
+                    sizes="(max-width: 1023px) 90vw, 46vw"
+                    className="object-cover"
+                  />
+                </div>
+              ) : current.visualType === 'video' && current.visualUrl ? (
+                <div className="h-full w-full overflow-hidden rounded-[2rem] border border-white/80 bg-white shadow-[0_30px_70px_rgba(13,1,33,0.16)]">
+                  <video
+                    src={current.visualUrl}
+                    className="h-full w-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-label={current.visualAlt || current.label}
+                  />
+                </div>
+              ) : (
+                <DotLottieReact
+                  src={current.visualUrl || current.lottie}
+                  loop
+                  autoplay
+                  className={`h-full w-full object-contain drop-shadow-[0_30px_52px_rgba(13,1,33,0.16)] ${current.lottieClass}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+              )}
             </motion.div>
           </AnimatePresence>
         </div>

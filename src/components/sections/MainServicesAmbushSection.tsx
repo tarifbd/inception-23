@@ -2,16 +2,21 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { mainServicesAmbush, type MainServicesAmbushItem } from '@/lib/constants/main-services-ambush';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
 const sectionBackgrounds = ['#ecfeff', '#f1fbf6', '#f7f3ff', '#fff6ef'];
 
-export function MainServicesAmbushSection({ content: _content }: { content: HomepageSectionContent }) {
+export function MainServicesAmbushSection({ content: _content, services }: { content: HomepageSectionContent; services?: CollectionRecord[] }) {
+  const serviceItems = useMemo(
+    () => (services?.length ? services : mainServicesAmbush) as MainServicesAmbushItem[],
+    [services],
+  );
   const sectionRef = useRef<HTMLElement | null>(null);
   const storyRefs = useRef<HTMLElement[]>([]);
   const imageRefs = useRef<HTMLDivElement[]>([]);
@@ -43,7 +48,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
       const mobileDots = mobileDotRefs.current.filter(Boolean);
 
       if (isDesktop) {
-        if (stories.length !== mainServicesAmbush.length || images.length !== mainServicesAmbush.length) return;
+        if (stories.length !== serviceItems.length || images.length !== serviceItems.length) return;
 
         gsap.set(section, { backgroundColor: sectionBackgrounds[0] });
         gsap.set(images, {
@@ -109,94 +114,87 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
         return;
       }
 
-      if (!mobileStage || mobileCards.length !== mainServicesAmbush.length || mobileImages.length !== mainServicesAmbush.length) return;
+      if (!mobileStage || mobileCards.length !== serviceItems.length || mobileImages.length !== serviceItems.length) return;
 
       gsap.set(section, { backgroundColor: sectionBackgrounds[0] });
       gsap.set(mobileCards, { autoAlpha: 0, pointerEvents: 'none' });
       gsap.set(mobileCards[0], { autoAlpha: 1, pointerEvents: 'auto' });
       gsap.set(mobileImages, {
+        autoAlpha: 0,
         clipPath: 'inset(0% 0% 0% 0% round 1.35rem)',
-        scale: 1,
-        yPercent: 0,
+        scale: 1.05,
+        yPercent: 2,
         transformOrigin: '50% 50%',
       });
+      gsap.set(mobileImages[0], { autoAlpha: 1, scale: 1, yPercent: 0 });
 
-      mobileImages.forEach((image, index) => {
-        image.style.zIndex = String(mobileImages.length - index);
+      mobileImages.forEach((image) => {
+        image.style.zIndex = '1';
       });
 
       gsap.set(mobileDots, { autoAlpha: 0.28, scaleX: 1 });
       if (mobileDots[0]) gsap.set(mobileDots[0], { autoAlpha: 1, scaleX: 1.8 });
 
-      const mobileTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: mobileStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.65,
-          invalidateOnRefresh: true,
-        },
-      });
+      let activeIndex = 0;
 
-      mobileCards.slice(0, -1).forEach((card, index) => {
-        const nextCard = mobileCards[index + 1];
-        const image = mobileImages[index];
-        const currentDot = mobileDots[index];
-        const nextDot = mobileDots[index + 1];
+      const setActiveMobileService = (nextIndex: number) => {
+        if (nextIndex === activeIndex) return;
 
-        mobileTimeline
-          .to(
-            image,
-            {
-              clipPath: 'inset(0% 0% 100% 0% round 1.35rem)',
-              scale: 1.08,
-              yPercent: -4,
-              duration: 0.78,
-              ease: 'none',
-            },
-            index,
-          )
-          .to(
-            card,
-            {
-              autoAlpha: 0,
-              pointerEvents: 'none',
-              duration: 0.38,
-              ease: 'none',
-            },
-            index,
-          )
-          .fromTo(
-            nextCard,
-            { autoAlpha: 0 },
-            {
-              autoAlpha: 1,
-              pointerEvents: 'auto',
-              duration: 0.44,
-              ease: 'none',
-            },
-            index + 0.1,
-          )
-          .to(
-            section,
-            {
-              backgroundColor: sectionBackgrounds[index + 1],
-              duration: 0.42,
-              ease: 'none',
-            },
-            index + 0.1,
-          );
+        const previousImage = mobileImages[activeIndex];
+        const nextImage = mobileImages[nextIndex];
 
-        if (currentDot && nextDot) {
-          mobileTimeline
-            .to(currentDot, { autoAlpha: 0.28, scaleX: 1, duration: 0.22, ease: 'power2.out' }, index)
-            .to(nextDot, { autoAlpha: 1, scaleX: 1.8, duration: 0.22, ease: 'power2.out' }, index + 0.1);
+        if (previousImage) previousImage.style.zIndex = '2';
+        if (nextImage) nextImage.style.zIndex = '3';
+
+        gsap.killTweensOf([mobileCards, mobileImages, mobileDots, section]);
+        gsap.set(mobileCards, { autoAlpha: 0, pointerEvents: 'none' });
+        gsap.set(mobileCards[nextIndex], { autoAlpha: 1, pointerEvents: 'auto' });
+
+        gsap.to(previousImage, {
+          autoAlpha: 0,
+          scale: 1.06,
+          yPercent: -1.5,
+          duration: 0.45,
+          ease: 'power2.out',
+          overwrite: true,
+        });
+        gsap.fromTo(
+          nextImage,
+          { autoAlpha: 0, scale: 1.06, yPercent: 2 },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            yPercent: 0,
+            duration: 0.58,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        );
+
+        gsap.to(section, { backgroundColor: sectionBackgrounds[nextIndex], duration: 0.35, overwrite: true });
+
+        if (mobileDots.length) {
+          gsap.to(mobileDots, { autoAlpha: 0.28, scaleX: 1, duration: 0.18, overwrite: true });
+          gsap.to(mobileDots[nextIndex], { autoAlpha: 1, scaleX: 1.8, duration: 0.18, overwrite: true });
         }
+
+        activeIndex = nextIndex;
+      };
+
+      const mobileTrigger = ScrollTrigger.create({
+        trigger: mobileStage,
+        start: 'top top',
+        end: 'bottom bottom',
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const nextIndex = Math.round(self.progress * (serviceItems.length - 1));
+          setActiveMobileService(nextIndex);
+        },
+        onLeaveBack: () => setActiveMobileService(0),
       });
 
       cleanupAnimation = () => {
-        mobileTimeline.scrollTrigger?.kill();
-        mobileTimeline.kill();
+        mobileTrigger.kill();
       };
 
       ScrollTrigger.refresh();
@@ -215,7 +213,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
       desktopQuery.removeEventListener('change', handleChange);
       motionQuery.removeEventListener('change', handleChange);
     };
-  }, []);
+  }, [serviceItems]);
 
   return (
     <section
@@ -228,7 +226,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
       <div ref={mobileStageRef} className="relative h-[400svh] px-4 sm:px-6 lg:hidden">
         <div className="sticky top-0 mx-auto flex min-h-[100svh] max-w-[42rem] items-center py-5">
           <div className="relative h-[calc(100svh-2.5rem)] w-full overflow-hidden">
-            {mainServicesAmbush.map((service, index) => (
+            {serviceItems.map((service, index) => (
               <MobileServiceStory
                 key={service.key}
                 service={service}
@@ -240,7 +238,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
             ))}
 
             <div className="pointer-events-none absolute left-0 right-0 top-[13.25rem] z-0 mx-auto aspect-[16/10] w-full max-w-[22.5rem] overflow-hidden rounded-[1.35rem] border border-white/90 bg-white shadow-[0_22px_60px_rgba(15,23,42,0.18)]">
-              {mainServicesAmbush.map((service, index) => (
+              {serviceItems.map((service, index) => (
                 <MobileServiceImage
                   key={service.key}
                   service={service}
@@ -253,7 +251,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
             </div>
 
             <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-2">
-              {mainServicesAmbush.map((service, index) => (
+              {serviceItems.map((service, index) => (
                 <span
                   key={service.key}
                   ref={(node) => {
@@ -270,7 +268,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
 
       <div className="mx-auto hidden w-full max-w-[92rem] px-4 sm:px-6 lg:grid lg:grid-cols-[0.76fr_1.24fr] lg:gap-10 lg:px-8">
         <div>
-          {mainServicesAmbush.map((service, index) => (
+          {serviceItems.map((service, index) => (
             <ServiceStory
               key={service.key}
               service={service}
@@ -285,7 +283,7 @@ export function MainServicesAmbushSection({ content: _content }: { content: Home
         <div className="relative hidden lg:block">
           <div className="sticky top-0 flex h-screen items-center py-12">
             <div className="relative h-[min(74vh,760px)] w-full overflow-hidden rounded-[2rem] border border-white/90 bg-white shadow-[0_32px_100px_rgba(15,23,42,0.16)]">
-              {mainServicesAmbush.map((service, index) => (
+              {serviceItems.map((service, index) => (
                 <ServiceImage
                   key={service.key}
                   service={service}

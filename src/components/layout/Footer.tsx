@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -21,38 +21,41 @@ import {
 } from 'lucide-react';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { industriesMenu, insightsMenu, solutionMenu } from '@/lib/constants/navigation';
+import {
+  contactHighlights as defaultContactHighlights,
+  footerCompanyLinks as defaultFooterCompanyLinks,
+  footerSocialLinks as defaultFooterSocialLinks,
+  footerTrustPoints as defaultFooterTrustPoints,
+} from '@/lib/constants/site-content';
 
-const footerCompanyLinks = [
-  { label: 'About', href: '/about' },
-  { label: 'Team', href: '/#team' },
-  { label: 'Process', href: '/#process' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Resources', href: '/resources' },
-  { label: 'Contact', href: '/contact' },
-];
-
-const trustPoints = [
-  'Confidential advisory intake',
-  'Strategy, systems, legal, finance, and creative under one roof',
-  'Bangladesh-aware execution with global-grade structure',
-];
-
-const footerSocialLinks = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: Linkedin },
-  { label: 'Facebook', href: 'https://www.facebook.com', icon: Facebook },
-  { label: 'Instagram', href: 'https://www.instagram.com', icon: Instagram },
-  { label: 'YouTube', href: 'https://www.youtube.com', icon: Youtube },
-];
-
-const contactHighlights = [
-  { label: 'Business hours', value: 'Sunday - Thursday, 9:00 AM - 6:00 PM', icon: Clock3 },
-  { label: 'Response time', value: 'Replies within one business day', icon: MessageCircle },
-  { label: 'Service coverage', value: 'Bangladesh-based, working with clients worldwide', icon: Globe2 },
-];
+const iconMap = { Clock3, Facebook, Globe2, Instagram, Linkedin, Mail, MapPin, MessageCircle, Phone, Youtube };
 
 export function Footer() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [companyLinks, setCompanyLinks] = useState(defaultFooterCompanyLinks);
+  const [socialLinks, setSocialLinks] = useState(defaultFooterSocialLinks);
+  const [trustPoints, setTrustPoints] = useState(defaultFooterTrustPoints);
+  const [contactHighlights, setContactHighlights] = useState(defaultContactHighlights);
+
+  useEffect(() => {
+    let active = true;
+    Promise.all([
+      fetch('/api/v1/admin/website-content/footerCompanyLinks').then((response) => response.json()).catch(() => ({ data: [] })),
+      fetch('/api/v1/admin/website-content/footerSocialLinks').then((response) => response.json()).catch(() => ({ data: [] })),
+      fetch('/api/v1/admin/website-content/footerTrustPoints').then((response) => response.json()).catch(() => ({ data: [] })),
+      fetch('/api/v1/admin/website-content/footerContactHighlights').then((response) => response.json()).catch(() => ({ data: [] })),
+    ]).then(([linksPayload, socialPayload, trustPayload, highlightsPayload]) => {
+      if (!active) return;
+      if (Array.isArray(linksPayload.data) && linksPayload.data.length) setCompanyLinks(linksPayload.data);
+      if (Array.isArray(socialPayload.data) && socialPayload.data.length) setSocialLinks(socialPayload.data);
+      if (Array.isArray(trustPayload.data) && trustPayload.data.length) setTrustPoints(trustPayload.data.map((item: { label?: string }) => item.label).filter(Boolean));
+      if (Array.isArray(highlightsPayload.data) && highlightsPayload.data.length) setContactHighlights(highlightsPayload.data);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -204,7 +207,9 @@ export function Footer() {
             <div className="mt-7">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Connect with us</p>
               <div className="mt-3 flex flex-wrap gap-3">
-                {footerSocialLinks.map(({ label, href, icon: Icon }) => (
+                {socialLinks.map(({ label, href, icon }) => {
+                  const Icon = iconMap[icon as keyof typeof iconMap] ?? Linkedin;
+                  return (
                   <a
                     key={label}
                     href={href}
@@ -215,7 +220,8 @@ export function Footer() {
                   >
                     <Icon size={18} />
                   </a>
-                ))}
+                  );
+                })}
                 <a href="mailto:hello@inception23.com" aria-label="Email" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
                   <Mail size={18} />
                 </a>
@@ -223,7 +229,9 @@ export function Footer() {
             </div>
 
             <div className="mt-8 grid gap-5 border-t border-slate-200 pt-7">
-              {contactHighlights.map(({ label, value, icon: Icon }) => (
+              {contactHighlights.map(({ label, value, icon }) => {
+                const Icon = iconMap[icon as keyof typeof iconMap] ?? Clock3;
+                return (
                 <div key={label} className="grid grid-cols-[2.5rem_1fr] gap-3">
                   <span className="flex h-10 w-10 items-center justify-center border border-slate-200 bg-slate-50 text-brand-700">
                     <Icon size={18} />
@@ -233,7 +241,8 @@ export function Footer() {
                     <p className="mt-1 text-sm font-bold leading-6 text-slate-700">{value}</p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="mt-auto pt-8">
@@ -257,7 +266,7 @@ export function Footer() {
             <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
             <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
             <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
-            <FooterColumn title="Company" links={[...footerCompanyLinks, ...insightsMenu.slice(0, 1)]} />
+            <FooterColumn title="Company" links={[...companyLinks, ...insightsMenu.slice(0, 1)]} />
           </div>
         </div>
 

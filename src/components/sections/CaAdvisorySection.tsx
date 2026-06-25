@@ -3,9 +3,11 @@ import { caAdvisoryFocus } from '@/lib/constants/solutions';
 import { serviceThemes } from '@/lib/constants/theme';
 import { AnimatedSection } from './AnimatedSection';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
-export function CaAdvisorySection({ content }: { content: HomepageSectionContent }) {
+export function CaAdvisorySection({ content, focusItems }: { content: HomepageSectionContent; focusItems?: CollectionRecord[] }) {
   const theme = serviceThemes.consultancy;
+  const displayFocus = focusItems?.length ? focusItems.map((item) => String(item.title || '')).filter(Boolean) : caAdvisoryFocus;
 
   return (
     <AnimatedSection id="ca-advisory" className="bg-gradient-to-b from-white to-emerald-50/50">
@@ -25,7 +27,7 @@ export function CaAdvisorySection({ content }: { content: HomepageSectionContent
           </div>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          {caAdvisoryFocus.map((item) => (
+          {displayFocus.map((item) => (
             <div key={item} className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-white/84 px-4 py-3 shadow-sm backdrop-blur-xl">
               <CheckCircle2 size={18} className={theme.textSoft} />
               <span className="text-sm font-bold text-slate-700">{item}</span>

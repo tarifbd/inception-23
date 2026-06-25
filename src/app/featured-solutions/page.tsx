@@ -7,13 +7,23 @@ import { SolutionCard } from '@/components/sections/SolutionCard';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { solutions } from '@/lib/constants/solutions';
 import { serviceThemes } from '@/lib/constants/theme';
+import { getWebsiteCollection } from '@/lib/website-collections';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Featured Solutions | Inception 23',
   description: 'Explore all featured advisory, IT, AI, management, legal, and creative solution systems by Inception 23.',
 };
 
-export default function FeaturedSolutionsPage() {
+export default async function FeaturedSolutionsPage() {
+  const [cmsCategories, cmsSolutions] = await Promise.all([
+    getWebsiteCollection('serviceCategories'),
+    getWebsiteCollection('solutions'),
+  ]);
+  const displayCategories = cmsCategories.length ? cmsCategories as unknown as typeof serviceCategories : serviceCategories;
+  const displaySolutions = cmsSolutions.length ? cmsSolutions as unknown as typeof solutions : solutions;
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white">
       <Header />
@@ -35,9 +45,9 @@ export default function FeaturedSolutionsPage() {
           </div>
 
           <div className="mt-12 space-y-16">
-            {serviceCategories.map((category) => {
+            {displayCategories.map((category) => {
               const theme = serviceThemes[category.key];
-              const categorySolutions = solutions.filter((solution) => solution.serviceKey === category.key);
+              const categorySolutions = displaySolutions.filter((solution) => solution.serviceKey === category.key);
 
               return (
                 <section key={category.key} className="scroll-mt-28">

@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { Check, CheckCircle2, ChevronDown, Clock3, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { subServices } from '@/lib/constants/sub-services';
@@ -114,12 +115,31 @@ export function ContactBriefSection({
   const [serviceKey, setServiceKey] = useState<ServiceKey | ''>('');
   const [subService, setSubService] = useState('');
   const [budget, setBudget] = useState('');
+  const [cmsBudgets, setCmsBudgets] = useState<string[]>([]);
+  const [cmsTrustPoints, setCmsTrustPoints] = useState<string[]>([]);
   const [openSelect, setOpenSelect] = useState<SelectKey | null>(null);
   const activeTheme = serviceKey ? serviceThemes[serviceKey] : serviceThemes.it;
   const activeSubServices = useMemo(() => (serviceKey ? subServices[serviceKey] : []), [serviceKey]);
   const mainServiceOptions = serviceCategories.map((category) => ({ value: category.key, label: category.title }));
   const subServiceOptions = activeSubServices.map((item) => ({ value: item.title, label: item.title }));
-  const budgetOptions = budgets.map((item) => ({ value: item, label: item }));
+  const budgetItems = cmsBudgets.length ? cmsBudgets : budgets;
+  const trustItems = cmsTrustPoints.length ? cmsTrustPoints : trustPoints;
+  const budgetOptions = budgetItems.map((item) => ({ value: item, label: item }));
+
+  useEffect(() => {
+    let active = true;
+    Promise.all([
+      fetch('/api/v1/admin/website-content/contactBudgets').then((response) => response.json()).catch(() => ({ data: [] })),
+      fetch('/api/v1/admin/website-content/contactTrustPoints').then((response) => response.json()).catch(() => ({ data: [] })),
+    ]).then(([budgetPayload, trustPayload]) => {
+      if (!active) return;
+      setCmsBudgets(Array.isArray(budgetPayload.data) ? budgetPayload.data.map((item: { label?: string }) => item.label).filter(Boolean) : []);
+      setCmsTrustPoints(Array.isArray(trustPayload.data) ? trustPayload.data.map((item: { label?: string }) => item.label).filter(Boolean) : []);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -331,7 +351,7 @@ export function ContactBriefSection({
             <div className={`rounded-[2rem] border bg-gradient-to-br ${activeTheme.gradientSoft} p-6 shadow-xl shadow-slate-950/6 md:p-7 ${activeTheme.border}`}>
               <h3 className="text-2xl font-black text-brand-950">Why work with us?</h3>
               <div className="mt-7 grid gap-4">
-                {trustPoints.map((point) => (
+                {trustItems.map((point) => (
                   <div key={point} className="flex gap-3 text-sm font-bold leading-6 text-slate-700">
                     <CheckCircle2 size={18} className={`mt-0.5 shrink-0 ${activeTheme.text}`} />
                     <span>{point}</span>

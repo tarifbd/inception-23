@@ -3,8 +3,11 @@ import { AnimatedSection } from './AnimatedSection';
 import { FeatureCard } from './FeatureCard';
 import { SectionHeader } from './SectionHeader';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
-export function AiSolutionsSection({ content }: { content: HomepageSectionContent }) {
+export function AiSolutionsSection({ content, capabilities }: { content: HomepageSectionContent; capabilities?: CollectionRecord[] }) {
+  const displayCapabilities = (capabilities?.length ? capabilities : aiCapabilities) as typeof aiCapabilities;
+
   return (
     <AnimatedSection id="ai-solutions" className="bg-white">
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.3fr] lg:items-center">
@@ -22,7 +25,7 @@ export function AiSolutionsSection({ content }: { content: HomepageSectionConten
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          {aiCapabilities.map((feature, index) => (
+          {displayCapabilities.map((feature, index) => (
             <FeatureCard key={feature.title} {...feature} serviceKey="it" index={index} />
           ))}
         </div>

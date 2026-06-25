@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { LandingIcon } from '@/components/landing/icons';
 import { processSteps } from '@/lib/constants/process';
+import type { CollectionRecord } from '@/lib/website-collections';
 
 const processAccentStyles = [
   {
@@ -35,12 +36,14 @@ const processAccentStyles = [
   },
 ];
 
-export function ProcessTimeline() {
+export function ProcessTimeline({ steps }: { steps?: CollectionRecord[] }) {
+  const displaySteps = (steps?.length ? steps : processSteps) as typeof processSteps;
+
   return (
     <div className="relative mx-auto max-w-6xl">
       <div className="absolute bottom-8 left-5 top-8 w-px bg-[linear-gradient(180deg,#22d3ee_0%,#34d399_34%,#8b5cf6_68%,#fb923c_100%)] opacity-40 md:left-1/2" />
       <div className="space-y-5">
-        {processSteps.map((step, index) => {
+        {displaySteps.map((step, index) => {
           const isEven = index % 2 === 0;
           const accent = processAccentStyles[index % processAccentStyles.length];
 

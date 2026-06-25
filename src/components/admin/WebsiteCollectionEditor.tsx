@@ -13,7 +13,7 @@ import {
 } from './AdminModuleShell';
 import type { CollectionDefinition, CollectionField, CollectionRecord } from '@/lib/website-collections';
 
-type MediaAsset = { id: string; name: string; url: string; altText: string };
+type MediaAsset = { id: string; name: string; url: string; altText: string; mimeType: string };
 
 export function WebsiteCollectionEditor({ collection }: { collection: string }) {
   const [definition, setDefinition] = useState<CollectionDefinition | null>(null);
@@ -91,17 +91,17 @@ export function WebsiteCollectionEditor({ collection }: { collection: string }) 
     const form = event.currentTarget;
     const response = await fetch('/api/v1/admin/cms/media', { method: 'POST', body: new FormData(form) });
     const payload = await response.json();
-    if (!response.ok) return setMessage(payload.error || 'Image upload failed');
+    if (!response.ok) return setMessage(payload.error || 'Media upload failed');
     updateRecord(recordIndex, field.key, payload.data.url);
     setAssets((current) => [payload.data, ...current]);
     form.reset();
-    setMessage('Image uploaded and selected. Save the collection to publish it.');
+    setMessage('Media uploaded and selected. Save the collection to publish it.');
   };
 
   return (
     <AdminModuleShell
       title={definition?.title || 'Website Content'}
-      eyebrow="Website collection editor"
+      eyebrow="Add, upload, delete, reorder, and change"
       nav={[
         { href: '/admin', label: 'Dashboard' },
         { href: '/admin/website', label: 'Website CMS' },
@@ -176,7 +176,7 @@ function FieldEditor({
   onUpload: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   const stringValue = Array.isArray(value) ? value.join('\n') : String(value ?? '');
-  const spanClass = field.type === 'textarea' || field.type === 'image' ? 'md:col-span-2' : '';
+  const spanClass = field.type === 'textarea' || field.type === 'image' || field.type === 'video' ? 'md:col-span-2' : '';
 
   if (field.type === 'textarea') {
     return <div className={spanClass}><AdminField label={field.label}><textarea className={`${adminInputClass} min-h-28 resize-y`} value={stringValue} onChange={(event) => onChange(event.target.value)} /></AdminField></div>;
@@ -188,6 +188,19 @@ function FieldEditor({
 
   if (field.type === 'select') {
     return <div className={spanClass}><AdminField label={field.label}><select className={adminInputClass} value={stringValue} onChange={(event) => onChange(event.target.value)}>{field.options?.map((option) => <option key={option} value={option}>{option || 'None'}</option>)}</select></AdminField></div>;
+  }
+
+  if (field.type === 'color') {
+    return (
+      <div className={spanClass}>
+        <AdminField label={field.label}>
+          <div className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-2">
+            <input type="color" className="h-11 w-full rounded-lg border border-gray-200 bg-white p-1" value={stringValue || '#0f172a'} onChange={(event) => onChange(event.target.value)} />
+            <input className={adminInputClass} value={stringValue} onChange={(event) => onChange(event.target.value)} placeholder="#0f172a" />
+          </div>
+        </AdminField>
+      </div>
+    );
   }
 
   if (field.type === 'image') {
@@ -202,10 +215,35 @@ function FieldEditor({
               <input className={adminInputClass} value={stringValue} onChange={(event) => onChange(event.target.value)} placeholder="/uploads/cms/..." />
               <select className={adminInputClass} value="" onChange={(event) => event.target.value && onChange(event.target.value)}>
                 <option value="">Choose from media library</option>
-                {assets.map((asset) => <option key={asset.id} value={asset.url}>{asset.name}</option>)}
+                {assets.filter((asset) => asset.mimeType?.startsWith('image/')).map((asset) => <option key={asset.id} value={asset.url}>{asset.name}</option>)}
               </select>
               <form onSubmit={onUpload} className="flex flex-col gap-2 sm:flex-row">
                 <input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif" required className={`${adminInputClass} file:mr-2 file:border-0 file:bg-transparent file:text-xs file:font-bold`} />
+                <button className={adminSecondaryButtonClass}><Upload size={14} /> Upload</button>
+              </form>
+            </div>
+          </div>
+        </AdminField>
+      </div>
+    );
+  }
+
+  if (field.type === 'video') {
+    return (
+      <div className={spanClass}>
+        <AdminField label={field.label}>
+          <div className="grid gap-3 lg:grid-cols-[180px_minmax(0,1fr)]">
+            <div className="flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+              {stringValue ? <video src={stringValue} className="h-full w-full object-contain" controls playsInline /> : <ImagePlus className="text-gray-300" size={30} />}
+            </div>
+            <div className="space-y-3">
+              <input className={adminInputClass} value={stringValue} onChange={(event) => onChange(event.target.value)} placeholder="/uploads/cms/video.mp4 or YouTube/Vimeo URL" />
+              <select className={adminInputClass} value="" onChange={(event) => event.target.value && onChange(event.target.value)}>
+                <option value="">Choose video from media library</option>
+                {assets.filter((asset) => asset.mimeType?.startsWith('video/')).map((asset) => <option key={asset.id} value={asset.url}>{asset.name}</option>)}
+              </select>
+              <form onSubmit={onUpload} className="flex flex-col gap-2 sm:flex-row">
+                <input type="file" name="file" accept="video/mp4,video/webm,video/quicktime" required className={`${adminInputClass} file:mr-2 file:border-0 file:bg-transparent file:text-xs file:font-bold`} />
                 <button className={adminSecondaryButtonClass}><Upload size={14} /> Upload</button>
               </form>
             </div>

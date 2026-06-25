@@ -35,6 +35,9 @@ export type HomepageHeroSlide = {
   highlight: string;
   copy: string;
   chips: string[];
+  visualType?: 'lottie' | 'image' | 'video';
+  visualUrl?: string;
+  visualAlt?: string;
 };
 
 export type HomepageContent = {
@@ -69,6 +72,9 @@ export const defaultHomepageContent: HomepageContent = {
         highlight: 'IT, AI & digital innovation',
         copy: 'Production-grade AI automation, custom software, data platforms, and secure web systems built for measurable business outcomes.',
         chips: ['AI Agents', 'Custom Software', 'Data Platforms', 'Cloud & DevOps'],
+        visualType: 'lottie',
+        visualUrl: '/animations/it-new.json',
+        visualAlt: 'IT and AI animated hero visual',
       },
       {
         id: 'consultancy',
@@ -78,6 +84,9 @@ export const defaultHomepageContent: HomepageContent = {
         highlight: 'management intelligence',
         copy: 'Strategy, operating cadence, KPI systems, process redesign, and governance structures for leadership teams that need control while scaling.',
         chips: ['Corporate Strategy', 'Operational Scaling', 'Process Design', 'Growth Systems'],
+        visualType: 'lottie',
+        visualUrl: '/animations/consultancy-new.json',
+        visualAlt: 'Management consultancy animated hero visual',
       },
       {
         id: 'legal',
@@ -87,6 +96,9 @@ export const defaultHomepageContent: HomepageContent = {
         highlight: 'legal precision',
         copy: 'Corporate legal support, compliance readiness, governance documents, and practical risk mitigation frameworks for serious operators.',
         chips: ['Compliance', 'Corporate Law', 'Governance', 'Risk Mitigation'],
+        visualType: 'lottie',
+        visualUrl: '/animations/legal-new.json',
+        visualAlt: 'Legal support animated hero visual',
       },
       {
         id: 'creative',
@@ -96,6 +108,9 @@ export const defaultHomepageContent: HomepageContent = {
         highlight: 'creative systems',
         copy: 'Brand strategy, visual direction, campaign architecture, premium interface design, and market-facing assets that make complex offers easier to trust.',
         chips: ['Brand Strategy', 'Campaign Systems', 'Digital Experience', 'Creative Direction'],
+        visualType: 'lottie',
+        visualUrl: '/animations/creative-new.json',
+        visualAlt: 'Creative services animated hero visual',
       },
     ],
   },

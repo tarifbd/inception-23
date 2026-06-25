@@ -2,8 +2,9 @@ import { AnimatedSection } from './AnimatedSection';
 import { ProcessTimeline } from './ProcessTimeline';
 import { SectionHeader } from './SectionHeader';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
-export function ProcessSection({ content }: { content: HomepageSectionContent }) {
+export function ProcessSection({ content, steps }: { content: HomepageSectionContent; steps?: CollectionRecord[] }) {
   return (
     <AnimatedSection id="process" className="bg-white">
       <SectionHeader
@@ -13,7 +14,7 @@ export function ProcessSection({ content }: { content: HomepageSectionContent })
         align="center"
       />
       <div className="mt-14">
-        <ProcessTimeline />
+        <ProcessTimeline steps={steps} />
       </div>
     </AnimatedSection>
   );

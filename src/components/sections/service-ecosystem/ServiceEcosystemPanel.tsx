@@ -18,12 +18,12 @@ export function ServiceEcosystemPanel({ category }: ServiceEcosystemPanelProps) 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-[2rem] border bg-white/76 p-4 shadow-2xl shadow-slate-950/7 backdrop-blur-xl md:p-6 ${theme.border}`}
+      className={`relative overflow-hidden rounded-[2rem] border bg-white/76 p-4 shadow-2xl shadow-slate-950/7 backdrop-blur-xl md:p-5 xl:p-6 ${theme.border}`}
     >
       <div className={`absolute -right-24 -top-24 h-72 w-72 rounded-full blur-3xl ${theme.surface}`} />
-      <div className={`relative mb-5 rounded-[1.5rem] bg-gradient-to-br ${theme.gradientSoft} p-5`}>
+      <div className={`relative mb-5 rounded-[1.5rem] bg-gradient-to-br ${theme.gradientSoft} p-5 xl:p-6`}>
         <p className={`text-[10px] font-black uppercase tracking-[0.22em] ${theme.text}`}>{category.eyebrow}</p>
-        <h3 className="mt-2 font-serif text-[clamp(1.8rem,3vw,3rem)] font-black leading-tight text-brand-950">{category.title}</h3>
+        <h3 className="mt-2 max-w-5xl font-serif text-[clamp(1.8rem,2.7vw,3rem)] font-black leading-tight text-brand-950">{category.title}</h3>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">{category.description}</p>
       </div>
 
@@ -35,7 +35,7 @@ export function ServiceEcosystemPanel({ category }: ServiceEcosystemPanelProps) 
           hidden: {},
           visible: { transition: { staggerChildren: 0.025 } },
         }}
-        className="relative grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
+        className="relative grid grid-cols-[repeat(auto-fit,minmax(min(100%,17rem),1fr))] gap-4"
       >
         {category.services.map((service, index) => (
           <SubServiceCard key={service.title} service={service} serviceKey={category.key} index={index} />

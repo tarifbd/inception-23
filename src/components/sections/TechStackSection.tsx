@@ -2,8 +2,11 @@ import { techStackGroups } from '@/lib/constants/tech-stack';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
-export function TechStackSection({ content }: { content: HomepageSectionContent }) {
+export function TechStackSection({ content, groups }: { content: HomepageSectionContent; groups?: CollectionRecord[] }) {
+  const displayGroups = (groups?.length ? groups : techStackGroups) as typeof techStackGroups;
+
   return (
     <AnimatedSection id="technology" className="bg-slate-50">
       <SectionHeader
@@ -13,7 +16,7 @@ export function TechStackSection({ content }: { content: HomepageSectionContent 
         align="center"
       />
       <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {techStackGroups.map((group) => (
+        {displayGroups.map((group) => (
           <article
             key={group.id}
             className="group relative overflow-hidden rounded-[1.5rem] border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"

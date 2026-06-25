@@ -13,9 +13,12 @@ import { MobileAccordionMenu, MobileMenuLink } from './MobileAccordionMenu';
 type MobileNavProps = {
   open: boolean;
   onClose: () => void;
+  navItems?: ReadonlyArray<{ label: string; href: string; menu?: string }>;
 };
 
-export function MobileNav({ open, onClose }: MobileNavProps) {
+export function MobileNav({ open, onClose, navItems }: MobileNavProps) {
+  const items = navItems ?? mainNav;
+
   return (
     <AnimatePresence>
       {open ? (
@@ -111,7 +114,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                 ))}
               </MobileAccordionMenu>
 
-              {mainNav.filter((item) => !('menu' in item) && item.label === 'Contact').map((item) => (
+              {items.filter((item) => !('menu' in item && item.menu) && item.label.toLowerCase() !== 'home').map((item) => (
                 <MobileMenuLink key={item.label} href={item.href} onClick={onClose}>{item.label}</MobileMenuLink>
               ))}
             </div>

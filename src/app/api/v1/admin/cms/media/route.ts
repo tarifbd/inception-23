@@ -9,6 +9,9 @@ const allowedTypes = new Map([
   ['image/png', 'png'],
   ['image/webp', 'webp'],
   ['image/gif', 'gif'],
+  ['video/mp4', 'mp4'],
+  ['video/webm', 'webm'],
+  ['video/quicktime', 'mov'],
 ]);
 
 export async function GET(request: NextRequest) {
@@ -25,17 +28,17 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const file = formData.get('file');
   const altText = String(formData.get('altText') || '').trim().slice(0, 250);
-  if (!(file instanceof File)) return Response.json({ error: 'Image file is required' }, { status: 400 });
-  if (file.size > 8 * 1024 * 1024) return Response.json({ error: 'Image must be smaller than 8 MB' }, { status: 400 });
+  if (!(file instanceof File)) return Response.json({ error: 'Media file is required' }, { status: 400 });
+  if (file.size > 50 * 1024 * 1024) return Response.json({ error: 'Media must be smaller than 50 MB' }, { status: 400 });
 
   const extension = allowedTypes.get(file.type);
-  if (!extension) return Response.json({ error: 'Use JPG, PNG, WebP, or GIF images' }, { status: 400 });
+  if (!extension) return Response.json({ error: 'Use JPG, PNG, WebP, GIF, MP4, WebM, or MOV media' }, { status: 400 });
 
   const baseName = path.basename(file.name, path.extname(file.name))
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 60) || 'image';
+    .slice(0, 60) || 'media';
   const fileName = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}-${baseName}.${extension}`;
   const directory = path.join(process.cwd(), 'public', 'uploads', 'cms');
   await mkdir(directory, { recursive: true });

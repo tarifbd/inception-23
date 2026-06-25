@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowDown, ArrowUp, Eye, RotateCcw, Save } from 'lucide-react';
+import { ArrowDown, ArrowUp, Eye, ImagePlus, RotateCcw, Save, Upload } from 'lucide-react';
 import {
   AdminField,
   AdminModuleShell,
@@ -13,17 +13,25 @@ import {
 } from '@/components/admin/AdminModuleShell';
 import type { HomepageContent } from '@/lib/homepage-content';
 
+type MediaAsset = { id: string; name: string; url: string; altText: string; mimeType: string };
+
 export function HomepageContentAdmin() {
   const [mounted, setMounted] = useState(false);
   const [content, setContent] = useState<HomepageContent | null>(null);
+  const [assets, setAssets] = useState<MediaAsset[]>([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     setMounted(true);
-    fetch('/api/v1/admin/homepage')
-      .then((response) => response.json())
-      .then((payload) => setContent(payload.data))
+    Promise.all([
+      fetch('/api/v1/admin/homepage').then((response) => response.json()),
+      fetch('/api/v1/admin/cms/media').then((response) => response.json()),
+    ])
+      .then(([homepagePayload, mediaPayload]) => {
+        setContent(homepagePayload.data);
+        setAssets(Array.isArray(mediaPayload.data) ? mediaPayload.data : []);
+      })
       .catch(() => setMessage('Could not load homepage content.'));
   }, []);
 
@@ -58,6 +66,30 @@ export function HomepageContentAdmin() {
     const sections = [...content.sections];
     sections[index] = { ...sections[index], ...patch };
     setContent({ ...content, sections });
+  };
+
+  const updateSlide = (index: number, patch: Partial<HomepageContent['hero']['slides'][number]>) => {
+    if (!content) return;
+    const slides = [...content.hero.slides];
+    slides[index] = { ...slides[index], ...patch };
+    setContent({ ...content, hero: { ...content.hero, slides } });
+  };
+
+  const uploadSlideMedia = async (event: React.FormEvent<HTMLFormElement>, slideIndex: number) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const response = await fetch('/api/v1/admin/cms/media', { method: 'POST', body: new FormData(form) });
+    const payload = await response.json();
+    if (!response.ok) return setMessage(payload.error || 'Media upload failed.');
+    const asset = payload.data as MediaAsset;
+    setAssets((current) => [asset, ...current]);
+    updateSlide(slideIndex, {
+      visualUrl: asset.url,
+      visualType: asset.mimeType.startsWith('video/') ? 'video' : 'image',
+      visualAlt: asset.altText || asset.name,
+    });
+    form.reset();
+    setMessage('Media uploaded and selected. Save all to publish.');
   };
 
   const moveSection = (sourceIndex: number, direction: -1 | 1) => {
@@ -130,11 +162,75 @@ export function HomepageContentAdmin() {
                   </AdminField>
                   <AdminField label="Chips, one per line">
                     <textarea className={`${adminInputClass} mt-3 min-h-24`} value={slide.chips.join('\n')} onChange={(event) => {
-                      const slides = [...content.hero.slides];
-                      slides[index] = { ...slide, chips: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) };
-                      setContent({ ...content, hero: { ...content.hero, slides } });
+                      updateSlide(index, { chips: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) });
                     }} />
                   </AdminField>
+                  <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-wider text-brand-700">Hero visual</p>
+                        <p className="mt-1 text-xs font-bold text-gray-500">Change image, video, or lottie for this slide.</p>
+                      </div>
+                      <select
+                        className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-black uppercase"
+                        value={slide.visualType || 'lottie'}
+                        onChange={(event) => updateSlide(index, { visualType: event.target.value as HomepageContent['hero']['slides'][number]['visualType'] })}
+                      >
+                        <option value="lottie">Lottie</option>
+                        <option value="image">Image</option>
+                        <option value="video">Video</option>
+                      </select>
+                    </div>
+                    <div className="grid gap-3 lg:grid-cols-[180px_minmax(0,1fr)]">
+                      <div className="flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+                        {slide.visualType === 'video' && slide.visualUrl ? (
+                          <video src={slide.visualUrl} className="h-full w-full object-contain" controls playsInline />
+                        ) : slide.visualType === 'image' && slide.visualUrl ? (
+                          <img src={slide.visualUrl} alt={slide.visualAlt || ''} className="h-full w-full object-contain" />
+                        ) : (
+                          <ImagePlus className="text-gray-300" size={32} />
+                        )}
+                      </div>
+                      <div className="space-y-3">
+                        <AdminField label="Visual URL">
+                          <input
+                            className={adminInputClass}
+                            value={slide.visualUrl || ''}
+                            onChange={(event) => updateSlide(index, { visualUrl: event.target.value })}
+                            placeholder="/uploads/cms/file.webp, /animations/file.json, or video URL"
+                          />
+                        </AdminField>
+                        <AdminField label="Alt / label">
+                          <input
+                            className={adminInputClass}
+                            value={slide.visualAlt || ''}
+                            onChange={(event) => updateSlide(index, { visualAlt: event.target.value })}
+                            placeholder="Describe the visual"
+                          />
+                        </AdminField>
+                        <select
+                          className={adminInputClass}
+                          value=""
+                          onChange={(event) => {
+                            const asset = assets.find((item) => item.url === event.target.value);
+                            if (!asset) return;
+                            updateSlide(index, {
+                              visualUrl: asset.url,
+                              visualType: asset.mimeType.startsWith('video/') ? 'video' : 'image',
+                              visualAlt: asset.altText || asset.name,
+                            });
+                          }}
+                        >
+                          <option value="">Choose uploaded image/video</option>
+                          {assets.map((asset) => <option key={asset.id} value={asset.url}>{asset.name}</option>)}
+                        </select>
+                        <form onSubmit={(event) => uploadSlideMedia(event, index)} className="flex flex-col gap-2 sm:flex-row">
+                          <input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" required className={`${adminInputClass} file:mr-2 file:border-0 file:bg-transparent file:text-xs file:font-bold`} />
+                          <button className={adminSecondaryButtonClass}><Upload size={14} /> Upload</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </article>
               ))}
             </div>

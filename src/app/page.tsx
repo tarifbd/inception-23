@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { HeroWrapper } from '@/components/home/HeroWrapper';
 import { LandingPageSections } from '@/components/sections';
 import { getHomepageContent } from '@/lib/homepage-content';
+import { getWebsiteCollections } from '@/lib/website-collections';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,13 +20,13 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const content = await getHomepageContent();
+  const [content, collections] = await Promise.all([getHomepageContent(), getWebsiteCollections()]);
 
   return (
     <main className="min-h-screen bg-white text-brand-950 selection:bg-brand-700 selection:text-white">
-      <Header />
+      <Header navigation={collections.navigation} />
       {content.hero.enabled ? <HeroWrapper content={content.hero} /> : null}
-      <LandingPageSections sections={content.sections} />
+      <LandingPageSections sections={content.sections} collections={collections} />
       <Footer />
     </main>
   );

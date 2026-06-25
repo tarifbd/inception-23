@@ -3,6 +3,7 @@ import { LandingIcon } from '@/components/landing/icons';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import type { CollectionRecord } from '@/lib/website-collections';
 
 const whyAccentStyles = [
   {
@@ -31,7 +32,9 @@ const whyAccentStyles = [
   },
 ];
 
-export function WhyChooseSection({ content }: { content: HomepageSectionContent }) {
+export function WhyChooseSection({ content, items }: { content: HomepageSectionContent; items?: CollectionRecord[] }) {
+  const displayItems = (items?.length ? items : whyChooseItems) as typeof whyChooseItems;
+
   return (
     <AnimatedSection id="why" className="bg-white">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.25fr] lg:items-start">
@@ -43,7 +46,7 @@ export function WhyChooseSection({ content }: { content: HomepageSectionContent 
           />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          {whyChooseItems.map((item, index) => {
+          {displayItems.map((item, index) => {
             const accent = whyAccentStyles[index % whyAccentStyles.length];
 
             return (

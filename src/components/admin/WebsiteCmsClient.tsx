@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import type { ElementType } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -11,10 +12,13 @@ import {
   Home,
   Image as ImageIcon,
   LayoutDashboard,
+  ListTree,
+  Newspaper,
   Pencil,
   Plus,
   RefreshCw,
   Save,
+  Settings2,
   Trash2,
   Upload,
   X,
@@ -64,7 +68,38 @@ type MediaAsset = {
   createdAt: string;
 };
 
-type View = 'pages' | 'media' | 'structure';
+type View = 'dashboard' | 'pages' | 'media' | 'structure';
+
+const editableCollections = [
+  ['navigation', 'Header / Navigation', 'Top menu label, URL, dropdown behavior'],
+  ['insights', 'Posts / Insights', 'Blog-style cards for the Insights page'],
+  ['caseStudies', 'Case Studies', 'Portfolio/case-study cards and metrics'],
+  ['testimonials', 'Testimonials', 'Quotes, names, roles, optional media'],
+  ['serviceCategories', 'Our Services', 'Homepage service cards and highlight bullets'],
+  ['serviceEcosystem', 'Service Ecosystem', 'Category tabs and every capability card'],
+  ['aiCapabilities', 'AI Solutions', 'AI cards, benefits, icons, text'],
+  ['caAdvisory', 'CA Advisory', 'Finance, tax, VAT, compliance focus items'],
+  ['whyChoose', 'Why Choose Us', 'Reason cards, icons, descriptions'],
+  ['industries', 'Industries', 'Industry cards, value text, optional images'],
+  ['process', 'Process', 'Timeline steps, icons, descriptions'],
+  ['solutions', 'Featured Solutions', 'Solution stories, modules, image and video URL'],
+  ['team', 'Team', 'Team profiles, images, links, expertise'],
+  ['techStack', 'Technology Stack', 'Tool groups, chips, colors'],
+  ['mainServices', 'Main Services Showcase', 'GSAP slides, images, colors, service bullets'],
+  ['footerCompanyLinks', 'Footer Company Links', 'Footer navigation links'],
+  ['footerSocialLinks', 'Footer Social Links', 'Social URLs and icons'],
+  ['footerTrustPoints', 'Footer Trust Points', 'Footer trust cards'],
+  ['footerContactHighlights', 'Footer Contact Highlights', 'Footer contact info rows'],
+  ['contactBudgets', 'Contact Budget Options', 'Budget dropdown items'],
+  ['contactTrustPoints', 'Contact Trust Points', 'Contact section trust bullets'],
+  ['aboutValues', 'About Values', 'About page value cards'],
+  ['aboutExpertise', 'About Expertise', 'About page expertise bullets'],
+] as const;
+
+type CollectionSummary = {
+  id: typeof editableCollections[number][0];
+  count: number;
+};
 
 const emptyPage: PageDraft = {
   slug: '',
@@ -83,8 +118,9 @@ const emptyPage: PageDraft = {
 export function WebsiteCmsClient() {
   const [pages, setPages] = useState<CmsPage[]>([]);
   const [assets, setAssets] = useState<MediaAsset[]>([]);
+  const [collectionSummaries, setCollectionSummaries] = useState<CollectionSummary[]>([]);
   const [draft, setDraft] = useState<PageDraft | null>(null);
-  const [view, setView] = useState<View>('pages');
+  const [view, setView] = useState<View>('dashboard');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -94,15 +130,26 @@ export function WebsiteCmsClient() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [pagesResponse, mediaResponse] = await Promise.all([
+      const [pagesResponse, mediaResponse, ...collectionResponses] = await Promise.all([
         fetch('/api/v1/admin/cms/pages'),
         fetch('/api/v1/admin/cms/media'),
+        ...editableCollections.map(([id]) => fetch(`/api/v1/admin/website-content/${id}`)),
       ]);
-      const [pagesPayload, mediaPayload] = await Promise.all([pagesResponse.json(), mediaResponse.json()]);
+      const [pagesPayload, mediaPayload, ...collectionPayloads] = await Promise.all([
+        pagesResponse.json(),
+        mediaResponse.json(),
+        ...collectionResponses.map((response) => response.json()),
+      ]);
       if (!pagesResponse.ok) throw new Error(pagesPayload.error || 'Could not load pages');
       if (!mediaResponse.ok) throw new Error(mediaPayload.error || 'Could not load media');
       setPages(pagesPayload.data);
       setAssets(mediaPayload.data);
+      setCollectionSummaries(
+        editableCollections.map(([id], index) => ({
+          id,
+          count: Array.isArray(collectionPayloads[index]?.data) ? collectionPayloads[index].data.length : 0,
+        })),
+      );
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not load the website CMS');
     } finally {
@@ -188,7 +235,7 @@ export function WebsiteCmsClient() {
   return (
     <AdminModuleShell
       title="Website CMS"
-      eyebrow="Pages, media, and site content"
+      eyebrow="New website structure CMS"
       nav={[
         { href: '/', label: 'View website' },
         { href: '/admin/homepage', label: 'Homepage layout' },
@@ -203,9 +250,10 @@ export function WebsiteCmsClient() {
 
       <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
         {([
+          ['dashboard', 'Dashboard', Home],
           ['pages', 'Website pages', FilePenLine],
           ['media', 'Media library', ImageIcon],
-          ['structure', 'Site structure', LayoutDashboard],
+          ['structure', 'Homepage sections', LayoutDashboard],
         ] as const).map(([id, label, Icon]) => (
           <button
             key={id}
@@ -281,8 +329,8 @@ export function WebsiteCmsClient() {
               <p className="text-xs font-black uppercase tracking-wider text-brand-700">Upload image</p>
               <h2 className="mt-1 font-serif text-2xl font-black">Add to media library</h2>
             </div>
-            <AdminField label="Image file">
-              <input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif" required className={`${adminInputClass} file:mr-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-xs file:font-black file:text-brand-700`} />
+            <AdminField label="Media file">
+              <input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" required className={`${adminInputClass} file:mr-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-xs file:font-black file:text-brand-700`} />
             </AdminField>
             <AdminField label="Alt text">
               <input name="altText" className={adminInputClass} placeholder="Describe the image for accessibility" />
@@ -291,7 +339,7 @@ export function WebsiteCmsClient() {
               <Upload size={15} />
               {uploading ? 'Uploading...' : 'Upload image'}
             </button>
-            <p className="text-xs leading-5 text-gray-500">JPG, PNG, WebP, or GIF. Maximum 8 MB.</p>
+            <p className="text-xs leading-5 text-gray-500">JPG, PNG, WebP, GIF, MP4, WebM, or MOV. Maximum 50 MB.</p>
           </form>
 
           <section className={`${adminCardClass} p-5`}>
@@ -304,7 +352,11 @@ export function WebsiteCmsClient() {
                 <article key={asset.id} className="overflow-hidden rounded-xl border border-gray-200">
                   <div className="aspect-[4/3] bg-gray-100">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={asset.url} alt={asset.altText} className="h-full w-full object-cover" />
+                    {asset.mimeType.startsWith('video/') ? (
+                      <video src={asset.url} className="h-full w-full object-cover" muted playsInline controls />
+                    ) : (
+                      <img src={asset.url} alt={asset.altText} className="h-full w-full object-cover" />
+                    )}
                   </div>
                   <div className="p-3">
                     <p className="truncate text-sm font-black text-gray-900">{asset.name}</p>
@@ -322,11 +374,123 @@ export function WebsiteCmsClient() {
         </div>
       ) : null}
 
+      {view === 'dashboard' ? (
+        <div className="mt-5 space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <AdminStatCard label="Pages" value={pages.length} />
+            <AdminStatCard label="Posts" value={collectionSummaries.find((item) => item.id === 'insights')?.count ?? 0} tone="cyan" />
+            <AdminStatCard label="Media" value={assets.length} tone="emerald" />
+            <AdminStatCard label="Editable blocks" value={collectionSummaries.reduce((sum, item) => sum + item.count, 0)} tone="rose" />
+          </div>
+
+          <section className={`${adminCardClass} overflow-hidden`}>
+            <div className="border-b border-gray-200 bg-gray-50 p-5">
+              <p className="text-xs font-black uppercase tracking-wider text-brand-700">WordPress-style CMS</p>
+              <h2 className="mt-1 font-serif text-2xl font-black">Content control center</h2>
+              <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-gray-500">
+                Manage pages, posts, media, menus, homepage sections, SEO, resources, and system tools from one place.
+              </p>
+            </div>
+            <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
+              <CmsModuleCard icon={FilePenLine} title="Pages" meta={`${pages.length} pages`} copy="Create rich pages with hero media, video, SEO, drafts, and publishing." onClick={() => setView('pages')} action="Manage pages" />
+              <CmsModuleCard icon={Newspaper} title="Posts / Insights" meta={`${collectionSummaries.find((item) => item.id === 'insights')?.count ?? 0} posts`} copy="Manage blog-style insight cards shown on the Insights page." href="/admin/content/insights" action="Manage posts" />
+              <CmsModuleCard icon={ImageIcon} title="Media Library" meta={`${assets.length} files`} copy="Upload, preview, copy, and delete image/video assets for the whole website." onClick={() => setView('media')} action="Open media" />
+              <CmsModuleCard icon={ListTree} title="Menus" meta="Header navigation" copy="Edit top navigation labels, URLs, order, and dropdown behavior." href="/admin/content/navigation" action="Edit menus" />
+              <CmsModuleCard icon={Home} title="Homepage Layout" meta="Hero + sections" copy="Edit hero slides, CTA labels, section order, visibility, headings, and hero visuals." href="/admin/homepage" action="Edit layout" />
+              <CmsModuleCard icon={LayoutDashboard} title="Section Builder" meta={`${editableCollections.length - 2} sections`} copy="Edit every live homepage section item: cards, services, team, solutions, and visuals." onClick={() => setView('structure')} action="Open sections" />
+              <CmsModuleCard icon={FolderOpen} title="Resources" meta="Downloads/content" copy="Manage resource portal entries, access links, categories, metadata, and publishing." href="/admin/resources" action="Manage resources" />
+              <CmsModuleCard icon={Settings2} title="SEO" meta="Search controls" copy="Manage SEO settings, redirects, robots, sitemap, product metadata, and image alt text." href="/admin/seo" action="Open SEO" />
+              <CmsModuleCard icon={ExternalLink} title="Preview Website" meta="Public site" copy="Open the public website after publishing CMS changes." href="/" action="View site" />
+            </div>
+          </section>
+
+          <section className={`${adminCardClass} p-5`}>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-brand-700">Quick section access</p>
+                <h2 className="mt-1 font-serif text-2xl font-black">Editable website parts</h2>
+              </div>
+              <button onClick={load} disabled={loading} className={adminSecondaryButtonClass}>
+                <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+                Refresh
+              </button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {editableCollections.map(([id, label]) => {
+                const count = collectionSummaries.find((item) => item.id === id)?.count ?? 0;
+                return (
+                  <Link key={id} href={`/admin/content/${id}`} className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-black text-gray-800 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700">
+                    <span className="min-w-0 truncate">{label}</span>
+                    <span className="rounded-full bg-gray-100 px-2 py-1 text-[10px] text-gray-500">{count}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+      ) : null}
+
       {view === 'structure' ? (
-        <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <StructureCard icon={Home} title="Homepage layout" copy="Edit the hero slides, homepage sections, visibility, ordering, headings, and calls to action." href="/admin/homepage" action="Open homepage editor" />
-          <StructureCard icon={FilePenLine} title="Custom pages" copy="Create full rich-content pages with images, videos, SEO metadata, and publishing controls." onClick={() => setView('pages')} action="Manage pages" />
-          <StructureCard icon={ImageIcon} title="Media library" copy="Upload reusable website imagery, maintain alt text, and copy URLs into any content field." onClick={() => setView('media')} action="Manage media" />
+        <div className="mt-5 space-y-5">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <AdminStatCard label="Editable sections" value={editableCollections.length + 1} />
+            <AdminStatCard label="Section items" value={collectionSummaries.reduce((sum, item) => sum + item.count, 0)} tone="cyan" />
+            <AdminStatCard label="Media files" value={assets.length} tone="emerald" />
+            <AdminStatCard label="Custom pages" value={pages.length} tone="rose" />
+          </div>
+
+          <section className={`${adminCardClass} overflow-hidden`}>
+            <div className="flex flex-col gap-3 border-b border-gray-200 bg-gray-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-brand-700">Current homepage structure</p>
+                <h2 className="mt-1 font-serif text-2xl font-black">Edit every live section</h2>
+                <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-gray-500">
+                  These are the new website sections. Open any section to add, upload, delete, reorder, or change its visible elements.
+                </p>
+              </div>
+              <Link href="/admin/homepage" className={adminButtonClass}>
+                <Settings2 size={15} />
+                Layout / headings
+              </Link>
+            </div>
+
+            <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
+              <Link href="/admin/homepage" className="group flex min-h-52 flex-col rounded-xl border border-gray-200 bg-white p-5 transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+                    <Home size={20} />
+                  </div>
+                  <span className="rounded-full bg-gray-100 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-gray-500">hero + sections</span>
+                </div>
+                <h3 className="mt-5 font-serif text-xl font-black text-gray-950">Hero, section order, headings</h3>
+                <p className="mt-3 flex-1 text-sm font-medium leading-6 text-gray-500">Hero slide text, buttons, section visibility, ordering, headings, descriptions, and support copy.</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-brand-700">Open editor <ExternalLink size={14} /></span>
+              </Link>
+
+              {editableCollections.map(([id, label, description]) => {
+                const count = collectionSummaries.find((item) => item.id === id)?.count ?? 0;
+                return (
+                  <Link key={id} href={`/admin/content/${id}`} className="group flex min-h-52 flex-col rounded-xl border border-gray-200 bg-white p-5 transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-cyan-50 text-cyan-700">
+                        <LayoutDashboard size={20} />
+                      </div>
+                      <span className="rounded-full bg-gray-100 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-gray-500">{count} item{count === 1 ? '' : 's'}</span>
+                    </div>
+                    <h3 className="mt-5 font-serif text-xl font-black text-gray-950">{label}</h3>
+                    <p className="mt-3 flex-1 text-sm font-medium leading-6 text-gray-500">{description}</p>
+                    <span className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-brand-700">Add / edit / upload <ExternalLink size={14} /></span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <StructureCard icon={ImageIcon} title="Media library" copy="Upload reusable website imagery and video, maintain alt text, and select media inside section editors." onClick={() => setView('media')} action="Manage media" />
+            <StructureCard icon={FilePenLine} title="Custom pages" copy="Create extra rich-content pages with images, videos, SEO metadata, and publishing controls." onClick={() => setView('pages')} action="Manage pages" />
+            <StructureCard icon={Home} title="Preview website" copy="Open the live homepage after saving section changes to confirm the public view." href="/" action="View website" />
+          </div>
         </div>
       ) : null}
 
@@ -427,7 +591,7 @@ function StructureCard({
   action,
   onClick,
 }: {
-  icon: React.ElementType;
+  icon: ElementType;
   title: string;
   copy: string;
   action: string;
@@ -444,4 +608,42 @@ function StructureCard({
     </>
   );
   return href ? <Link href={href} className={className}>{content}</Link> : <button onClick={onClick} className={className}>{content}</button>;
+}
+
+function CmsModuleCard({
+  icon: Icon,
+  title,
+  meta,
+  copy,
+  href,
+  action,
+  onClick,
+}: {
+  icon: ElementType;
+  title: string;
+  meta: string;
+  copy: string;
+  action: string;
+  href?: string;
+  onClick?: () => void;
+}) {
+  const className = 'group flex min-h-56 flex-col rounded-xl border border-gray-200 bg-white p-5 text-left transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg';
+  const content = (
+    <>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition group-hover:bg-brand-600 group-hover:text-white">
+          <Icon size={20} />
+        </div>
+        <span className="rounded-full bg-gray-100 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-gray-500">{meta}</span>
+      </div>
+      <h3 className="mt-5 font-serif text-xl font-black text-gray-950">{title}</h3>
+      <p className="mt-3 flex-1 text-sm font-medium leading-6 text-gray-500">{copy}</p>
+      <span className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-brand-700">
+        {action}
+        <ExternalLink size={14} />
+      </span>
+    </>
+  );
+
+  return href ? <Link href={href} className={className}>{content}</Link> : <button type="button" onClick={onClick} className={className}>{content}</button>;
 }
