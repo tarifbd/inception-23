@@ -257,7 +257,7 @@ export const CaseStudies = () => {
                     <div className="space-y-2 text-xs font-bold uppercase tracking-widest text-gray-500 border-t border-gray-200 dark:border-white/5 pt-6">
                       <div>Pillar: <span className="text-brand-500">{selectedCase.categoryId.toUpperCase()}</span></div>
                       <div>Engine: <span className="text-brand-500">Inception 23 Core</span></div>
-                      <div>Audited: <span className="text-brand-500">100% Verified</span></div>
+                      <div>Audited: <span className="text-brand-500">Reviewed</span></div>
                     </div>
                   </div>
 

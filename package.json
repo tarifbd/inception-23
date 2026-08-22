@@ -6,44 +6,47 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run lint",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "db:migrate": "prisma migrate deploy",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.19.4",
     "@prisma/client": "^5.22.0",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
-    "@remotion/google-fonts": "^4.0.468",
-    "@remotion/noise": "^4.0.468",
-    "@remotion/player": "^4.0.468",
-    "@remotion/transitions": "^4.0.468",
+    "@vercel/blob": "2.6.1",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.0",
     "gsap": "^3.15.0",
     "lucide-react": "^0.473.0",
-    "next": "^15.5.9",
+    "next": "15.5.22",
     "prisma": "^5.22.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "remotion": "^4.0.468",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sanitize-html": "2.17.6",
+    "sharp": "0.35.3",
     "tailwind-merge": "^2.2.0",
-    "three": "^0.183.2",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/three": "^0.172.0",
+    "@types/sanitize-html": "2.16.1",
     "autoprefixer": "^10.4.17",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.4",
-    "postcss": "^8.4.35",
+    "eslint-config-next": "15.5.22",
+    "postcss": "8.5.23",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.0.0"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
+  },
+  "overrides": {
+    "postcss": "8.5.23",
+    "sharp": "0.35.3"
   }
 }

@@ -1,6 +1,28 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { caseStudies as fallbackCaseStudies } from '@/lib/constants/services';
+import { requirePermission } from '@/lib/admin/rbac';
+import { assertString, readJson } from '@/lib/api/http';
+
+type CaseStudyPayload = {
+  id?: string;
+  titleEn?: string;
+  titleBn?: string;
+  clientEn?: string;
+  clientBn?: string;
+  categoryId?: string;
+  summaryEn?: string;
+  summaryBn?: string;
+  metricsEn?: string;
+  metricsBn?: string;
+  challengeEn?: string;
+  challengeBn?: string;
+  solutionEn?: string;
+  solutionBn?: string;
+  img?: string;
+  order?: number | string;
+  action?: string;
+};
 
 export async function GET() {
   try {
@@ -14,9 +36,12 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const forbidden = requirePermission(request, 'cms.manage');
+  if (forbidden) return forbidden;
+
   try {
-    const body = await request.json();
+    const body = await readJson<CaseStudyPayload>(request, 256 * 1024);
     const { 
       id, titleEn, titleBn, clientEn, clientBn, categoryId, 
       summaryEn, summaryBn, metricsEn, metricsBn, 
@@ -56,23 +81,25 @@ export async function POST(request: Request) {
       });
       return NextResponse.json({ success: true, caseStudy: updated });
     } else {
-      // Create
+      const requiredData = {
+        titleEn: assertString(titleEn, 'English title', 250),
+        titleBn: assertString(titleBn, 'Bangla title', 250),
+        clientEn: assertString(clientEn, 'English client', 250),
+        clientBn: assertString(clientBn, 'Bangla client', 250),
+        categoryId: assertString(categoryId, 'Category', 100),
+        summaryEn: assertString(summaryEn, 'English summary', 5000),
+        summaryBn: assertString(summaryBn, 'Bangla summary', 5000),
+        metricsEn: assertString(metricsEn, 'English metrics', 2000),
+        metricsBn: assertString(metricsBn, 'Bangla metrics', 2000),
+        challengeEn: assertString(challengeEn, 'English challenge', 10000),
+        challengeBn: assertString(challengeBn, 'Bangla challenge', 10000),
+        solutionEn: assertString(solutionEn, 'English solution', 10000),
+        solutionBn: assertString(solutionBn, 'Bangla solution', 10000),
+        img: assertString(img, 'Image', 2048),
+      };
       const created = await db.caseStudy.create({
         data: {
-          titleEn,
-          titleBn,
-          clientEn,
-          clientBn,
-          categoryId,
-          summaryEn,
-          summaryBn,
-          metricsEn,
-          metricsBn,
-          challengeEn,
-          challengeBn,
-          solutionEn,
-          solutionBn,
-          img,
+          ...requiredData,
           order: order !== undefined ? parseInt(order.toString()) : 0,
         },
       });
@@ -80,6 +107,12 @@ export async function POST(request: Request) {
     }
   } catch (error) {
     console.error('API Case Studies POST Error:', error);
-    return NextResponse.json({ error: 'Failed to update/create case study' }, { status: 500 });
+    const message = error instanceof Error ? error.message : '';
+    const clientError = message === 'Request body is too large' || message === 'Invalid JSON body'
+      || message.endsWith('is required') || message.endsWith('is too long');
+    return NextResponse.json(
+      { error: clientError ? message : 'Failed to update/create case study' },
+      { status: message === 'Request body is too large' ? 413 : clientError ? 400 : 500 },
+    );
   }
 }

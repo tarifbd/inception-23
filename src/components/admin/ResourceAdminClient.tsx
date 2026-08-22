@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import {
   AdminField,
+  AdminLoadingSkeleton,
   AdminModuleShell,
   AdminStatCard,
   adminButtonClass,
@@ -271,6 +272,8 @@ export function ResourceAdminClient() {
 
           {message ? <div className="border-b border-gray-200 bg-cyan-50 px-5 py-3 text-sm font-bold text-cyan-900">{message}</div> : null}
 
+          {loading ? <div className="p-5"><AdminLoadingSkeleton rows={5} framed={false} /></div> : null}
+
           <div className="overflow-x-auto">
             <table className="w-full min-w-[860px] text-left">
               <thead className="border-b border-gray-200 text-[11px] font-black uppercase tracking-wider text-gray-500">
@@ -371,15 +374,15 @@ export function ResourceAdminClient() {
       </div>
 
       {draft ? (
-        <div className="fixed inset-0 z-[100] flex justify-end bg-gray-950/35">
+        <div className="dialog-backdrop fixed inset-0 z-[100] flex justify-end bg-gray-950/35" role="dialog" aria-modal="true" aria-label="Resource editor">
           <button className="hidden flex-1 lg:block" onClick={() => setDraft(null)} aria-label="Close resource editor" />
-          <div className="h-full w-full overflow-y-auto bg-white p-5 shadow-2xl sm:max-w-2xl sm:p-7">
+          <div className="dialog-panel h-full w-full overflow-y-auto bg-white p-5 shadow-xl dark:bg-night-900 sm:max-w-2xl sm:p-7">
             <div className="mb-6 flex items-center justify-between border-b border-gray-200 pb-4">
               <div>
                 <p className="text-xs font-black uppercase tracking-wider text-brand-700">Resource editor</p>
                 <h2 className="mt-1 font-serif text-2xl font-black">{draft.id ? 'Edit resource' : 'New resource'}</h2>
               </div>
-              <button onClick={() => setDraft(null)} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600" aria-label="Close editor">
+              <button onClick={() => setDraft(null)} className="ui-action inline-flex h-11 w-11 items-center justify-center rounded-lg border border-gray-200 text-gray-600 dark:border-white/10" aria-label="Close editor">
                 <X size={17} />
               </button>
             </div>

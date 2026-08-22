@@ -8,9 +8,9 @@ import { CountingNumber } from '@/components/ui/HyperEffects';
 export const ProofModern = () => {
   const { lang } = useAppStore();
   const stats = [
-    { val: '$50B+', label: { en: 'Assets Advised', bn: 'Assets Advised' }, icon: TrendingUp },
-    { val: '30%', label: { en: 'Avg. Efficiency Gain', bn: 'Avg. Efficiency Gain' }, icon: BarChart },
-    { val: '100%', label: { en: 'Regulatory Compliance', bn: 'Regulatory Compliance' }, icon: ShieldCheck },
+    { val: 'Clear', label: { en: 'Decision Support', bn: 'Decision Support' }, icon: TrendingUp },
+    { val: 'Better', label: { en: 'Reporting Rhythm', bn: 'Reporting Rhythm' }, icon: BarChart },
+    { val: 'Ready', label: { en: 'Compliance Records', bn: 'Compliance Records' }, icon: ShieldCheck },
   ];
 
   return (
@@ -27,11 +27,11 @@ export const ProofModern = () => {
       >
         <div className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-200">Performance Proof</div>
-            <h2 className="mt-3 font-serif text-4xl font-black leading-none md:text-6xl">Measured outcomes.</h2>
+            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-200">Proof of work</div>
+            <h2 className="mt-3 font-serif text-4xl font-black leading-none md:text-6xl">Practical outcomes.</h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-white/60">
-            Advisory, operational change, and regulatory control translated into visible client outcomes.
+            Advisory, operations, and documentation support translated into visible working improvements.
           </p>
         </div>
 

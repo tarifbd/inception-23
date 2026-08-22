@@ -8,13 +8,15 @@ import { serviceCategories } from '@/lib/constants/service-categories';
 import { solutions } from '@/lib/constants/solutions';
 import { serviceThemes } from '@/lib/constants/theme';
 import { getWebsiteCollection } from '@/lib/website-collections';
+import { createPageMetadata } from '@/lib/seo/metadata';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: 'Featured Solutions | Inception 23',
-  description: 'Explore all featured advisory, IT, AI, management, legal, and creative solution systems by Inception 23.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'Featured Business Solutions',
+  description: 'Explore practical technology, management, legal, finance, and creative solution systems designed around real operating problems.',
+  path: '/featured-solutions',
+});
 
 export default async function FeaturedSolutionsPage() {
   const [cmsCategories, cmsSolutions] = await Promise.all([
@@ -25,18 +27,18 @@ export default async function FeaturedSolutionsPage() {
   const displaySolutions = cmsSolutions.length ? cmsSolutions as unknown as typeof solutions : solutions;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-50 dark:bg-night-950">
       <Header />
       <section className="pb-16 pt-28 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-40">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-brand-950 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+          <Link href="/" className="ui-action inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-brand-950 shadow-sm dark:border-white/10 dark:bg-night-900">
             <ArrowLeft size={15} />
             Back to home
           </Link>
 
           <div className="mt-8 max-w-4xl">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Featured solution library</p>
-            <h1 className="mt-4 font-serif text-[clamp(2.5rem,6vw,6rem)] font-black leading-[1.02] text-brand-950">
+            <p className="text-xs font-semibold text-brand-700">Featured solution library</p>
+            <h1 className="mt-4 font-serif text-[clamp(2.5rem,6vw,6rem)] font-bold leading-[1.02] text-brand-950">
               All solution systems, grouped by service.
             </h1>
             <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
@@ -51,9 +53,9 @@ export default async function FeaturedSolutionsPage() {
 
               return (
                 <section key={category.key} className="scroll-mt-28">
-                  <div className={`mb-6 rounded-[2rem] border bg-gradient-to-br p-5 sm:p-6 ${theme.border} ${theme.gradientSoft}`}>
-                    <p className={`text-[10px] font-black uppercase tracking-[0.22em] ${theme.text}`}>{theme.label}</p>
-                    <h2 className="mt-2 text-2xl font-black text-brand-950 sm:text-3xl">{category.title}</h2>
+                  <div className={`mb-6 border-l-2 bg-white p-5 dark:bg-night-900 sm:p-6 ${theme.border}`}>
+                    <p className={`text-xs font-semibold ${theme.text}`}>{theme.label}</p>
+                    <h2 className="mt-2 text-2xl font-bold text-brand-950 sm:text-3xl">{category.title}</h2>
                     <p className="mt-3 max-w-3xl text-sm font-semibold leading-7 text-slate-600">{category.description}</p>
                   </div>
 

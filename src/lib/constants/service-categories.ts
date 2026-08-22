@@ -16,10 +16,10 @@ export type ServiceCategory = {
 export const serviceCategories: ServiceCategory[] = [
   {
     key: 'it',
-    title: 'IT & AI Solutions',
-    shortTitle: 'IT & AI',
-    eyebrow: 'Technology, automation, intelligence',
-    description: 'Production-grade AI automation, business software, data dashboards, and secure digital systems built around real operations.',
+    title: 'Technology & Software Solutions',
+    shortTitle: 'Technology',
+    eyebrow: 'Software, dashboards, internal tools',
+    description: 'Business software, workflow tools, data dashboards, and secure digital systems built around real operations.',
     icon: 'BrainCircuit',
     href: '/services/it-ai-solutions',
     highlights: subServices.it.slice(0, 8).map((item) => item.title),
@@ -49,7 +49,7 @@ export const serviceCategories: ServiceCategory[] = [
     title: 'Creative & Others',
     shortTitle: 'Creative',
     eyebrow: 'Brand, story, market experience',
-    description: 'Brand strategy, visual identity, pitch systems, content, UI/UX, campaign direction, and market-facing creative assets.',
+    description: 'Brand strategy, visual identity, pitch materials, content, UI/UX, campaign direction, and market-facing creative assets.',
     icon: 'Palette',
     href: '/services/creative-others',
     highlights: subServices.creative.slice(0, 8).map((item) => item.title),

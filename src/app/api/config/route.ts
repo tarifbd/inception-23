@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requirePermission } from '@/lib/admin/rbac';
+import { readJson } from '@/lib/api/http';
 
 export async function GET() {
   try {
@@ -18,9 +20,12 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const forbidden = requirePermission(request, 'cms.manage');
+  if (forbidden) return forbidden;
+
   try {
-    const body = await request.json();
+    const body = await readJson<Record<string, unknown>>(request, 256 * 1024);
     const { categories, services, action } = body;
 
     // Run updates in a Prisma Transaction
@@ -82,6 +87,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, message: 'Configuration saved successfully!' });
   } catch (error) {
     console.error('API Config POST Error:', error);
-    return NextResponse.json({ error: 'Failed to update configurations' }, { status: 500 });
+    const message = error instanceof Error ? error.message : '';
+    const clientError = message === 'Request body is too large' || message === 'Invalid JSON body';
+    return NextResponse.json(
+      { error: clientError ? message : 'Failed to update configurations' },
+      { status: message === 'Request body is too large' ? 413 : clientError ? 400 : 500 },
+    );
   }
 }

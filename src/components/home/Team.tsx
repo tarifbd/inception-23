@@ -32,78 +32,78 @@ const teamMembers: TeamMember[] = [
     id: 'khadimul',
     name: 'K M KHADIMUL HASAN',
     role: { en: 'Founder & Managing Partner', bn: 'প্রতিষ্ঠাতা ও ম্যানেজিং পার্টনার' },
-    bio: { en: 'Ex-McKinsey Senior Partner. 25 years advising Fortune 500 boards on cross-border strategy and commercial scaling.', bn: 'সাবেক ম্যাককিনসে সিনিয়র পার্টনার। ২৫ বছর ধরে ফরচুন ৫০০ বোর্ডকে বৈশ্বিক বাণিজ্য ও কৌশলগত প্রসারে পরামর্শ দিচ্ছেন।' },
+    bio: { en: 'Works with owners and leadership teams on strategy, finance control, governance, and delivery discipline.', bn: 'সাবেক ম্যাককিনসে সিনিয়র পার্টনার। ২৫ বছর ধরে ফরচুন ৫০০ বোর্ডকে বৈশ্বিক বাণিজ্য ও কৌশলগত প্রসারে পরামর্শ দিচ্ছেন।' },
     fullBio: {
-      en: 'K M Khadimul Hasan is the Founder and Managing Partner of Inception 23. A veteran corporate strategist, he spent over two decades as a Senior Partner at McKinsey & Company, where he established scaling frameworks utilized by market-leading enterprises globally. His expertise spans M&A advisory, cross-border restructuring, and high-velocity corporate scaling. He acts as a primary board-level advisor for Fortune 500 companies.',
+      en: 'K M Khadimul Hasan is the Founder and Managing Partner of Inception 23. His work focuses on practical management discipline: setting priorities, improving reporting habits, keeping delivery accountable, and helping leadership teams make cleaner decisions.',
       bn: 'কে এম খাদিমুল হাসান ইনসেপশন ২৩-এর প্রতিষ্ঠাতা ও ম্যানেজিং পার্টনার। তিনি ম্যাককিনসে অ্যান্ড কোম্পানিতে সিনিয়র পার্টনার হিসেবে দুই দশকেরও বেশি সময় কাজ করেছেন, যেখানে তিনি বৈশ্বিক বাজারের শীর্ষস্থানীয় প্রতিষ্ঠানগুলোর জন্য স্কেলিং ফ্রেমওয়ার্ক তৈরি করেন। তার দক্ষতার ক্ষেত্রগুলোর মধ্যে রয়েছে একত্রীকরণ ও অধিগ্রহণ (M&A) পরামর্শ, আন্তর্জাতিক পুনর্গঠন এবং উচ্চ-গতির কর্পোরেট স্কেলিং।'
     },
     img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=900&auto=format&fit=crop',
     signal: 'Board Strategy',
-    metric: '25Y EXP',
+    metric: 'MGMT',
     theme: 'amber',
     gradient: 'from-amber-500 via-orange-500 to-yellow-600',
     color: '#F59E0B',
     textColor: 'text-amber-600 dark:text-amber-400',
     glowColor: 'rgba(245, 158, 11, 0.15)',
     stats: [
-      { label: 'Board Advisory', value: '40+ Boards' },
-      { label: 'Transaction Value', value: '$12B+' },
-      { label: 'Global Scaling', value: '18 Countries' }
+      { label: 'Board Advisory', value: 'Strategy' },
+      { label: 'Transaction Value', value: 'Governance' },
+      { label: 'Global Scaling', value: 'Finance' }
     ]
   },
   {
     id: 'faisal',
-    name: 'GAZI FAISAL',
+    name: 'Removed profile',
     role: { en: 'Co-Founder & Partner', bn: 'সহ-প্রতিষ্ঠাতা ও পার্টনার' },
-    bio: { en: 'Former Federal Prosecutor. Expert in regulatory defense, risk mitigation, and high-stakes dispute resolution.', bn: 'সাবেক ফেডারেল প্রসিকিউটর। রেগুলেটরি ডিফেন্স, রিস্ক ম্যানেজমেন্ট এবং জটিল কর্পোরেট আইনি বিরোধ মীমাংসা বিশেষজ্ঞ।' },
+    bio: { en: 'Supports documentation, compliance coordination, risk review, and day-to-day legal operations for business teams.', bn: 'সাবেক ফেডারেল প্রসিকিউটর। রেগুলেটরি ডিফেন্স, রিস্ক ম্যানেজমেন্ট এবং জটিল কর্পোরেট আইনি বিরোধ মীমাংসা বিশেষজ্ঞ।' },
     fullBio: {
-      en: 'Gazi Faisal is the Co-Founder and Partner leading the Corporate Legal and Risk Practice at Inception 23. As a former Federal Prosecutor, he has extensive experience defending enterprises against regulatory actions and handling high-stakes corporate disputes. His practice ensures corporate entities operate with absolute compliance while building bulletproof risk-mitigation frameworks.',
+      en: 'This profile is no longer published.',
       bn: 'গাজী ফয়সাল ইনসেপশন ২৩-এর সহ-প্রতিষ্ঠাতা এবং কর্পোরেট লিগ্যাল অ্যান্ড রিস্ক প্র্যাকটিস-এর প্রধান পার্টনার। সাবেক ফেডারেল প্রসিকিউটর হিসেবে তার রেগুলেটরি জটিলতা মোকাবিলা এবং বড় কর্পোরেট দ্বন্দ্ব নিরসনের ব্যাপক অভিজ্ঞতা রয়েছে। তিনি ব্যবসায়িক প্রতিষ্ঠানগুলোর পরম কমপ্লায়েন্স এবং অটুট আইনি সুরক্ষা নিশ্চিত করেন।'
     },
     img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=900&auto=format&fit=crop',
     signal: 'Risk Control',
-    metric: '100% DEF',
+    metric: 'RISK',
     theme: 'rose',
     gradient: 'from-rose-500 via-pink-500 to-purple-600',
     color: '#F43F5E',
     textColor: 'text-rose-600 dark:text-rose-400',
     glowColor: 'rgba(244, 63, 94, 0.15)',
     stats: [
-      { label: 'Regulatory Audits', value: '120+' },
-      { label: 'Disputes Settled', value: '$1.5B+' },
-      { label: 'Defense Rate', value: '98.8%' }
+      { label: 'Regulatory Audits', value: 'Risk' },
+      { label: 'Disputes Settled', value: 'Docs' },
+      { label: 'Defense Rate', value: 'Compliance' }
     ]
   },
   {
     id: 'mahmudul',
     name: 'MAHMUDUL HASAN',
     role: { en: 'Management Partner, Tech', bn: 'ম্যানেজমেন্ট পার্টনার, টেকনোলজি' },
-    bio: { en: 'PhD in AI from MIT. Architect of predictive operating engines and zero-trust computational architectures.', bn: 'এমআইটি থেকে এআই-তে পিএইচডি। প্রেডিক্টিভ অপারেটিং ইঞ্জিন এবং জিরো-ট্রাস্ট কম্পিউটার অবকাঠামোর স্থপতি।' },
+    bio: { en: 'Works on practical software delivery, dashboards, internal tools, and automation that reduce manual work.', bn: 'এমআইটি থেকে এআই-তে পিএইচডি। প্রেডিক্টিভ অপারেটিং ইঞ্জিন এবং জিরো-ট্রাস্ট কম্পিউটার অবকাঠামোর স্থপতি।' },
     fullBio: {
-      en: 'Dr. Mahmudul Hasan drives the Artificial Intelligence and Software systems practice at Inception 23. Holding a PhD in Computer Science & AI from MIT, he is a leading expert in deploying custom LLM voice agents, neural databases, and secure, high-capacity React/Next.js frameworks. He specializes in removing operational friction through intelligent corporate automation.',
+      en: 'Mahmudul Hasan supports the technology practice at Inception 23. His work covers custom web applications, dashboards, internal tools, data workflows, and automation that remove repeated manual steps from business operations.',
       bn: 'ডঃ মাহমুদুল হাসান ইনসেপশন ২৩-এর আর্টিফিশিয়াল ইন্টেলিজেন্স এবং সফটওয়্যার সিস্টেমস বিভাগের দায়িত্ব আছেন। এমআইটি থেকে কম্পিউটার সায়েন্স ও এআই-তে পিএইচডি ধারী এই প্রযুক্তিবিদ এআই ভয়েস এজেন্ট, নিউরাল ডাটাবেস এবং জিরো-ট্রাস্ট সিস্টেম আর্কিটেকচার নিয়ে কাজ করেন। তিনি কর্পোরেট অটোমেশনের মাধ্যমে কোম্পানির পরিচালনাগত জটিলতা দূর করতে পারদর্শী।'
     },
     img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=900&auto=format&fit=crop',
-    signal: 'AI Systems',
-    metric: 'MIT PhD',
+    signal: 'Software',
+    metric: 'TECH',
     theme: 'teal',
     gradient: 'from-teal-500 via-cyan-500 to-blue-600',
     color: '#14B8A6',
     textColor: 'text-teal-600 dark:text-teal-400',
     glowColor: 'rgba(20, 184, 166, 0.15)',
     stats: [
-      { label: 'LLM Systems Run', value: '50M+ Req' },
-      { label: 'APIs Built', value: '300+' },
-      { label: 'Patents Filed', value: '4 Issued' }
+      { label: 'Systems Work', value: 'Software' },
+      { label: 'APIs Built', value: 'Dashboards' },
+      { label: 'Patents Filed', value: 'Automation' }
     ]
   },
   {
     id: 'khairul',
     name: 'K M KHAIRUL HASAN ARIF',
     role: { en: 'Strategic Advisor', bn: 'কৌশলগত উপদেষ্টা' },
-    bio: { en: "Author of 'The Quantum Pivot'. Directing enterprise strategy, high-velocity growth, and digital execution.", bn: "'দ্যা কোয়ান্টাম পিভট' এর লেখক। এন্টারপ্রাইজ কৌশল, উচ্চ-গতির প্রবৃদ্ধি এবং ডিজিটাল বাস্তবায়নের দিকনির্দেশক।" },
+    bio: { en: "Supports strategy, positioning, growth planning, and practical execution for teams building their next stage.", bn: "'দ্যা কোয়ান্টাম পিভট' এর লেখক। এন্টারপ্রাইজ কৌশল, উচ্চ-গতির প্রবৃদ্ধি এবং ডিজিটাল বাস্তবায়নের দিকনির্দেশক।" },
     fullBio: {
-      en: "K M Khairul Hasan Arif is a Senior Strategic Advisor. Known for authoring the influential framework 'The Quantum Pivot', he advises corporations on structural agility and market-share acquisition. His work focuses on guiding fast-growing companies and mid-market enterprises through complex digital pivots and operational expansion.",
+      en: "K M Khairul Hasan Arif is a Strategic Advisor. His work focuses on positioning, growth planning, market direction, and practical execution support for teams that need a clearer next step.",
       bn: 'কে এম খাইরুল হাসান আরিফ একজন সিনিয়র কৌশলগত উপদেষ্টা। বিখ্যাত কর্পোরেট ম্যানুয়াল "দ্যা কোয়ান্টাম পিভট"-এর লেখক হিসেবে তিনি ব্যবসা প্রতিষ্ঠানের সক্ষমতা বৃদ্ধি এবং বাজার দখল কৌশলে দিকনির্দেশনা দেন। তার মূল মনোযোগ দ্রুত বর্ধনশীল এবং মধ্যম সারির কোম্পানিগুলোর ডিজিটাল পিভটিং ও অপারেশনাল সম্প্রসারণের ওপর।'
     },
     img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=900&auto=format&fit=crop',
@@ -115,9 +115,9 @@ const teamMembers: TeamMember[] = [
     textColor: 'text-indigo-600 dark:text-indigo-400',
     glowColor: 'rgba(99, 102, 241, 0.15)',
     stats: [
-      { label: 'Pivots Supervised', value: '35+' },
-      { label: 'Enterprise ROI', value: '4.2x Avg' },
-      { label: 'Growth Audits', value: '80+' }
+      { label: 'Focus', value: 'Strategy' },
+      { label: 'Work', value: 'Growth' },
+      { label: 'Support', value: 'Positioning' }
     ]
   }
 ];
@@ -169,10 +169,10 @@ export const Team = () => {
               className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-500/20 bg-brand-500/5 px-4 py-2 text-[10px] font-black uppercase tracking-[0.28em] text-brand-700 dark:text-brand-400"
             >
               <Sparkles size={12} className="animate-pulse text-brand-500" />
-              {lang === 'en' ? 'TEAM ARCHITECTURE' : 'টিম আর্কিটেকচার'}
+              {lang === 'en' ? 'TEAM STRUCTURE' : 'টিম আর্কিটেকচার'}
             </motion.div>
             <h2 className="max-w-4xl font-serif text-[clamp(2.5rem,4.5vw,4.5rem)] font-black leading-[1.05] tracking-tight text-brand-950 dark:text-white">
-              <SplitText text={lang === 'en' ? 'Elite advisory board.' : 'অভিজ্ঞ উপদেষ্টা মণ্ডলী।'} />
+              <SplitText text={lang === 'en' ? 'Advisory and delivery team.' : 'অভিজ্ঞ উপদেষ্টা মণ্ডলী।'} />
             </h2>
           </div>
 
@@ -190,7 +190,7 @@ export const Team = () => {
               <div>
                 <div className="text-sm font-black text-brand-950 dark:text-white">Structured Advisory Mapping</div>
                 <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-light">
-                  Direct boardroom governance, deep software technology architectures, and complex federal legal defense.
+                  Business control, practical technology work, legal coordination, and delivery support.
                 </p>
               </div>
             </div>
@@ -202,7 +202,7 @@ export const Team = () => {
         {/* Row 2: Mahmudul (1x col) + Khairul (1x col) + Careers (1x col) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           
-          {teamMembers.map((member, i) => {
+          {teamMembers.filter((member) => member.id !== 'faisal').map((member, i) => {
             const isFounder = member.id === 'khadimul';
             const mPos = mousePos[member.id] || { x: 0, y: 0 };
 
@@ -301,12 +301,12 @@ export const Team = () => {
               </div>
               
               <h3 className="text-2xl font-serif font-black text-white leading-tight">
-                {lang === 'en' ? 'Join the Elite.' : 'বোর্ডে যোগ দিন।'}
+                {lang === 'en' ? 'Work with us.' : 'বোর্ডে যোগ দিন।'}
               </h3>
               
               <p className="text-gray-400 text-xs leading-relaxed font-light">
                 {lang === 'en' 
-                  ? "We actively recruit partners capable of reshaping markets. Submit credentials for open seats."
+                  ? "We welcome capable advisors, operators, and delivery people for open seats."
                   : "আমাদের শূন্য অ্যাডভাইজরি এবং ম্যানেজমেন্ট স্লটগুলোর জন্য সরাসরি আবেদন করুন।"}
               </p>
             </div>
@@ -358,9 +358,9 @@ export const Team = () => {
           >
             {/* Drawer Body Panel */}
             <motion.div
-              initial={{ x: '100%' }}
+              initial={{ x: '100%'  }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              exit={{ x: '100%'  }}
               transition={{ type: "spring", damping: 28, stiffness: 220 }}
               className="bg-white dark:bg-night-900 border-l border-gray-200 dark:border-white/10 w-full max-w-lg h-full shadow-2xl relative flex flex-col justify-between overflow-hidden"
               onClick={(e) => e.stopPropagation()}

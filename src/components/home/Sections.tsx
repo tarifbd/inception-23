@@ -59,9 +59,9 @@ export const Proof = () => {
             >
                 <div suppressHydrationWarning className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-white/10">
                     {[
-                        { val: "$50B+", label: { en: "Assets Advised", bn: "উপদেষ্টা সম্পদ" }, icon: TrendingUp, theme: 'emerald' },
+                        { val: "Clear", label: { en: "Decision Support", bn: "উপদেষ্টা সম্পদ" }, icon: TrendingUp, theme: 'emerald' },
                         { val: "30%", label: { en: "Avg. Efficiency Gain", bn: "গড় দক্ষতা বৃদ্ধি" }, icon: BarChart, theme: 'blue' },
-                        { val: "100%", label: { en: "Regulatory Compliance", bn: "নিয়ন্ত্রক সম্মতি" }, icon: ShieldCheck, theme: 'purple' }
+                        { val: "Ready", label: { en: "Compliance Records", bn: "নিয়ন্ত্রক সম্মতি" }, icon: ShieldCheck, theme: 'purple' }
                     ].map((stat, i) => (
                         <motion.div 
                           initial={{ scale: 0.8, opacity: 0 }} 

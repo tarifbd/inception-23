@@ -1,10 +1,11 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ArrowDown, ArrowUp, ImagePlus, Plus, RefreshCw, RotateCcw, Save, Trash2, Upload } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowDown, ArrowUp, Copy, ImagePlus, Plus, RefreshCw, RotateCcw, Save, Trash2, Upload } from 'lucide-react';
 import {
   AdminField,
+  AdminLoadingSkeleton,
   AdminModuleShell,
   adminButtonClass,
   adminCardClass,
@@ -86,6 +87,14 @@ export function WebsiteCollectionEditor({ collection }: { collection: string }) 
     setRecords((current) => [...current, { id: `${collection}-${crypto.randomUUID()}`, ...blank }]);
   };
 
+  const duplicate = (index: number) => {
+    const source = records[index];
+    if (!source) return;
+    const copy = { ...structuredClone(source), id: `${collection}-${crypto.randomUUID()}` };
+    setRecords((current) => [...current.slice(0, index + 1), copy, ...current.slice(index + 1)]);
+    setMessage('Item duplicated. Save all to publish the new copy.');
+  };
+
   const uploadImage = async (event: FormEvent<HTMLFormElement>, recordIndex: number, field: CollectionField) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -121,6 +130,8 @@ export function WebsiteCollectionEditor({ collection }: { collection: string }) 
         </div>
       </div>
 
+      {loading ? <AdminLoadingSkeleton rows={4} /> : null}
+
       <div className="space-y-4">
         {records.map((record, index) => (
           <article key={record.id} className={`${adminCardClass} p-5`}>
@@ -132,6 +143,7 @@ export function WebsiteCollectionEditor({ collection }: { collection: string }) 
               <div className="flex gap-2">
                 <button onClick={() => move(index, -1)} disabled={index === 0} className={adminSecondaryButtonClass} aria-label="Move up"><ArrowUp size={14} /></button>
                 <button onClick={() => move(index, 1)} disabled={index === records.length - 1} className={adminSecondaryButtonClass} aria-label="Move down"><ArrowDown size={14} /></button>
+                <button onClick={() => duplicate(index)} className={adminSecondaryButtonClass} aria-label="Duplicate item"><Copy size={14} /></button>
                 <button onClick={() => setRecords((current) => current.filter((_, recordIndex) => recordIndex !== index))} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50" aria-label="Delete item"><Trash2 size={15} /></button>
               </div>
             </div>
@@ -209,7 +221,16 @@ function FieldEditor({
         <AdminField label={field.label}>
           <div className="grid gap-3 lg:grid-cols-[180px_minmax(0,1fr)]">
             <div className="flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
-              {stringValue ? <img src={stringValue} alt="" className="h-full w-full object-contain" /> : <ImagePlus className="text-gray-300" size={30} />}
+              {stringValue ? (
+                <Image
+                  src={stringValue}
+                  alt={`${field.label} preview`}
+                  width={320}
+                  height={180}
+                  unoptimized
+                  className="h-full w-full object-contain"
+                />
+              ) : <ImagePlus className="text-gray-300" size={30} />}
             </div>
             <div className="space-y-3">
               <input className={adminInputClass} value={stringValue} onChange={(event) => onChange(event.target.value)} placeholder="/uploads/cms/..." />

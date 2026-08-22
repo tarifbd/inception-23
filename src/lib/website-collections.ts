@@ -1,12 +1,13 @@
+import { revalidateTag, unstable_cache } from 'next/cache';
 import { industries } from '@/lib/constants/industries';
 import { aiCapabilities, caAdvisoryFocus } from '@/lib/constants/solutions';
 import { mainServicesAmbush } from '@/lib/constants/main-services-ambush';
-import { mainNav } from '@/lib/constants/navigation';
+import { aboutMenu, eventManagementMenu, industriesMenu, insightsMenu, mainNav, resourcesMenu, servicesMenu, solutionMenu } from '@/lib/constants/navigation';
 import { footerCompanyLinks, footerSocialLinks, contactHighlights, footerTrustPoints } from '@/lib/constants/site-content';
 import { processSteps } from '@/lib/constants/process';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
-import { caseStudies, insights, testimonials } from '@/lib/constants/services';
+import { caseStudies, insights, services, testimonials } from '@/lib/constants/services';
 import { solutions } from '@/lib/constants/solutions';
 import { teamMembers } from '@/lib/constants/team';
 import { techStackGroups } from '@/lib/constants/tech-stack';
@@ -15,6 +16,14 @@ import { db } from '@/lib/db';
 
 export type CollectionId =
   | 'navigation'
+  | 'servicesMenu'
+  | 'eventsMenu'
+  | 'solutionsMenu'
+  | 'industriesMenu'
+  | 'insightsMenu'
+  | 'resourcesMenu'
+  | 'aboutMenu'
+  | 'serviceDetails'
   | 'insights'
   | 'caseStudies'
   | 'testimonials'
@@ -27,6 +36,9 @@ export type CollectionId =
   | 'aboutValues'
   | 'aboutExpertise'
   | 'serviceCategories'
+  | 'eventServices'
+  | 'eventHandover'
+  | 'eventPhases'
   | 'mainServices'
   | 'serviceEcosystem'
   | 'solutions'
@@ -66,7 +78,52 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
     fields: [
       { key: 'label', label: 'Label', type: 'text' },
       { key: 'href', label: 'Destination', type: 'text', placeholder: '/about or #team' },
-      { key: 'menu', label: 'Dropdown menu', type: 'select', options: ['', 'services', 'solutions', 'industries', 'insights', 'about'] },
+      { key: 'menu', label: 'Dropdown menu', type: 'select', options: ['', 'services', 'events', 'solutions', 'industries', 'insights', 'resources', 'about'] },
+    ],
+  },
+  servicesMenu: {
+    id: 'servicesMenu', title: 'Services Dropdown', singular: 'Service menu item', description: 'Manage cards inside the Services dropdown.',
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' },
+      { key: 'icon', label: 'Icon name', type: 'text' }, { key: 'theme', label: 'Color theme', type: 'select', options: ['it', 'consultancy', 'legal', 'creative'] },
+    ],
+  },
+  eventsMenu: {
+    id: 'eventsMenu', title: 'Events Dropdown', singular: 'Event menu item', description: 'Manage cards inside the Events dropdown.',
+    fields: [{ key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' }, { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' }],
+  },
+  solutionsMenu: {
+    id: 'solutionsMenu', title: 'Solutions Dropdown', singular: 'Solution menu item', description: 'Manage cards inside the Solutions dropdown.',
+    fields: [{ key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' }, { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' }, { key: 'icon', label: 'Icon name', type: 'text' }, { key: 'theme', label: 'Color theme', type: 'select', options: ['it', 'consultancy', 'legal', 'creative'] }],
+  },
+  industriesMenu: {
+    id: 'industriesMenu', title: 'Industries Dropdown', singular: 'Industry menu item', description: 'Manage cards inside the Industries dropdown.',
+    fields: [{ key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' }, { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' }],
+  },
+  insightsMenu: {
+    id: 'insightsMenu', title: 'Insights Dropdown', singular: 'Insight menu item', description: 'Manage cards inside the Insights dropdown.',
+    fields: [{ key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' }, { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' }],
+  },
+  resourcesMenu: {
+    id: 'resourcesMenu', title: 'Resources Dropdown', singular: 'Resource menu item', description: 'Manage cards inside the Resources dropdown.',
+    fields: [{ key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' }, { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' }],
+  },
+  aboutMenu: {
+    id: 'aboutMenu', title: 'About Dropdown', singular: 'About menu item', description: 'Manage cards inside the About dropdown.',
+    fields: [{ key: 'title', label: 'Title', type: 'text' }, { key: 'href', label: 'Destination', type: 'text' }, { key: 'description', label: 'Description', type: 'textarea' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' }],
+  },
+  serviceDetails: {
+    id: 'serviceDetails', title: 'Service Detail Pages', singular: 'Service detail page', description: 'Manage every public service detail page, its media, copy, lists, and delivery content.',
+    fields: [
+      { key: 'slug', label: 'Route slug', type: 'select', options: ['it-ai-solutions', 'management-consultancy', 'legal-support', 'creative-others'] },
+      { key: 'shortId', label: 'Theme', type: 'select', options: ['it', 'consultancy', 'legal', 'creative'] },
+      { key: 'title', label: 'Page title', type: 'text' }, { key: 'eyebrow', label: 'Eyebrow', type: 'text' },
+      { key: 'summary', label: 'SEO summary', type: 'textarea' }, { key: 'description', label: 'Hero description', type: 'textarea' },
+      { key: 'lottie', label: 'Animation path', type: 'text' }, { key: 'heroImage', label: 'Optional hero image', type: 'image' },
+      { key: 'problems', label: 'Problems', type: 'tags' }, { key: 'solutions', label: 'Solutions', type: 'tags' },
+      { key: 'process', label: 'Process steps', type: 'tags' }, { key: 'deliverables', label: 'Deliverables', type: 'tags' },
+      { key: 'useCases', label: 'Use cases', type: 'tags' },
     ],
   },
   insights: {
@@ -197,6 +254,34 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
       { key: 'highlights', label: 'Highlight bullets', type: 'tags' },
     ],
   },
+  eventServices: {
+    id: 'eventServices',
+    title: 'Event Services',
+    singular: 'Event service',
+    description: 'Edit event service rows, descriptions, and contact destinations.',
+    fields: [
+      { key: 'label', label: 'Service name', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'href', label: 'Destination', type: 'text' },
+    ],
+  },
+  eventHandover: {
+    id: 'eventHandover',
+    title: 'Event Handover Pack',
+    singular: 'Handover item',
+    description: 'Edit the handover deliverables shown beside the event services.',
+    fields: [{ key: 'label', label: 'Deliverable', type: 'text' }],
+  },
+  eventPhases: {
+    id: 'eventPhases',
+    title: 'Event Delivery Phases',
+    singular: 'Event phase',
+    description: 'Edit the before, during, and after delivery notes.',
+    fields: [
+      { key: 'phase', label: 'Phase name', type: 'text' },
+      { key: 'detail', label: 'Phase detail', type: 'textarea' },
+    ],
+  },
   mainServices: {
     id: 'mainServices',
     title: 'Main Services Showcase',
@@ -253,9 +338,9 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
   },
   aiCapabilities: {
     id: 'aiCapabilities',
-    title: 'AI Capability Cards',
-    singular: 'AI capability',
-    description: 'Edit the AI solutions cards shown on the homepage.',
+    title: 'Digital Systems Cards',
+    singular: 'Digital system capability',
+    description: 'Edit the digital systems cards shown on the homepage.',
     fields: [
       { key: 'title', label: 'Title', type: 'text' },
       { key: 'description', label: 'Description', type: 'textarea' },
@@ -303,7 +388,7 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
     fields: [
       { key: 'name', label: 'Name', type: 'text' },
       { key: 'role', label: 'Role', type: 'text' },
-      { key: 'category', label: 'Team group', type: 'select', options: ['management', 'advisor-consultant', 'executive'] },
+      { key: 'category', label: 'Team group', type: 'select', options: ['management', 'advisor-consultant', 'associates'] },
       { key: 'bio', label: 'Biography', type: 'textarea' },
       { key: 'expertise', label: 'Expertise', type: 'tags' },
       { key: 'initials', label: 'Initials', type: 'text' },
@@ -312,6 +397,7 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
       { key: 'linkedinHref', label: 'LinkedIn URL', type: 'text' },
       { key: 'emailHref', label: 'Email link', type: 'text' },
       { key: 'githubHref', label: 'GitHub URL', type: 'text' },
+      { key: 'portfolioHref', label: 'Portfolio / website URL', type: 'text' },
     ],
   },
   process: {
@@ -347,6 +433,18 @@ const defaults: Record<CollectionId, CollectionRecord[]> = {
     label: item.label,
     href: item.href,
       menu: 'menu' in item ? item.menu : '',
+  })),
+  servicesMenu: servicesMenu.map((item, index) => ({ id: `services-menu-${index + 1}`, title: item.title, href: item.href, description: item.description, eyebrow: 'Service discipline', icon: item.icon, theme: item.key })),
+  eventsMenu: eventManagementMenu.map((item, index) => ({ id: `events-menu-${index + 1}`, title: item.label, href: item.href, description: item.description || '', eyebrow: 'Event work' })),
+  solutionsMenu: solutionMenu.map((item, index) => ({ id: `solutions-menu-${index + 1}`, title: item.title, href: item.href, description: item.description, eyebrow: item.badge, icon: item.icon, theme: item.serviceKey })),
+  industriesMenu: industriesMenu.map((item, index) => ({ id: `industries-menu-${index + 1}`, title: item.label, href: item.href, description: item.description || '', eyebrow: 'Industry focus' })),
+  insightsMenu: insightsMenu.map((item, index) => ({ id: `insights-menu-${index + 1}`, title: item.label, href: item.href, description: item.description || '', eyebrow: 'Knowledge' })),
+  resourcesMenu: resourcesMenu.map((item, index) => ({ id: `resources-menu-${index + 1}`, title: item.label, href: item.href, description: item.description || '', eyebrow: 'Resource' })),
+  aboutMenu: aboutMenu.map((item, index) => ({ id: `about-menu-${index + 1}`, title: item.label, href: item.href, description: item.description || '', eyebrow: 'Inception 23' })),
+  serviceDetails: services.map((item) => ({
+    id: `service-detail-${item.slug}`, slug: item.slug, shortId: item.shortId, title: item.title, eyebrow: item.eyebrow,
+    summary: item.summary, description: item.description, lottie: item.lottie, heroImage: '', problems: item.problems,
+    solutions: item.solutions, process: item.process, deliverables: item.deliverables, useCases: item.useCases,
   })),
   insights: insights.map((item, index) => ({
     id: `insight-${index + 1}`,
@@ -386,7 +484,7 @@ const defaults: Record<CollectionId, CollectionRecord[]> = {
     'Design with commercial purpose',
   ].map((label, index) => ({ id: `about-value-${index + 1}`, label })),
   aboutExpertise: [
-    'Technology and AI systems',
+    'Technology and software systems',
     'Management consulting and process control',
     'Finance, tax, VAT, customs, and business advisory support',
     'Legal documentation and compliance coordination',
@@ -394,6 +492,20 @@ const defaults: Record<CollectionId, CollectionRecord[]> = {
     'Dashboards, operating models, and implementation governance',
   ].map((label, index) => ({ id: `about-expertise-${index + 1}`, label })),
   serviceCategories: serviceCategories.map((item) => ({ id: `service-category-${item.key}`, ...item })) as CollectionRecord[],
+  eventServices: eventManagementMenu.map((item, index) => ({ id: `event-service-${index + 1}`, ...item })),
+  eventHandover: [
+    'Event brief and working budget',
+    'Venue/vendor comparison sheet',
+    'Guest and RSVP tracker',
+    'Program flow and cue sheet',
+    'Creative asset checklist',
+    'Post-event recap and closing notes',
+  ].map((label, index) => ({ id: `event-handover-${index + 1}`, label })),
+  eventPhases: [
+    ['Before', 'Budget, venue shortlist, guest list, supplier calls, stage needs'],
+    ['During', 'Check-in, seating, speaker cues, vendor timing, issue desk'],
+    ['After', 'Photo handover, bills, lead list, recap note, closing report'],
+  ].map(([phase, detail], index) => ({ id: `event-phase-${index + 1}`, phase, detail })),
   mainServices: mainServicesAmbush.map((item) => ({ id: `main-service-${item.key}`, ...item })) as CollectionRecord[],
   serviceEcosystem: serviceEcosystemCategories.map((category) => ({
     id: `service-ecosystem-${category.key}`,
@@ -425,22 +537,48 @@ export function getDefaultCollection(id: CollectionId) {
   return structuredClone(defaults[id]);
 }
 
+const collectionIds = Object.keys(collectionDefinitions) as CollectionId[];
+const websiteCollectionsCacheTag = 'website-collections';
+
+const getStoredWebsiteCollections = unstable_cache(
+  async () => {
+    try {
+      return await db.siteSetting.findMany({
+        where: { group: 'website-content' },
+        select: { key: true, value: true },
+      });
+    } catch {
+      return [];
+    }
+  },
+  ['website-collections-v1'],
+  { revalidate: 300, tags: [websiteCollectionsCacheTag] },
+);
+
+export async function getWebsiteCollections(): Promise<WebsiteCollections> {
+  const settings = await getStoredWebsiteCollections();
+  const settingsByKey = new Map(settings.map((setting) => [setting.key, setting.value]));
+  const entries = collectionIds.map((id) => {
+    const stored = settingsByKey.get(`website.collection.${id}.v1`);
+    if (!stored) return [id, getDefaultCollection(id)] as const;
+
+    try {
+      const parsed = JSON.parse(stored);
+      return [id, Array.isArray(parsed) ? parsed : getDefaultCollection(id)] as const;
+    } catch {
+      return [id, getDefaultCollection(id)] as const;
+    }
+  });
+  return Object.fromEntries(entries) as WebsiteCollections;
+}
+
 export async function getWebsiteCollection<T extends CollectionRecord = CollectionRecord>(id: CollectionId): Promise<T[]> {
   try {
-    const setting = await db.siteSetting.findUnique({ where: { key: `website.collection.${id}.v1` } });
-    if (!setting) return getDefaultCollection(id) as T[];
-    const parsed = JSON.parse(setting.value);
-    return Array.isArray(parsed) ? parsed as T[] : getDefaultCollection(id) as T[];
+    const collections = await getWebsiteCollections();
+    return collections[id] as T[];
   } catch {
     return getDefaultCollection(id) as T[];
   }
-}
-
-export async function getWebsiteCollections(): Promise<WebsiteCollections> {
-  const entries = await Promise.all(
-    (Object.keys(collectionDefinitions) as CollectionId[]).map(async (id) => [id, await getWebsiteCollection(id)] as const),
-  );
-  return Object.fromEntries(entries) as WebsiteCollections;
 }
 
 export async function saveWebsiteCollection(id: CollectionId, records: CollectionRecord[]) {
@@ -454,5 +592,6 @@ export async function saveWebsiteCollection(id: CollectionId, records: Collectio
     update: { value: JSON.stringify(cleanRecords), group: 'website-content' },
     create: { key: `website.collection.${id}.v1`, value: JSON.stringify(cleanRecords), group: 'website-content' },
   });
+  revalidateTag(websiteCollectionsCacheTag);
   return cleanRecords;
 }

@@ -10,8 +10,8 @@ export type LandingFeature = {
 
 export const aiSolutions: LandingFeature[] = [
   {
-    id: 'ai-workflow-automation',
-    title: 'AI Workflow Automation',
+    id: 'workflow-automation',
+    title: 'Workflow Automation',
     description: 'Automate recurring approvals, routing, summaries, reminders, and operational handoffs.',
     benefit: 'Less manual work, faster execution.',
     icon: 'Workflow',
@@ -38,9 +38,9 @@ export const aiSolutions: LandingFeature[] = [
     icon: 'BarChart3',
   },
   {
-    id: 'ai-chatbots-assistants',
-    title: 'AI Chatbots & Assistants',
-    description: 'Customer support, internal knowledge, lead capture, and service assistants with governed behavior.',
+    id: 'support-assistants',
+    title: 'Support Assistants',
+    description: 'Customer support, internal knowledge, lead capture, and service assistants with clear operating rules.',
     benefit: 'Better response without chaos.',
     icon: 'Bot',
   },

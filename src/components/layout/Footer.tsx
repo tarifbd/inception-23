@@ -1,11 +1,7 @@
-'use client';
-
-import { FormEvent, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
-  CheckCircle2,
   Clock3,
   Facebook,
   Globe2,
@@ -14,11 +10,10 @@ import {
   Mail,
   MapPin,
   MessageCircle,
-  Phone,
-  Send,
   ShieldCheck,
   Youtube,
 } from 'lucide-react';
+import { NewsletterForm } from '@/components/layout/NewsletterForm.client';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { industriesMenu, insightsMenu, solutionMenu } from '@/lib/constants/navigation';
 import {
@@ -27,242 +22,138 @@ import {
   footerSocialLinks as defaultFooterSocialLinks,
   footerTrustPoints as defaultFooterTrustPoints,
 } from '@/lib/constants/site-content';
+import { getWebsiteCollections } from '@/lib/website-collections';
 
-const iconMap = { Clock3, Facebook, Globe2, Instagram, Linkedin, Mail, MapPin, MessageCircle, Phone, Youtube };
+const iconMap = { Clock3, Facebook, Globe2, Instagram, Linkedin, Mail, MapPin, MessageCircle, Youtube };
 
-export function Footer() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [companyLinks, setCompanyLinks] = useState(defaultFooterCompanyLinks);
-  const [socialLinks, setSocialLinks] = useState(defaultFooterSocialLinks);
-  const [trustPoints, setTrustPoints] = useState(defaultFooterTrustPoints);
-  const [contactHighlights, setContactHighlights] = useState(defaultContactHighlights);
+function isSpecificSocialUrl(href: string) {
+  if (!href || href === '#') return false;
+  try {
+    const url = new URL(href);
+    return url.protocol === 'https:' && url.pathname !== '/' && url.pathname !== '';
+  } catch {
+    return false;
+  }
+}
 
-  useEffect(() => {
-    let active = true;
-    Promise.all([
-      fetch('/api/v1/admin/website-content/footerCompanyLinks').then((response) => response.json()).catch(() => ({ data: [] })),
-      fetch('/api/v1/admin/website-content/footerSocialLinks').then((response) => response.json()).catch(() => ({ data: [] })),
-      fetch('/api/v1/admin/website-content/footerTrustPoints').then((response) => response.json()).catch(() => ({ data: [] })),
-      fetch('/api/v1/admin/website-content/footerContactHighlights').then((response) => response.json()).catch(() => ({ data: [] })),
-    ]).then(([linksPayload, socialPayload, trustPayload, highlightsPayload]) => {
-      if (!active) return;
-      if (Array.isArray(linksPayload.data) && linksPayload.data.length) setCompanyLinks(linksPayload.data);
-      if (Array.isArray(socialPayload.data) && socialPayload.data.length) setSocialLinks(socialPayload.data);
-      if (Array.isArray(trustPayload.data) && trustPayload.data.length) setTrustPoints(trustPayload.data.map((item: { label?: string }) => item.label).filter(Boolean));
-      if (Array.isArray(highlightsPayload.data) && highlightsPayload.data.length) setContactHighlights(highlightsPayload.data);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!email.trim()) return;
-
-    setStatus('submitting');
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) throw new Error('Newsletter request failed');
-      setEmail('');
-      setStatus('success');
-    } catch {
-      setStatus('error');
-    } finally {
-      window.setTimeout(() => setStatus('idle'), 3600);
-    }
-  };
+export async function Footer() {
+  const collections = await getWebsiteCollections();
+  const companyLinks = collections.footerCompanyLinks.length
+    ? collections.footerCompanyLinks.map((item) => ({ label: String(item.label ?? ''), href: String(item.href ?? '') }))
+    : defaultFooterCompanyLinks;
+  const socialLinks = collections.footerSocialLinks.length
+    ? collections.footerSocialLinks.map((item) => ({ label: String(item.label ?? ''), href: String(item.href ?? ''), icon: String(item.icon ?? 'Linkedin') }))
+    : defaultFooterSocialLinks;
+  const trustPoints = collections.footerTrustPoints.length
+    ? collections.footerTrustPoints.map((item) => String(item.label ?? '')).filter(Boolean)
+    : defaultFooterTrustPoints;
+  const contactHighlights = collections.footerContactHighlights.length
+    ? collections.footerContactHighlights.map((item) => ({ label: String(item.label ?? ''), value: String(item.value ?? ''), icon: String(item.icon ?? 'Clock3') }))
+    : defaultContactHighlights;
+  const visibleSocialLinks = socialLinks.filter((link) => isSpecificSocialUrl(link.href));
 
   return (
-    <footer className="relative overflow-hidden border-t border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_42%,#eef7fb_100%)] text-brand-950">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:72px_72px]" />
-      <div className="pointer-events-none absolute -left-28 top-20 h-80 w-80 rounded-full bg-cyan-200/35 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 bottom-16 h-80 w-80 rounded-full bg-emerald-200/35 blur-3xl" />
+    <footer
+      id="site-footer"
+      data-site-footer
+      className="relative overflow-hidden border-t border-slate-300 bg-[#e8eff2] text-brand-950"
+    >
+      <div className="absolute inset-x-0 top-0 grid h-1 grid-cols-4" aria-hidden="true">
+        <span className="bg-cyan-500" />
+        <span className="bg-emerald-500" />
+        <span className="bg-violet-500" />
+        <span className="bg-orange-500" />
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-        <div className="rounded-[1.5rem] border border-white/80 bg-white/82 p-4 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:p-8 lg:p-10">
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
-            <div className="flex flex-col justify-between gap-10">
-              <div>
-                <Link href="/" className="inline-flex min-w-0 items-center gap-3 focus:outline-none focus:ring-4 focus:ring-brand-700/15 sm:gap-4">
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-lg shadow-slate-950/10 ring-1 ring-slate-200 sm:h-16 sm:w-16 sm:rounded-3xl">
-                    <Image
-                      src="/inception23-mark.png"
-                      alt="Inception 23 mark"
-                      width={112}
-                      height={112}
-                      className="h-full w-full object-contain"
-                    />
+      <div className="relative mx-auto max-w-[1480px] px-5 sm:px-8 lg:px-12">
+        <div className="flex flex-col gap-5 border-b border-slate-300 py-7 sm:flex-row sm:items-center sm:justify-between lg:py-9">
+          <Link href="/" className="inline-flex min-w-0 items-center gap-3 focus:outline-none focus:ring-4 focus:ring-cyan-400/20">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden bg-white p-1.5">
+              <Image src="/inception23-mark.png" alt="Inception 23 mark" width={88} height={88} className="h-full w-full object-contain" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-sm font-black uppercase tracking-[0.16em] text-brand-950 sm:text-base">Inception 23</span>
+              <span className="mt-1 block font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-slate-500">Advisory / Consulting / Solutions</span>
+            </span>
+          </Link>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-slate-600">
+            <span className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 bg-emerald-400" />Dhaka, Bangladesh</span>
+            <span>UTC +06</span>
+            <span className="text-cyan-800">Worldwide engagements</span>
+          </div>
+        </div>
+
+        <div className="grid gap-12 py-16 lg:grid-cols-[minmax(0,1.45fr)_minmax(20rem,0.55fr)] lg:gap-20 lg:py-24">
+          <div data-footer-reveal>
+            <p className="flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-orange-800">
+              <span className="h-px w-10 bg-orange-600" aria-hidden="true" />
+              Start with the consequential question
+            </p>
+            <h2 className="mt-7 max-w-5xl font-serif text-[clamp(3rem,6.3vw,6.8rem)] font-bold leading-[0.91] text-brand-950">
+              Clear decisions.<br />Accountable delivery.
+            </h2>
+            <p className="mt-8 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+              Inception 23 connects technology, management, finance, legal support, compliance, and creative execution through one accountable working relationship.
+            </p>
+            <div className="mt-10 grid max-w-4xl border-t border-slate-300 sm:grid-cols-3">
+              {trustPoints.slice(0, 3).map((point, index) => (
+                <div key={point} className={`grid grid-cols-[2rem_1fr] gap-3 py-5 sm:pr-5 ${index > 0 ? 'sm:border-l sm:border-slate-300 sm:pl-5' : ''}`}>
+                  <span className={index === 0 ? 'font-mono text-[9px] font-bold text-cyan-800' : index === 1 ? 'font-mono text-[9px] font-bold text-emerald-800' : 'font-mono text-[9px] font-bold text-orange-800'}>
+                    {String(index + 1).padStart(2, '0')}
                   </span>
-                  <span className="min-w-0 leading-none">
-                    <span className="block truncate text-base font-black uppercase tracking-[0.18em] text-brand-950 min-[380px]:text-lg sm:text-2xl sm:tracking-[0.28em]">
-                      Inception 23
-                    </span>
-                    <span className="mt-2 block truncate text-[0.45rem] font-black uppercase tracking-[0.12em] text-slate-500 min-[380px]:text-[0.5rem] sm:text-[0.62rem] sm:tracking-[0.2em]">
-                      Where <span className="text-orange-600">new beginnings</span> create the future
-                    </span>
-                  </span>
-                </Link>
-
-                <h2 className="mt-8 max-w-3xl break-words font-serif text-[clamp(2.15rem,5vw,3.75rem)] font-black leading-[1.06] text-brand-950 sm:mt-10 sm:leading-[1.02]">
-                  Advisory clarity for companies ready to move with discipline.
-                </h2>
-                <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-                  Inception 23 brings technology, management, finance, documentation, legal support, and creative execution into one premium operating partner.
-                </p>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-3">
-                {trustPoints.map((point) => (
-                  <div key={point} className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
-                    <CheckCircle2 className="mb-3 text-emerald-600" size={18} />
-                    <p className="text-sm font-bold leading-6 text-slate-700">{point}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="min-w-0 rounded-[1.5rem] border border-slate-200 bg-brand-950 p-5 text-white shadow-2xl shadow-brand-950/15 sm:rounded-[1.6rem] sm:p-8">
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-300">Start a confidential brief</p>
-              <h3 className="mt-5 font-serif text-3xl font-black leading-tight sm:text-4xl">
-                Tell us where the business needs clarity, control, or acceleration.
-              </h3>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/contact"
-                  className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-brand-950 transition hover:-translate-y-1 hover:shadow-xl hover:shadow-white/10"
-                >
-                  Book a Consultation
-                  <ArrowRight size={17} className="transition group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-4 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:-translate-y-1 hover:bg-white/10"
-                >
-                  Explore Services
-                </Link>
-              </div>
-
-              <form onSubmit={handleSubscribe} className="mt-8 rounded-3xl border border-white/10 bg-white/[0.06] p-3">
-                <label htmlFor="footer-email" className="mb-3 block px-2 text-xs font-black uppercase tracking-[0.2em] text-white/55">
-                  Insight dispatch
-                </label>
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <input
-                    id="footer-email"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="you@company.com"
-                    required
-                    disabled={status === 'submitting'}
-                  className="min-h-12 min-w-0 flex-1 rounded-full border border-white/10 bg-white px-5 text-sm font-bold text-brand-950 outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-300/20 disabled:cursor-not-allowed disabled:opacity-70"
-                  />
-                  <button
-                    type="submit"
-                    disabled={status === 'submitting'}
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-cyan-400 px-5 text-sm font-black uppercase tracking-[0.12em] text-brand-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {status === 'submitting' ? 'Sending' : 'Subscribe'}
-                    <Send size={15} />
-                  </button>
+                  <p className="text-xs font-semibold leading-5 text-slate-600">{point}</p>
                 </div>
-                {status === 'success' ? <p className="mt-3 px-2 text-sm font-bold text-emerald-300">Subscribed. Thank you.</p> : null}
-                {status === 'error' ? <p className="mt-3 px-2 text-sm font-bold text-rose-300">Could not subscribe. Please try again.</p> : null}
-              </form>
+              ))}
+            </div>
+          </div>
+
+          <div data-footer-reveal className="border-l border-slate-300 pl-6 lg:mr-12 lg:self-end lg:pl-9 2xl:mr-0">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-800">Confidential advisory intake</p>
+            <h3 className="mt-5 font-serif text-3xl font-bold leading-[1.05] text-brand-950 sm:text-4xl">
+              Bring us the decision, constraint, or opportunity.
+            </h3>
+            <p className="mt-5 max-w-md text-sm leading-7 text-slate-600">
+              We will help define the right advisory path and the practical next step.
+            </p>
+            <div className="mt-8 flex flex-col gap-3">
+              <Link href="/contact" className="ui-action group inline-flex min-h-14 items-center justify-between bg-brand-950 px-6 text-sm font-bold text-white hover:bg-[#32193a]">
+                Start a confidential brief
+                <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+              </Link>
+              <Link href="/services" className="ui-action inline-flex min-h-12 items-center justify-between border-b border-slate-400 px-1 text-sm font-bold text-brand-950 hover:border-cyan-700 hover:text-cyan-800">
+                Explore services
+                <ArrowRight size={15} />
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_1.95fr]">
-          <div className="flex flex-col rounded-none border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">Contact</p>
-              <h3 className="mt-4 font-serif text-2xl font-black leading-tight text-brand-950">
-                Start with a clear, confidential conversation.
-              </h3>
-            </div>
+        <div className="grid border-y border-slate-300 lg:grid-cols-[0.72fr_1.28fr]">
+          <div data-footer-reveal className="border-b border-slate-300 py-12 lg:border-b-0 lg:border-r lg:pr-12">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">Direct contact / 01</p>
+            <a href="mailto:hello@inception23.com" className="mt-5 inline-flex break-all font-serif text-2xl font-bold text-brand-950 transition hover:text-cyan-800 sm:text-3xl">
+              hello@inception23.com
+            </a>
+            <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600"><MapPin size={15} className="text-orange-700" />Dhaka, Bangladesh</p>
 
-            <div className="mt-6 grid gap-4 text-sm font-bold text-slate-600">
-              <a href="mailto:hello@inception23.com" className="flex items-center gap-3 transition hover:text-brand-950">
-                <Mail size={18} className="text-cyan-600" />
-                hello@inception23.com
-              </a>
-              <a href="tel:+8801XXXXXXXXX" className="flex items-center gap-3 transition hover:text-brand-950">
-                <Phone size={18} className="text-emerald-600" />
-                +880 1XXX-XXXXXX
-              </a>
-              <span className="flex items-center gap-3">
-                <MapPin size={18} className="text-purple-600" />
-                Dhaka, Bangladesh
-              </span>
-            </div>
-
-            <div className="mt-7">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Connect with us</p>
-              <div className="mt-3 flex flex-wrap gap-3">
-                {socialLinks.map(({ label, href, icon }) => {
-                  const Icon = iconMap[icon as keyof typeof iconMap] ?? Linkedin;
-                  return (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950"
-                  >
-                    <Icon size={18} />
-                  </a>
-                  );
-                })}
-                <a href="mailto:hello@inception23.com" aria-label="Email" className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-1 hover:border-cyan-300 hover:text-brand-950">
-                  <Mail size={18} />
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-8 grid gap-5 border-t border-slate-200 pt-7">
-              {contactHighlights.map(({ label, value, icon }) => {
-                const Icon = iconMap[icon as keyof typeof iconMap] ?? Clock3;
+            <div className="mt-8 flex flex-wrap gap-2">
+              {visibleSocialLinks.map(({ label, href, icon }) => {
+                const Icon = iconMap[icon as keyof typeof iconMap] ?? Linkedin;
                 return (
-                <div key={label} className="grid grid-cols-[2.5rem_1fr] gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center border border-slate-200 bg-slate-50 text-brand-700">
-                    <Icon size={18} />
-                  </span>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{label}</p>
-                    <p className="mt-1 text-sm font-bold leading-6 text-slate-700">{value}</p>
-                  </div>
-                </div>
+                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="ui-action flex h-10 w-10 items-center justify-center border border-slate-400 text-slate-600 hover:border-cyan-700 hover:text-cyan-800">
+                    <Icon size={17} />
+                  </a>
                 );
               })}
+              <a href="mailto:hello@inception23.com" aria-label="Email" className="ui-action flex h-10 w-10 items-center justify-center border border-slate-400 text-slate-600 hover:border-cyan-700 hover:text-cyan-800">
+                <Mail size={17} />
+              </a>
             </div>
 
-            <div className="mt-auto pt-8">
-              <div className="border border-brand-950 bg-brand-950 p-5 text-white">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-300">Have a project in mind?</p>
-                <p className="mt-3 text-sm font-bold leading-6 text-white/75">
-                  Share the challenge, timeline, and outcome you need. We will help define the next practical step.
-                </p>
-                <Link
-                  href="/contact"
-                  className="group mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:text-cyan-300"
-                >
-                  Send a project brief
-                  <ArrowRight size={15} className="transition group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </div>
+            <NewsletterForm />
           </div>
 
-          <div className="grid gap-4 min-[480px]:grid-cols-2 xl:gap-6">
+          <div className="grid gap-y-10 py-12 min-[480px]:grid-cols-2 min-[480px]:gap-x-8 lg:pl-12 xl:grid-cols-4">
             <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
             <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
             <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
@@ -270,12 +161,33 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-5 border-t border-slate-200 pt-6 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 sm:text-xs sm:tracking-[0.16em] md:flex-row md:items-center md:justify-between">
+        <div className="grid border-b border-slate-300 sm:grid-cols-3">
+          {contactHighlights.map(({ label, value, icon }, index) => {
+            const Icon = iconMap[icon as keyof typeof iconMap] ?? Clock3;
+            return (
+              <div key={label} className={`flex gap-3 border-b border-slate-300 py-7 last:border-b-0 sm:border-b-0 ${index > 0 ? 'sm:border-l sm:border-slate-300 sm:pl-6' : ''} ${index < contactHighlights.length - 1 ? 'sm:pr-6' : ''}`}>
+                <Icon size={17} className={index === 0 ? 'text-emerald-800' : index === 1 ? 'text-orange-800' : 'text-violet-800'} aria-hidden="true" />
+                <div>
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-slate-500">{label}</p>
+                  <p className="mt-2 text-xs font-semibold leading-5 text-slate-700">{value}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="overflow-hidden border-b border-slate-300 py-7" aria-hidden="true">
+          <p className="whitespace-nowrap font-serif text-[clamp(4rem,12.5vw,12rem)] font-bold leading-[0.78] text-brand-950/[0.055]">
+            INCEPTION <span className="text-brand-950/[0.14]">23</span>
+          </p>
+        </div>
+
+        <div data-footer-reveal className="flex flex-col gap-5 py-7 text-xs font-semibold text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} Inception 23. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <Link href="/privacy" className="transition hover:text-brand-950">Privacy</Link>
             <Link href="/terms" className="transition hover:text-brand-950">Terms</Link>
-            <span className="inline-flex items-center gap-2 text-emerald-700">
+            <span className="inline-flex items-center gap-2 text-emerald-800">
               <ShieldCheck size={14} />
               Confidential by design
             </span>
@@ -285,16 +197,15 @@ export function Footer() {
     </footer>
   );
 }
-
 function FooterColumn({ title, links }: { title: string; links: Array<{ label: string; href: string }> }) {
   return (
-    <nav className="rounded-none border border-slate-200 bg-white/78 p-6 shadow-sm backdrop-blur" aria-label={title}>
-      <h3 className="text-xs font-black uppercase tracking-[0.22em] text-brand-600">{title}</h3>
-      <ul className="mt-5 space-y-3">
+    <nav data-footer-reveal aria-label={title}>
+      <h3 className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">{title}</h3>
+      <ul className="mt-5 space-y-3.5">
         {links.map((link) => (
           <li key={`${title}-${link.label}`}>
-            <Link href={link.href} className="group inline-flex items-start gap-2 text-sm font-bold leading-6 text-slate-600 transition hover:text-brand-950">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-300 transition group-hover:bg-cyan-500" />
+            <Link href={link.href} className="group inline-flex items-start gap-2 text-sm font-semibold leading-6 text-slate-600 transition hover:text-brand-950">
+              <span className="mt-[0.68rem] h-px w-0 shrink-0 bg-cyan-700 transition-all group-hover:w-3" aria-hidden="true" />
               <span>{link.label}</span>
             </Link>
           </li>

@@ -13,12 +13,7 @@ export const footerTrustPoints = [
   'Bangladesh-aware execution with global-grade structure',
 ];
 
-export const footerSocialLinks = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: 'Linkedin' },
-  { label: 'Facebook', href: 'https://www.facebook.com', icon: 'Facebook' },
-  { label: 'Instagram', href: 'https://www.instagram.com', icon: 'Instagram' },
-  { label: 'YouTube', href: 'https://www.youtube.com', icon: 'Youtube' },
-];
+export const footerSocialLinks: Array<{ label: string; href: string; icon: string }> = [];
 
 export const contactHighlights = [
   { label: 'Business hours', value: 'Sunday - Thursday, 9:00 AM - 6:00 PM', icon: 'Clock3' },

@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowDown, ArrowUp, Eye, ImagePlus, RotateCcw, Save, Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Copy, Eye, ImagePlus, Plus, RotateCcw, Save, Trash2, Upload } from 'lucide-react';
 import {
   AdminField,
+  AdminLoadingSkeleton,
   AdminModuleShell,
   adminButtonClass,
   adminCardClass,
@@ -75,6 +77,52 @@ export function HomepageContentAdmin() {
     setContent({ ...content, hero: { ...content.hero, slides } });
   };
 
+  const moveSlide = (index: number, direction: -1 | 1) => {
+    if (!content) return;
+    const target = index + direction;
+    if (!content.hero.slides[target]) return;
+    const slides = [...content.hero.slides];
+    [slides[index], slides[target]] = [slides[target], slides[index]];
+    setContent({ ...content, hero: { ...content.hero, slides } });
+  };
+
+  const duplicateSlide = (index: number) => {
+    if (!content) return;
+    const source = content.hero.slides[index];
+    const duplicate = {
+      ...structuredClone(source),
+      id: `hero-${crypto.randomUUID()}`,
+      label: `${source.label} copy`,
+    };
+    const slides = [...content.hero.slides.slice(0, index + 1), duplicate, ...content.hero.slides.slice(index + 1)];
+    setContent({ ...content, hero: { ...content.hero, slides } });
+    setMessage('Hero slide duplicated. Save all to publish.');
+  };
+
+  const addSlide = () => {
+    if (!content) return;
+    const source = content.hero.slides[0];
+    const slide = {
+      ...structuredClone(source),
+      id: `hero-${crypto.randomUUID()}`,
+      theme: 'it' as const,
+      label: 'New hero slide',
+      eyebrow: 'New service story',
+      title: 'Add your headline',
+      highlight: 'and highlighted outcome',
+      copy: 'Add the supporting description for this hero slide.',
+      chips: ['Capability one', 'Capability two'],
+    };
+    setContent({ ...content, hero: { ...content.hero, slides: [...content.hero.slides, slide] } });
+    setMessage('New hero slide added. Save all to publish.');
+  };
+
+  const deleteSlide = (index: number) => {
+    if (!content || content.hero.slides.length <= 1) return;
+    setContent({ ...content, hero: { ...content.hero, slides: content.hero.slides.filter((_, itemIndex) => itemIndex !== index) } });
+    setMessage('Hero slide removed. Save all to publish.');
+  };
+
   const uploadSlideMedia = async (event: React.FormEvent<HTMLFormElement>, slideIndex: number) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -106,7 +154,7 @@ export function HomepageContentAdmin() {
   return (
     <AdminModuleShell title="Homepage CMS" eyebrow="Live website content" nav={[{ href: '/', label: 'View website' }]}>
       {!content ? (
-        <div className={`${adminCardClass} p-8 text-sm font-bold text-gray-500`}>Loading homepage content...</div>
+        <AdminLoadingSkeleton rows={5} />
       ) : (
         <div className="space-y-6">
           <div className="sticky top-3 z-30 flex flex-col gap-3 rounded-xl border border-gray-200 bg-white/95 p-3 shadow-lg backdrop-blur sm:flex-row sm:items-center sm:justify-between">
@@ -121,15 +169,18 @@ export function HomepageContentAdmin() {
           </div>
 
           <section className={`${adminCardClass} p-5`}>
-            <div className="mb-5 flex items-center justify-between gap-4">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-black uppercase tracking-wider text-brand-700">Hero</p>
                 <h2 className="mt-1 font-serif text-2xl font-black">Hero controls and slides</h2>
               </div>
-              <label className="flex items-center gap-2 text-sm font-black">
-                <input type="checkbox" checked={content.hero.enabled} onChange={(event) => setContent({ ...content, hero: { ...content.hero, enabled: event.target.checked } })} />
-                Show hero
-              </label>
+              <div className="flex flex-wrap items-center gap-2">
+                <button type="button" onClick={addSlide} className={adminSecondaryButtonClass}><Plus size={15} /> Add slide</button>
+                <label className="flex items-center gap-2 text-sm font-black">
+                  <input type="checkbox" checked={content.hero.enabled} onChange={(event) => setContent({ ...content, hero: { ...content.hero, enabled: event.target.checked } })} />
+                  Show hero
+                </label>
+              </div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {(['primaryCtaLabel', 'primaryCtaHref', 'secondaryCtaLabel', 'secondaryCtaHref', 'footerLabel'] as const).map((field) => (
@@ -141,7 +192,24 @@ export function HomepageContentAdmin() {
             <div className="mt-6 grid gap-4 xl:grid-cols-2">
               {content.hero.slides.map((slide, index) => (
                 <article key={slide.id} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                  <p className="mb-4 text-xs font-black uppercase tracking-wider text-brand-700">{slide.id} slide</p>
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wider text-brand-700">Slide {index + 1}</p>
+                      <p className="mt-1 text-xs font-bold text-gray-400">{slide.id}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <select className={adminInputClass} value={slide.theme || 'it'} onChange={(event) => updateSlide(index, { theme: event.target.value as NonNullable<typeof slide.theme> })} aria-label="Slide color theme">
+                        <option value="it">Technology theme</option>
+                        <option value="consultancy">Consultancy theme</option>
+                        <option value="legal">Legal theme</option>
+                        <option value="creative">Creative theme</option>
+                      </select>
+                      <button type="button" onClick={() => moveSlide(index, -1)} disabled={index === 0} className={adminSecondaryButtonClass} aria-label="Move slide up"><ArrowUp size={14} /></button>
+                      <button type="button" onClick={() => moveSlide(index, 1)} disabled={index === content.hero.slides.length - 1} className={adminSecondaryButtonClass} aria-label="Move slide down"><ArrowDown size={14} /></button>
+                      <button type="button" onClick={() => duplicateSlide(index)} className={adminSecondaryButtonClass} aria-label="Duplicate slide"><Copy size={14} /></button>
+                      <button type="button" onClick={() => deleteSlide(index)} disabled={content.hero.slides.length <= 1} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="Delete slide"><Trash2 size={14} /></button>
+                    </div>
+                  </div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {(['label', 'eyebrow', 'title', 'highlight'] as const).map((field) => (
                       <AdminField key={field} label={field}>
@@ -186,7 +254,14 @@ export function HomepageContentAdmin() {
                         {slide.visualType === 'video' && slide.visualUrl ? (
                           <video src={slide.visualUrl} className="h-full w-full object-contain" controls playsInline />
                         ) : slide.visualType === 'image' && slide.visualUrl ? (
-                          <img src={slide.visualUrl} alt={slide.visualAlt || ''} className="h-full w-full object-contain" />
+                          <Image
+                            src={slide.visualUrl}
+                            alt={slide.visualAlt || 'Hero visual preview'}
+                            width={320}
+                            height={180}
+                            unoptimized
+                            className="h-full w-full object-contain"
+                          />
                         ) : (
                           <ImagePlus className="text-gray-300" size={32} />
                         )}

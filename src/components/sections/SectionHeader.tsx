@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 
 type SectionHeaderProps = {
   eyebrow: string;
@@ -10,13 +11,13 @@ type SectionHeaderProps = {
 
 export function SectionHeader({ eyebrow, title, description, align = 'left', kicker }: SectionHeaderProps) {
   return (
-    <div className={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
+    <div data-motion-copy className={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
       {kicker}
-      <p className="mb-3 text-[10px] font-black uppercase tracking-[0.2em] text-brand-700 sm:mb-4 sm:tracking-[0.24em]">{eyebrow}</p>
-      <h2 className="break-words font-serif text-[clamp(2rem,4.4vw,4.8rem)] font-black leading-[1.06] tracking-normal text-brand-950 sm:leading-[1.02]">
-        {title}
+      <p data-motion-eyebrow className="mb-3 flex items-center gap-3 font-utility text-[0.68rem] font-bold uppercase tracking-[0.16em] text-brand-700 sm:mb-4"><span className="h-px w-7 bg-current" aria-hidden="true" />{eyebrow}</p>
+      <h2 data-motion-heading className="break-words font-serif text-[2.25rem] font-bold leading-[1.04] text-brand-950 sm:text-[3.25rem] lg:text-[4.25rem]">
+        <GradientTitle text={title} />
       </h2>
-      {description ? <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:leading-8 md:text-lg">{description}</p> : null}
+      {description ? <p data-motion-description className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:leading-8 md:text-lg">{description}</p> : null}
     </div>
   );
 }

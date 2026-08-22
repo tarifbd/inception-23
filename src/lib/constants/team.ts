@@ -1,6 +1,6 @@
 import type { ServiceKey } from './theme';
 
-export type TeamCategory = 'management' | 'advisor-consultant' | 'executive';
+export type TeamCategory = 'management' | 'advisor-consultant' | 'associates';
 
 export type TeamMember = {
   id: string;
@@ -15,14 +15,16 @@ export type TeamMember = {
   emailHref: string;
   githubHref: string;
   imageSrc: string;
+  portfolioHref?: string;
+  imageFit?: 'cover' | 'contain';
+  isPending?: boolean;
 };
 
 export const teamCategories: Array<{ id: TeamCategory; label: string; summary: string; themeKey: ServiceKey }> = [
-  { id: 'management', label: 'Management', summary: 'Leadership ownership for strategy, governance, and delivery control.', themeKey: 'consultancy' },
-  { id: 'advisor-consultant', label: 'Advisor & Consultant', summary: 'Specialist advisory capacity across business, technology, legal, finance, and market systems.', themeKey: 'legal' },
-  { id: 'executive', label: 'Executive', summary: 'Execution support for client operations, project coordination, and delivery management.', themeKey: 'it' },
+  { id: 'management', label: 'Management', summary: 'Leadership ownership for strategy, governance, finance, and delivery control.', themeKey: 'consultancy' },
+  { id: 'advisor-consultant', label: 'Advisory & Consultant', summary: 'Specialist support across business, technology, legal, finance, and market work.', themeKey: 'legal' },
+  { id: 'associates', label: 'Associates', summary: 'Focused support for research, coordination, documentation, and accountable project delivery.', themeKey: 'it' },
 ];
-
 export const teamMembers: TeamMember[] = [
   {
     id: 'khadimul-hasan',
@@ -37,89 +39,36 @@ export const teamMembers: TeamMember[] = [
     emailHref: 'mailto:hello@inception23.com',
     githubHref: '#',
     imageSrc: '/team/team-management.jpg',
+    imageFit: 'cover',
   },
   {
     id: 'mahmudul-hasan',
     category: 'management',
     name: 'Mahmudul Hasan',
     role: 'Technology Management',
-    expertise: ['AI Systems', 'Software', 'Automation'],
-    bio: 'Shapes technical delivery, AI architecture, and scalable digital operating systems.',
+    expertise: ['Software', 'Systems', 'Automation'],
+    bio: 'Shapes technical delivery, internal tools, reporting systems, and practical automation.',
     initials: 'MH',
     themeKey: 'it',
     linkedinHref: '#',
     emailHref: 'mailto:hello@inception23.com',
     githubHref: '#',
     imageSrc: '/team/team-technology.png',
+    imageFit: 'contain',
   },
-  {
-    id: 'gaizi-faisal',
-    category: 'management',
-    name: 'Gaizi Faisal',
-    role: 'Management Partner',
-    expertise: ['Risk', 'Legal', 'Operations'],
-    bio: 'Connects business decisions with compliance, documentation, and operating continuity.',
-    initials: 'GF',
-    themeKey: 'legal',
-    linkedinHref: '#',
-    emailHref: 'mailto:hello@inception23.com',
-    githubHref: '#',
-    imageSrc: '/team/team-advisor.jpeg',
-  },
-  ...Array.from({ length: 3 }, (_, index) => ({
-    id: `management-seat-${index + 4}`,
-    category: 'management' as const,
-    name: `Management Seat ${String(index + 4).padStart(2, '0')}`,
-    role: 'Management Seat',
-    expertise: ['Leadership', 'Delivery', 'Control'],
-    bio: 'Reserved leadership capacity for future management expansion.',
-    initials: `M${index + 4}`,
-    themeKey: 'consultancy' as const,
-    linkedinHref: '#',
-    emailHref: 'mailto:hello@inception23.com',
-    githubHref: '#',
-    imageSrc: '/team/team-management.png',
-  })),
   {
     id: 'km-khairul-hasan-arif',
     category: 'advisor-consultant',
     name: 'K M Khairul Hasan Arif',
     role: 'Strategic Advisor',
-    expertise: ['Strategy', 'Digital Growth', 'Advisory'],
-    bio: 'Advises on market direction, strategic positioning, and transformation priorities.',
+    expertise: ['Strategy', 'Growth', 'Advisory'],
+    bio: 'Advises on market direction, strategic positioning, and execution priorities.',
     initials: 'KA',
     themeKey: 'consultancy',
     linkedinHref: '#',
     emailHref: 'mailto:hello@inception23.com',
     githubHref: '#',
     imageSrc: '/team/team-advisor.png',
+    imageFit: 'contain',
   },
-  ...Array.from({ length: 9 }, (_, index) => ({
-    id: `advisor-consultant-seat-${index + 2}`,
-    category: 'advisor-consultant' as const,
-    name: index < 4 ? `Advisor Seat ${String(index + 2).padStart(2, '0')}` : `Consultant Seat ${String(index + 2).padStart(2, '0')}`,
-    role: index < 4 ? 'Advisor Seat' : 'Consultant Seat',
-    expertise: ['Advisory', 'Systems', 'Execution'],
-    bio: 'Reserved specialist capacity for advisory and consulting assignments.',
-    initials: `AC${index + 2}`,
-    themeKey: (index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative') as ServiceKey,
-    linkedinHref: '#',
-    emailHref: 'mailto:hello@inception23.com',
-    githubHref: '#',
-    imageSrc: index % 4 === 0 ? '/team/team-technology.png' : index % 4 === 1 ? '/team/team-management.png' : index % 4 === 2 ? '/team/team-advisor.png' : '/team/team-creative.png',
-  })),
-  ...Array.from({ length: 10 }, (_, index) => ({
-    id: `executive-seat-${index + 1}`,
-    category: 'executive' as const,
-    name: `Executive Seat ${String(index + 1).padStart(2, '0')}`,
-    role: 'Executive',
-    expertise: ['Coordination', 'Delivery', 'Client Support'],
-    bio: 'Execution capacity for project coordination, client communication, and delivery operations.',
-    initials: `E${index + 1}`,
-    themeKey: (index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative') as ServiceKey,
-    linkedinHref: '#',
-    emailHref: 'mailto:hello@inception23.com',
-    githubHref: '#',
-    imageSrc: index % 4 === 0 ? '/team/team-technology.png' : index % 4 === 1 ? '/team/team-management.png' : index % 4 === 2 ? '/team/team-advisor.png' : '/team/team-creative.png',
-  })),
 ];

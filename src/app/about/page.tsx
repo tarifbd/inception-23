@@ -10,12 +10,15 @@ import { serviceCategories } from '@/lib/constants/service-categories';
 import { teamCategories } from '@/lib/constants/team';
 import { serviceThemes } from '@/lib/constants/theme';
 import { whyChooseItems } from '@/lib/constants/why-choose';
-import { getWebsiteCollection } from '@/lib/website-collections';
+import { getWebsiteCollections } from '@/lib/website-collections';
+import { createPageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'About | Inception 23',
-  description: 'Learn about Inception 23, a premium advisory and solution company built for strategic execution.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'About Us',
+  description: 'Meet Inception 23, an integrated advisory and solutions company built for disciplined, practical business execution.',
+  path: '/about',
+  keywords: ['advisory company Bangladesh', 'consulting team Dhaka'],
+});
 
 const values = [
   'Clarity before complexity',
@@ -25,7 +28,7 @@ const values = [
 ];
 
 const expertiseAreas = [
-  'Technology and AI systems',
+  'Technology and software systems',
   'Management consulting and process control',
   'Finance, tax, VAT, customs, and business advisory support',
   'Legal documentation and compliance coordination',
@@ -33,48 +36,53 @@ const expertiseAreas = [
   'Dashboards, operating models, and implementation governance',
 ];
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 export default async function AboutPage() {
-  const [cmsValues, cmsExpertise] = await Promise.all([
-    getWebsiteCollection('aboutValues'),
-    getWebsiteCollection('aboutExpertise'),
-  ]);
+  const collections = await getWebsiteCollections();
+  const cmsValues = collections.aboutValues;
+  const cmsExpertise = collections.aboutExpertise;
   const displayValues = cmsValues.length ? cmsValues.map((item) => String(item.label || '')).filter(Boolean) : values;
   const displayExpertiseAreas = cmsExpertise.length ? cmsExpertise.map((item) => String(item.label || '')).filter(Boolean) : expertiseAreas;
+  const displayServiceCategories = collections.serviceCategories.length ? collections.serviceCategories as unknown as typeof serviceCategories : serviceCategories;
+  const displayWhyChoose = collections.whyChoose.length ? collections.whyChoose as unknown as typeof whyChooseItems : whyChooseItems;
+  const displayTeamCategories = collections.team.length ? teamCategories.map((group) => ({
+    ...group,
+    summary: `${collections.team.filter((member) => String(member.category) === group.id).length} active profiles managed through the team CMS.`,
+  })) : teamCategories;
+  const displayProcess = collections.process.length ? collections.process as unknown as typeof processSteps : processSteps;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white text-brand-950">
+    <main id="main-content" tabIndex={-1} className="min-h-screen overflow-x-hidden bg-white text-brand-950 dark:bg-night-950">
       <Header />
 
-      <section className="relative overflow-hidden bg-[#f8fafc] pb-16 pt-28 sm:pb-20 sm:pt-36 md:pb-28 md:pt-44">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(13,1,33,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(13,1,33,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_16%,rgba(34,211,238,0.12),transparent_30%),radial-gradient(circle_at_82%_20%,rgba(16,185,129,0.1),transparent_28%),radial-gradient(circle_at_76%_86%,rgba(124,58,237,0.09),transparent_30%)]" />
+      <section className="relative overflow-hidden bg-slate-50 pb-16 pt-28 dark:bg-night-950 sm:pb-20 sm:pt-36 md:pb-28 md:pt-44">
+        <div className="absolute inset-0 bg-paper-grid bg-[size:64px_64px] opacity-70 dark:opacity-20" />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
           <div>
             <p className="mb-5 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">About Inception 23</p>
             <h1 className="max-w-5xl break-words font-serif text-[clamp(2.25rem,5.5vw,6rem)] font-black leading-[1.06] tracking-normal text-brand-950 sm:leading-[1.02]">
-              Advisory, systems, and market execution for decisive companies.
+              Advisory, systems, and market execution for growing companies.
             </h1>
             <p className="mt-7 max-w-3xl text-base leading-8 text-slate-600 md:text-lg">
-              Inception 23 helps leadership teams turn complex business moves into operating systems, advisory clarity, compliance readiness, digital infrastructure, and market-facing trust.
+              Inception 23 helps leadership teams turn complex business needs into clearer systems, advisory support, compliance readiness, digital infrastructure, and market-facing trust.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/contact" className="inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-950 px-7 py-4 text-sm font-black text-white shadow-xl shadow-brand-950/15 transition hover:-translate-y-0.5 hover:bg-brand-900">
+              <Link href="/contact" className="ui-action inline-flex items-center justify-center gap-3 rounded-lg bg-brand-950 px-7 py-4 text-sm font-semibold text-white shadow-md hover:bg-brand-900">
                 Book a Consultation <ArrowRight size={18} />
               </Link>
-              <Link href="/services" className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-300 bg-white/70 px-7 py-4 text-sm font-black text-brand-950 transition hover:-translate-y-0.5 hover:border-brand-700/40 hover:bg-brand-50">
+              <Link href="/services" className="ui-action inline-flex items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white/70 px-7 py-4 text-sm font-semibold text-brand-950 hover:border-brand-700/40 hover:bg-brand-50 dark:border-white/10 dark:bg-night-900">
                 Explore services
               </Link>
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {serviceCategories.map((category) => {
+            {displayServiceCategories.map((category) => {
               const theme = serviceThemes[category.key];
               return (
-                <article key={category.key} className={`rounded-[1.5rem] border bg-white/86 p-5 shadow-xl shadow-slate-950/6 backdrop-blur-xl ${theme.border}`}>
-                  <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${theme.gradient} text-white shadow-lg`}>
+                <article key={category.key} className={`ui-card-interactive rounded-lg border bg-white/86 p-5 shadow-sm backdrop-blur-xl dark:bg-night-900/86 ${theme.border}`}>
+                  <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${theme.gradient} text-white shadow-sm`}>
                     <LandingIcon name={category.icon} size={21} />
                   </div>
                   <p className={`text-[10px] font-black uppercase tracking-[0.18em] ${theme.text}`}>{category.shortTitle}</p>
@@ -92,7 +100,7 @@ export default async function AboutPage() {
           <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5 shadow-sm sm:p-7 md:rounded-[2rem] md:p-9">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Mission</p>
             <h2 className="mt-4 font-serif text-[clamp(2.1rem,4vw,4.4rem)] font-black leading-[1.04] text-brand-950">
-              Turn advisory into operating advantage.
+              Turn advisory into practical operating support.
             </h2>
             <p className="mt-5 text-base leading-8 text-slate-600">
               Our mission is to help organizations install the strategy, systems, documents, dashboards, and creative assets required to move faster with control.
@@ -101,10 +109,10 @@ export default async function AboutPage() {
           <article className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/6 sm:p-7 md:rounded-[2rem] md:p-9">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Vision</p>
             <h2 className="mt-4 font-serif text-[clamp(2.1rem,4vw,4.4rem)] font-black leading-[1.04] text-brand-950">
-              A trusted transformation partner.
+              A trusted execution partner.
             </h2>
             <p className="mt-5 text-base leading-8 text-slate-600">
-              We aim to become the advisory and solution partner leaders call when the work is too important for generic execution.
+              We aim to become the advisory and solution partner leaders call when the work needs careful thinking and reliable follow-through.
             </p>
           </article>
         </div>
@@ -165,7 +173,7 @@ export default async function AboutPage() {
             </h2>
           </div>
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {whyChooseItems.map((item) => (
+            {displayWhyChoose.map((item) => (
               <article key={item.title} className="rounded-[1.45rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10">
                 <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-950 text-white shadow-lg shadow-brand-950/15">
                   <LandingIcon name={item.icon} size={19} />
@@ -187,7 +195,7 @@ export default async function AboutPage() {
                 Leadership, advisory, and execution capacity.
               </h2>
               <p className="mt-5 text-base leading-8 text-slate-600">
-                Team profiles are structured for future admin-managed expansion while keeping the consulting-firm hierarchy clear.
+                Team profiles are structured for admin-managed expansion while keeping the consulting-firm hierarchy clear.
               </p>
             </div>
             <Link href="/#team" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-brand-950 transition hover:border-brand-700/40 hover:bg-brand-50">
@@ -195,7 +203,7 @@ export default async function AboutPage() {
             </Link>
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {teamCategories.map((group) => (
+            {displayTeamCategories.map((group) => (
               <article key={group.id} className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-7 shadow-sm">
                 <h3 className="font-serif text-3xl font-black text-brand-950">{group.label}</h3>
                 <p className="mt-4 text-sm leading-7 text-slate-600">{group.summary}</p>
@@ -214,7 +222,7 @@ export default async function AboutPage() {
             </h2>
           </div>
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {processSteps.slice(0, 4).map((step) => (
+            {displayProcess.slice(0, 4).map((step) => (
               <article key={step.id} className="rounded-[1.45rem] border border-slate-200 bg-white p-5 shadow-sm">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-brand-700">{step.number}</p>
                 <h3 className="mt-3 text-xl font-black text-brand-950">{step.title}</h3>

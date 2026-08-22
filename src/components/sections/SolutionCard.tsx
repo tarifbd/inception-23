@@ -23,17 +23,19 @@ export function SolutionCard({ solution, index = 0 }: SolutionCardProps) {
 
   return (
     <motion.article
+      data-interactive-surface
       initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-70px' }}
       transition={{ duration: 0.45, delay: index * 0.04 }}
-      whileHover={{ y: -7 }}
-      className={`group relative grid overflow-hidden rounded-[2rem] border bg-white p-3 shadow-[0_22px_70px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(15,23,42,0.14)] lg:grid-cols-[1.08fr_0.92fr] ${theme.border}`}
+      whileHover={{ y: -4 }}
+      className={`group relative grid overflow-hidden rounded-lg border bg-white p-3 shadow-[0_18px_52px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_26px_72px_rgba(15,23,42,0.14)] lg:grid-cols-[1.08fr_0.92fr] ${theme.border}`}
     >
       <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${theme.gradient}`} />
 
       <div
-        className={`relative min-h-[260px] overflow-hidden rounded-[1.55rem] border bg-slate-50 sm:min-h-[340px] lg:min-h-[390px] ${theme.border} ${imageSrc ? 'cursor-zoom-in' : ''}`}
+        data-motion-media
+        className={`relative min-h-[260px] overflow-hidden rounded-md border bg-slate-50 sm:min-h-[340px] lg:min-h-[390px] ${theme.border} ${imageSrc ? 'cursor-zoom-in' : ''}`}
         onMouseEnter={() => imageSrc && setPreviewOpen(true)}
         onMouseLeave={() => setPreviewOpen(false)}
       >
@@ -44,7 +46,7 @@ export function SolutionCard({ solution, index = 0 }: SolutionCardProps) {
               alt={`${solution.title} interface preview`}
               fill
               sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 56vw, 100vw"
-              quality={88}
+              quality={82}
               priority={index === 0}
               onError={() => setImageFailed(true)}
               className="object-contain object-center p-2 transition duration-500 group-hover:scale-[1.015] group-hover:brightness-[1.03] sm:p-3"
@@ -98,7 +100,7 @@ export function SolutionCard({ solution, index = 0 }: SolutionCardProps) {
 
         <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className={`rounded-2xl px-4 py-3 text-sm font-black leading-6 ${theme.bg} ${theme.text}`}>{solution.outcome}</p>
-          <Link href={solution.href} className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-xs font-black uppercase tracking-[0.12em] shadow-lg transition ${theme.button}`}>
+          <Link href={solution.href} className={`ui-action inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-md px-5 text-xs font-black uppercase tracking-[0.12em] shadow-md transition ${theme.button}`}>
             Start
             <ArrowRight size={15} className="transition group-hover:translate-x-1" />
           </Link>
@@ -133,7 +135,7 @@ function ImagePreviewPortal({
           alt={`${title} full preview`}
           fill
           sizes="94vw"
-          quality={100}
+          quality={82}
           className="object-contain object-center p-3"
         />
       </div>

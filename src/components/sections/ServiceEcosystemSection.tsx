@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
 import type { EcosystemCategory } from '@/lib/constants/service-ecosystem';
 import type { ServiceKey } from '@/lib/constants/theme';
@@ -12,129 +12,169 @@ import type { CollectionRecord } from '@/lib/website-collections';
 
 function normalizeEcosystemCategories(records?: CollectionRecord[]) {
   if (!records?.length) return serviceEcosystemCategories;
+
   return records.map((record) => {
     const servicesText = Array.isArray(record.servicesText) ? record.servicesText : [];
+
     return {
       ...record,
-      services: servicesText.map((item) => {
-        const [title, ...description] = String(item).split('::');
-        return {
-          title: title.trim(),
-          description: description.join('::').trim(),
-        };
-      }).filter((item) => item.title),
+      services: servicesText
+        .map((item) => {
+          const [title, ...description] = String(item).split('::');
+          return {
+            title: title.trim(),
+            description: description.join('::').trim(),
+          };
+        })
+        .filter((item) => item.title),
     } as unknown as EcosystemCategory;
   });
 }
 
-export function ServiceEcosystemSection({ content, categories }: { content: HomepageSectionContent; categories?: CollectionRecord[] }) {
-  const ecosystemCategories = useMemo(() => normalizeEcosystemCategories(categories), [categories]);
-  const [activeKey, setActiveKey] = useState<ServiceKey>(
-    ecosystemCategories[0].key
+export function ServiceEcosystemSection({
+  content,
+  categories,
+}: {
+  content: HomepageSectionContent;
+  categories?: CollectionRecord[];
+}) {
+  const ecosystemCategories = useMemo(
+    () => normalizeEcosystemCategories(categories),
+    [categories],
   );
-  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [activeKey, setActiveKey] = useState<ServiceKey>(
+    ecosystemCategories[0]?.key ?? 'it',
+  );
+  const mobileSectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const activeCategory =
+    ecosystemCategories.find((category) => category.key === activeKey) ??
+    ecosystemCategories[0];
 
   useEffect(() => {
-    const handleScroll = () => {
-      let currentKey = ecosystemCategories[0].key;
-      ecosystemCategories.forEach((cat) => {
-        const el = sectionRefs.current[cat.key];
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * 0.4) {
-          currentKey = cat.key;
+    const mobileQuery = window.matchMedia('(max-width: 1023px)');
+    let frame = 0;
+
+    const updateActiveCategory = () => {
+      frame = 0;
+      if (!mobileQuery.matches) return;
+
+      let currentKey = ecosystemCategories[0]?.key;
+      const activationLine = Math.min(220, window.innerHeight * 0.34);
+
+      ecosystemCategories.forEach((category) => {
+        const element = mobileSectionRefs.current[category.key];
+        if (element && element.getBoundingClientRect().top <= activationLine) {
+          currentKey = category.key;
         }
       });
-      setActiveKey(currentKey);
+
+      if (currentKey) setActiveKey(currentKey);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateActiveCategory);
+    };
+
+    updateActiveCategory();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, [ecosystemCategories]);
 
-  const handleTabChange = (key: ServiceKey) => {
-    const el = sectionRefs.current[key];
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 120;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
+  const handleMobileCategoryChange = (key: ServiceKey) => {
+    setActiveKey(key);
+    const element = mobileSectionRefs.current[key];
+    if (!element) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const top = element.getBoundingClientRect().top + window.scrollY - 164;
+    window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
   };
 
   return (
     <section
       id="ecosystem"
-      className="relative overflow-visible bg-gradient-to-b from-slate-50 via-white to-slate-50 py-20 md:py-28"
+      data-native-reveal
+      data-motion-variant="editorial"
+      className="ambient-mesh border-y border-slate-200 bg-slate-50 py-20 dark:border-white/10 dark:bg-[#111018] md:py-28"
     >
-      {/* Background grid */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.03)_1px,transparent_1px)] bg-[size:56px_56px]" />
-
-      <div className="relative mx-auto w-full max-w-[92rem] px-5 sm:px-6 lg:px-8">
-
-        {/* Heading block — always visible, not sticky */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-6 lg:hidden"
-        >
-          <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">
-            {content.eyebrow}
-          </p>
-          <h2 className="font-serif text-[clamp(2rem,8vw,3.5rem)] font-black leading-[1.02] tracking-normal text-brand-950">
-            {content.title}
-          </h2>
-          <p className="mt-5 text-base leading-8 text-slate-600">
+      <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6">
+        <header className="grid gap-5 lg:grid-cols-[minmax(0,0.72fr)_minmax(20rem,0.42fr)] lg:items-end lg:gap-16">
+          <div>
+            <p data-motion-eyebrow className="mb-4 border-l-2 border-support-600 pl-3 text-xs font-semibold text-support-700 dark:text-support-300">
+              {content.eyebrow}
+            </p>
+            <h2 data-motion-heading className="max-w-4xl font-serif text-[clamp(2.15rem,5vw,4.75rem)] font-semibold leading-[0.98] text-brand-950 dark:text-white">
+              {content.title}
+            </h2>
+          </div>
+          <p data-motion-description className="max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300 md:text-lg md:leading-8">
             {content.description}
           </p>
-        </motion.div>
+        </header>
 
-        {/* Mobile sticky tabs bar */}
-        <div className="sticky top-16 z-30 -mx-5 mb-6 bg-white/90 px-5 py-3 backdrop-blur-md lg:hidden">
-          <ServiceCategoryTabs
-            categories={ecosystemCategories}
-            activeKey={activeKey}
-            onChange={handleTabChange}
-          />
-        </div>
+        <div className="lg:hidden">
+          <div className="sticky top-16 z-30 -mx-5 mt-8 border-y border-slate-200 bg-slate-50/92 px-5 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#111018]/92 sm:-mx-6 sm:px-6">
+            <ServiceCategoryTabs
+              categories={ecosystemCategories}
+              activeKey={activeCategory.key}
+              onChange={handleMobileCategoryChange}
+              idPrefix="ecosystem-mobile"
+            />
+          </div>
 
-        {/* Desktop: two column layout */}
-        <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(15.5rem,0.34fr)_minmax(0,1fr)] lg:items-start lg:gap-[clamp(2rem,3vw,4rem)] xl:grid-cols-[minmax(18rem,0.32fr)_minmax(0,1fr)]">
-
-          {/* LEFT SIDEBAR — desktop only sticky */}
-          <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
-            <div className="flex w-full max-w-[21.5rem] flex-col">
-              <p className="mb-4 text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">
-                {content.eyebrow}
-              </p>
-              <h2 className="font-serif text-[clamp(2.2rem,3.05vw,4rem)] font-black leading-[1.02] tracking-normal text-brand-950">
-                {content.title}
-              </h2>
-              <p className="mt-5 max-w-[19rem] text-[clamp(0.95rem,1.05vw,1.1rem)] leading-8 text-slate-600">
-                {content.description}
-              </p>
-              <ServiceCategoryTabs
-                categories={ecosystemCategories}
-                activeKey={activeKey}
-                onChange={handleTabChange}
-              />
-            </div>
-          </aside>
-
-          {/* RIGHT PANEL — all sections stacked */}
-          <div className="flex min-w-0 flex-col gap-24">
-            {ecosystemCategories.map((category) => (
+          <div className="mt-8 space-y-14 md:space-y-20">
+            {ecosystemCategories.map((category, index) => (
               <div
                 key={category.key}
-                id={`section-${category.key}`}
-                ref={(el) => { sectionRefs.current[category.key] = el; }}
-                className="scroll-mt-32"
+                ref={(element) => {
+                  mobileSectionRefs.current[category.key] = element;
+                }}
+                className="scroll-mt-44"
               >
-                <ServiceEcosystemPanel category={category} />
+                <ServiceEcosystemPanel
+                  category={category}
+                  index={index}
+                  idPrefix="ecosystem-mobile"
+                />
               </div>
             ))}
           </div>
+        </div>
 
+        <div className="hidden lg:block">
+          <div className="mt-10">
+            <ServiceCategoryTabs
+              categories={ecosystemCategories}
+              activeKey={activeCategory.key}
+              onChange={setActiveKey}
+              idPrefix="ecosystem-desktop"
+            />
+          </div>
+
+          <div className="mt-5 min-h-[560px]">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={activeCategory.key}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <ServiceEcosystemPanel
+                  category={activeCategory}
+                  index={ecosystemCategories.findIndex(
+                    (category) => category.key === activeCategory.key,
+                  )}
+                  idPrefix="ecosystem-desktop"
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>

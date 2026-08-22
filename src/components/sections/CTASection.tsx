@@ -12,7 +12,7 @@ export function CTASection() {
           <div className="absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
           <p className="relative text-[10px] font-black uppercase tracking-[0.24em] text-brand-700">Confidential consultation</p>
           <h2 className="relative mx-auto mt-4 max-w-4xl font-serif text-[clamp(2.2rem,5vw,5rem)] font-black leading-[1.02] text-brand-950">
-            Start your next transformation with Inception 23.
+            Start your next practical move with Inception 23.
           </h2>
           <p className="relative mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
             Bring the problem, ambition, or operating bottleneck. We will help shape the advisory path, system design, and execution roadmap.

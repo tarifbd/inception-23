@@ -14,11 +14,11 @@ export type LandingService = {
 export const landingServices: LandingService[] = [
   {
     id: 'it',
-    title: 'IT & AI Solutions',
+    title: 'Technology & Software Solutions',
     eyebrow: 'Blue / cyan system',
-    description: 'Software, automation, AI agents, dashboards, and digital operations built for measurable business execution.',
+    description: 'Software, automation, dashboards, and digital operations built for measurable business execution.',
     icon: 'BrainCircuit',
-    bullets: ['Custom applications', 'AI automation', 'Dashboards & data', 'Workflow systems'],
+    bullets: ['Custom applications', 'Automation', 'Dashboards & data', 'Workflow systems'],
     cta: 'Explore IT systems',
     href: '/services/it-ai-solutions',
   },

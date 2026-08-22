@@ -33,12 +33,12 @@ export const techStackGroups: TechStackGroup[] = [
     tools: ['Prisma ORM', 'PostgreSQL-ready schema', 'SQLite dev database', 'Admin-ready models', 'Data relations', 'Migrations', 'Seed data', 'Audit fields', 'Backup planning'],
   },
   {
-    id: 'ai-automation',
-    title: 'AI & Automation',
+    id: 'automation-search',
+    title: 'Automation & Search',
     accent: '#0891B2',
     soft: '#ECFEFF',
     border: '#A5F3FC',
-    tools: ['AI agents', 'RAG assistants', 'Workflow automation', 'Document automation', 'Chat assistants', 'Prompt systems', 'Knowledge bases', 'Email automation', 'Internal copilots'],
+    tools: ['Workflow automation', 'Document automation', 'Chat assistants', 'Knowledge bases', 'Email automation', 'Internal support tools', 'Search systems', 'Approval flows', 'Task routing'],
   },
   {
     id: 'cloud-devops',

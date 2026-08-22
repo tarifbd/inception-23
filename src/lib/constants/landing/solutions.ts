@@ -14,12 +14,12 @@ export type LandingSolution = {
 
 export const featuredSolutions: LandingSolution[] = [
   {
-    id: 'ai-crm-client-management',
+    id: 'crm-client-management',
     serviceKey: 'it',
     badge: 'Client growth',
-    title: 'AI-powered CRM & Client Management System',
-    description: 'A lead, client, follow-up, document, and reporting system strengthened by AI-assisted actions.',
-    modules: ['Lead pipeline', 'Client profiles', 'AI follow-ups', 'Executive dashboard'],
+    title: 'CRM & Client Management System',
+    description: 'A lead, client, follow-up, document, and reporting system for clearer sales ownership.',
+    modules: ['Lead pipeline', 'Client profiles', 'Follow-up reminders', 'Management dashboard'],
     outcome: 'Cleaner sales rhythm and stronger client accountability.',
     icon: 'Bot',
     href: '/contact',
@@ -62,7 +62,7 @@ export const featuredSolutions: LandingSolution[] = [
     serviceKey: 'creative',
     badge: 'Market presence',
     title: 'Creative Brand & Website Experience',
-    description: 'A premium brand and website system that clarifies the offer and improves trust at first contact.',
+    description: 'A brand and website system that clarifies the offer and improves trust at first contact.',
     modules: ['Identity system', 'Website UX', 'Content direction', 'Pitch assets'],
     outcome: 'A sharper market signal and higher conversion confidence.',
     icon: 'Palette',

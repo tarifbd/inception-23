@@ -68,5 +68,6 @@ export function estimateReadingMinutes(content: string) {
 }
 
 export function resourceDestination(resource: { fileUrl: string | null; externalUrl: string | null }) {
-  return resource.fileUrl || resource.externalUrl;
+  return safePublicDestination(resource.fileUrl) || safePublicDestination(resource.externalUrl);
 }
+import { safePublicDestination } from '@/lib/security/url';

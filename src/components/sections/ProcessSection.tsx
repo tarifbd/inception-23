@@ -6,14 +6,14 @@ import type { CollectionRecord } from '@/lib/website-collections';
 
 export function ProcessSection({ content, steps }: { content: HomepageSectionContent; steps?: CollectionRecord[] }) {
   return (
-    <AnimatedSection id="process" className="bg-white">
+    <AnimatedSection id="process" motionVariant="editorial" className="bg-white">
       <SectionHeader
         eyebrow={content.eyebrow}
         title={content.title}
         description={content.description}
         align="center"
       />
-      <div className="mt-14">
+      <div data-motion-grid className="mt-14">
         <ProcessTimeline steps={steps} />
       </div>
     </AnimatedSection>

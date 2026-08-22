@@ -13,33 +13,33 @@ export const Testimonials = () => {
   const quotes = [
     {
       quote: {
-        en: "Inception 23 didn't just advise us, they re-engineered our entire operational architecture, unlocking $200M in trapped value.",
-        bn: 'They re-engineered our operating architecture and unlocked trapped value.',
+        en: 'Inception 23 helped us bring our reporting, decision meetings, and ownership structure into a cleaner rhythm.',
+        bn: 'They helped us improve reporting, decision meetings, and ownership rhythm.',
       },
-      author: 'Sarah Jenkins',
-      role: 'CEO, NexaGlobal Group',
-      metric: '$200M',
-      theme: 'Operational Architecture',
+      author: 'Client Partner',
+      role: 'Service Business',
+      metric: 'Clearer',
+      theme: 'Operating Rhythm',
     },
     {
       quote: {
-        en: 'Their legal defense strategy during our global restructuring was nothing short of legendary. Absolute precision.',
-        bn: 'Their legal defense strategy was precise and decisive.',
+        en: 'The documentation support was careful, practical, and easy for our team to follow.',
+        bn: 'Their documentation support was careful and practical.',
       },
-      author: 'David Chen',
-      role: 'Chief Counsel, Titan Energy',
-      metric: '100%',
-      theme: 'Regulatory Defense',
+      author: 'Client Partner',
+      role: 'Trading Company',
+      metric: 'Organized',
+      theme: 'Documentation',
     },
     {
       quote: {
-        en: 'The AI transformation they deployed took us from an analog legacy player to a digital-first market leader in 18 months.',
-        bn: 'Their AI transformation moved us into digital-first leadership.',
+        en: 'They turned scattered spreadsheets and follow-ups into a simple working system our team could actually maintain.',
+        bn: 'They helped turn scattered spreadsheets into a maintainable system.',
       },
-      author: 'Elena Rostova',
-      role: 'CTO, FinVault Banking',
-      metric: '18M',
-      theme: 'AI Transformation',
+      author: 'Client Partner',
+      role: 'Operations Team',
+      metric: 'Simpler',
+      theme: 'Digital Systems',
     },
   ];
 
@@ -96,7 +96,7 @@ export const Testimonials = () => {
             </div>
             <div className="mt-8 h-px bg-gradient-to-r from-brand-500/50 to-transparent" />
             <p className="mt-6 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-              Rotating proof points from client transformation mandates.
+              Rotating notes from client advisory and delivery work.
             </p>
           </div>
 

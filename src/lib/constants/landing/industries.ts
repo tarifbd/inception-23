@@ -10,7 +10,7 @@ export type LandingIndustry = {
 export const landingIndustries: LandingIndustry[] = [
   { id: 'startups', title: 'Startups', value: 'MVPs, launch systems, automation, and investor-ready operating clarity.', icon: 'Rocket' },
   { id: 'smes', title: 'SMEs', value: 'Practical strategy, systems, compliance, and digital workflows for growing companies.', icon: 'Building2' },
-  { id: 'professional-services', title: 'Professional Service Firms', value: 'Client portals, knowledge workflows, CRM systems, and premium market positioning.', icon: 'BriefcaseBusiness' },
+  { id: 'professional-services', title: 'Professional Service Firms', value: 'Client portals, knowledge workflows, CRM systems, and clear market positioning.', icon: 'BriefcaseBusiness' },
   { id: 'real-estate-construction', title: 'Real Estate & Construction', value: 'Project visibility, sales pipelines, documentation flows, and reporting dashboards.', icon: 'Building2' },
   { id: 'education-edtech', title: 'Education & EdTech', value: 'Learning platforms, admissions workflows, analytics, and communication systems.', icon: 'GraduationCap' },
   { id: 'ecommerce-retail', title: 'E-commerce & Retail', value: 'Storefronts, automation, inventory visibility, and customer growth systems.', icon: 'Store' },

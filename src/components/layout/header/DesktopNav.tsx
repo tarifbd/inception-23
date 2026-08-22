@@ -18,7 +18,7 @@ export function DesktopNav({ activeMenu, setActiveMenu, navItems }: DesktopNavPr
   const items = navItems ?? mainNav;
 
   return (
-    <nav aria-label="Primary navigation" className="hidden min-w-0 items-center gap-0.5 rounded-full border border-slate-200/80 bg-white/75 p-1 shadow-sm backdrop-blur-xl xl:flex">
+    <nav aria-label="Primary navigation" className="hidden min-w-0 items-center gap-0.5 rounded-full border border-slate-200/80 bg-white/75 p-1 shadow-sm backdrop-blur-xl 2xl:flex">
       {items.map((item) => {
         const menu = ('menu' in item ? item.menu : undefined) as MenuKind | undefined;
         const isActive = menu && activeMenu === menu;

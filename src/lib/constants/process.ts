@@ -9,7 +9,7 @@ export type ProcessStep = {
 };
 
 export const processSteps: ProcessStep[] = [
-  { id: 'discover', number: '01', title: 'Discover', description: 'Understand the business, stakeholders, constraints, and transformation goal.', icon: 'FileSearch' },
+  { id: 'discover', number: '01', title: 'Discover', description: 'Understand the business, stakeholders, constraints, and practical goal.', icon: 'FileSearch' },
   { id: 'diagnose', number: '02', title: 'Diagnose', description: 'Map the operational, financial, legal, technical, and market gaps.', icon: 'BrainCircuit' },
   { id: 'strategize', number: '03', title: 'Strategize', description: 'Prioritize the right decisions, roadmap, ownership model, and success metrics.', icon: 'Target' },
   { id: 'design', number: '04', title: 'Design', description: 'Shape the system, workflow, advisory framework, brand, or implementation plan.', icon: 'Palette' },

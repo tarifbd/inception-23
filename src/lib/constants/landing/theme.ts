@@ -55,7 +55,7 @@ export type LandingTheme = {
 export const landingThemes: Record<LandingServiceKey, LandingTheme> = {
   it: {
     key: 'it',
-    label: 'IT & AI Solutions',
+    label: 'Technology & Software Solutions',
     text: 'text-cyan-700',
     textSoft: 'text-cyan-600',
     border: 'border-cyan-200/80',

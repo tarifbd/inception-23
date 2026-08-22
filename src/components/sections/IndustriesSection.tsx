@@ -9,14 +9,14 @@ export function IndustriesSection({ content, industries: cmsIndustries }: { cont
   const displayIndustries = (cmsIndustries?.length ? cmsIndustries : industries) as typeof industries;
 
   return (
-    <AnimatedSection id="industries" className="bg-slate-50">
+    <AnimatedSection id="industries" motionVariant="rise" className="bg-slate-50">
       <SectionHeader
         eyebrow={content.eyebrow}
         title={content.title}
         description={content.description}
         align="center"
       />
-      <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div data-motion-grid className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {displayIndustries.map((industry, index) => (
           <IndustryCard key={industry.id} industry={industry} index={index} />
         ))}

@@ -26,6 +26,11 @@ dist/
 # misc
 .DS_Store
 *.pem
+*.log
+*.db-journal
+prisma/*.db
+prisma/*.db-shm
+prisma/*.db-wal
 
 # debug
 npm-debug.log*
@@ -35,9 +40,14 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# local Codex/dev server output
+.codex-*.out.log
+.codex-*.err.log
 
 # typescript
 *.tsbuildinfo

@@ -21,9 +21,9 @@ export const techStackGroups: TechStackGroup[] = [
     tools: ['PostgreSQL-ready schema', 'Prisma ORM', 'SQLite dev database', 'Admin-ready models'],
   },
   {
-    id: 'ai-automation',
-    title: 'AI & Automation',
-    tools: ['AI agents', 'RAG search', 'Workflow automation', 'Chat assistants'],
+    id: 'automation-search',
+    title: 'Automation & Search',
+    tools: ['Workflow automation', 'Knowledge search', 'Document automation', 'Chat assistants'],
   },
   {
     id: 'cloud-devops',

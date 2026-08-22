@@ -1,46 +1,68 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import type { EcosystemCategory } from '@/lib/constants/service-ecosystem';
 import { serviceThemes } from '@/lib/constants/theme';
 import { SubServiceCard } from './SubServiceCard';
 
 type ServiceEcosystemPanelProps = {
   category: EcosystemCategory;
+  index: number;
+  idPrefix?: string;
 };
 
-export function ServiceEcosystemPanel({ category }: ServiceEcosystemPanelProps) {
+export function ServiceEcosystemPanel({
+  category,
+  index,
+  idPrefix = 'ecosystem',
+}: ServiceEcosystemPanelProps) {
+  const panelRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const isInView = useInView(panelRef, { once: true, margin: '-72px' });
   const theme = serviceThemes[category.key];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
+    <motion.article
+      ref={panelRef}
+      data-native-reveal
+      data-motion-state={reduceMotion || isInView ? 'visible' : 'hidden'}
+      id={`${idPrefix}-panel-${category.key}`}
+      role="tabpanel"
+      aria-labelledby={`${idPrefix}-tab-${category.key}`}
+      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-[2rem] border bg-white/76 p-4 shadow-2xl shadow-slate-950/7 backdrop-blur-xl md:p-5 xl:p-6 ${theme.border}`}
+      viewport={{ once: true, margin: '-72px' }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="grid gap-8 rounded-lg border border-slate-200 bg-white p-5 shadow-md sm:p-7 lg:grid-cols-[minmax(15rem,0.32fr)_minmax(0,1fr)] lg:gap-12 dark:border-white/10 dark:bg-night-900"
     >
-      <div className={`absolute -right-24 -top-24 h-72 w-72 rounded-full blur-3xl ${theme.surface}`} />
-      <div className={`relative mb-5 rounded-[1.5rem] bg-gradient-to-br ${theme.gradientSoft} p-5 xl:p-6`}>
-        <p className={`text-[10px] font-black uppercase tracking-[0.22em] ${theme.text}`}>{category.eyebrow}</p>
-        <h3 className="mt-2 max-w-5xl font-serif text-[clamp(1.8rem,2.7vw,3rem)] font-black leading-tight text-brand-950">{category.title}</h3>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">{category.description}</p>
-      </div>
+      <header className="self-start">
+        <span className={`font-mono text-xs font-semibold ${theme.text}`}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <p className={`mt-5 text-xs font-semibold ${theme.text}`}>
+          {category.eyebrow}
+        </p>
+        <h3 className="mt-2 max-w-md font-serif text-[clamp(1.75rem,3vw,2.8rem)] font-semibold leading-[1.05] text-brand-950 dark:text-white">
+          {category.title}
+        </h3>
+        <p className="mt-4 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-300">
+          {category.description}
+        </p>
+        <p className={`mt-6 inline-flex rounded-md border px-3 py-1.5 text-xs font-semibold ${theme.border} ${theme.bg} ${theme.text}`}>
+          {category.services.length} areas of support
+        </p>
+      </header>
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.025 } },
-        }}
-        className="relative grid grid-cols-[repeat(auto-fit,minmax(min(100%,17rem),1fr))] gap-4"
-      >
-        {category.services.map((service, index) => (
-          <SubServiceCard key={service.title} service={service} serviceKey={category.key} index={index} />
+      <div data-motion-grid className="grid content-start gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {category.services.map((service) => (
+          <SubServiceCard
+            key={service.title}
+            service={service}
+            serviceKey={category.key}
+          />
         ))}
-      </motion.div>
-    </motion.div>
+      </div>
+    </motion.article>
   );
 }

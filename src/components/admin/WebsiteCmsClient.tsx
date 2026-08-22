@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import type { ElementType } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   Copy,
@@ -15,7 +16,7 @@ import {
   ListTree,
   Newspaper,
   Pencil,
-  Plus,
+  RadioTower,
   RefreshCw,
   Save,
   Settings2,
@@ -25,6 +26,7 @@ import {
 } from 'lucide-react';
 import {
   AdminField,
+  AdminLoadingSkeleton,
   AdminModuleShell,
   AdminStatCard,
   adminButtonClass,
@@ -72,10 +74,21 @@ type View = 'dashboard' | 'pages' | 'media' | 'structure';
 
 const editableCollections = [
   ['navigation', 'Header / Navigation', 'Top menu label, URL, dropdown behavior'],
+  ['servicesMenu', 'Services Dropdown', 'Service dropdown cards and links'],
+  ['eventsMenu', 'Events Dropdown', 'Event dropdown cards and links'],
+  ['solutionsMenu', 'Solutions Dropdown', 'Solution dropdown cards and links'],
+  ['industriesMenu', 'Industries Dropdown', 'Industry dropdown cards and links'],
+  ['insightsMenu', 'Insights Dropdown', 'Insight dropdown cards and links'],
+  ['resourcesMenu', 'Resources Dropdown', 'Resource dropdown cards and links'],
+  ['aboutMenu', 'About Dropdown', 'About dropdown cards and links'],
+  ['serviceDetails', 'Service Detail Pages', 'Page media, copy, process, deliverables, and use cases'],
   ['insights', 'Posts / Insights', 'Blog-style cards for the Insights page'],
   ['caseStudies', 'Case Studies', 'Portfolio/case-study cards and metrics'],
   ['testimonials', 'Testimonials', 'Quotes, names, roles, optional media'],
   ['serviceCategories', 'Our Services', 'Homepage service cards and highlight bullets'],
+  ['eventServices', 'Event Services', 'Event rows, descriptions, and contact destinations'],
+  ['eventHandover', 'Event Handover Pack', 'Event deliverables and closing documents'],
+  ['eventPhases', 'Event Delivery Phases', 'Before, during, and after delivery notes'],
   ['serviceEcosystem', 'Service Ecosystem', 'Category tabs and every capability card'],
   ['aiCapabilities', 'AI Solutions', 'AI cards, benefits, icons, text'],
   ['caAdvisory', 'CA Advisory', 'Finance, tax, VAT, compliance focus items'],
@@ -288,6 +301,8 @@ export function WebsiteCmsClient() {
             </div>
           </div>
 
+          {loading ? <div className="p-5"><AdminLoadingSkeleton rows={4} framed={false} /></div> : null}
+
           <div className="divide-y divide-gray-100">
             {filteredPages.map((page) => (
               <article key={page.id} className="flex flex-col gap-4 p-5 transition hover:bg-gray-50 lg:flex-row lg:items-center lg:justify-between">
@@ -351,11 +366,17 @@ export function WebsiteCmsClient() {
               {assets.map((asset) => (
                 <article key={asset.id} className="overflow-hidden rounded-xl border border-gray-200">
                   <div className="aspect-[4/3] bg-gray-100">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     {asset.mimeType.startsWith('video/') ? (
                       <video src={asset.url} className="h-full w-full object-cover" muted playsInline controls />
                     ) : (
-                      <img src={asset.url} alt={asset.altText} className="h-full w-full object-cover" />
+                      <Image
+                        src={asset.url}
+                        alt={asset.altText || asset.name}
+                        width={480}
+                        height={360}
+                        unoptimized
+                        className="h-full w-full object-cover"
+                      />
                     )}
                   </div>
                   <div className="p-3">
@@ -399,6 +420,7 @@ export function WebsiteCmsClient() {
               <CmsModuleCard icon={Home} title="Homepage Layout" meta="Hero + sections" copy="Edit hero slides, CTA labels, section order, visibility, headings, and hero visuals." href="/admin/homepage" action="Edit layout" />
               <CmsModuleCard icon={LayoutDashboard} title="Section Builder" meta={`${editableCollections.length - 2} sections`} copy="Edit every live homepage section item: cards, services, team, solutions, and visuals." onClick={() => setView('structure')} action="Open sections" />
               <CmsModuleCard icon={FolderOpen} title="Resources" meta="Downloads/content" copy="Manage resource portal entries, access links, categories, metadata, and publishing." href="/admin/resources" action="Manage resources" />
+              <CmsModuleCard icon={RadioTower} title="Pixels / CAPI" meta="Tracking setup" copy="Toggle Google, Meta, LinkedIn, TikTok, X, Clarity, and server-side event settings." href="/admin/tracking" action="Open tracking" />
               <CmsModuleCard icon={Settings2} title="SEO" meta="Search controls" copy="Manage SEO settings, redirects, robots, sitemap, product metadata, and image alt text." href="/admin/seo" action="Open SEO" />
               <CmsModuleCard icon={ExternalLink} title="Preview Website" meta="Public site" copy="Open the public website after publishing CMS changes." href="/" action="View site" />
             </div>
@@ -495,15 +517,15 @@ export function WebsiteCmsClient() {
       ) : null}
 
       {draft ? (
-        <div className="fixed inset-0 z-[100] flex justify-end bg-gray-950/40">
+        <div className="dialog-backdrop fixed inset-0 z-[100] flex justify-end bg-gray-950/40" role="dialog" aria-modal="true" aria-label="Page editor">
           <button className="hidden flex-1 lg:block" onClick={() => setDraft(null)} aria-label="Close page editor" />
-          <div className="h-full w-full overflow-y-auto bg-white p-5 shadow-2xl sm:max-w-4xl sm:p-7">
+          <div className="dialog-panel h-full w-full overflow-y-auto bg-white p-5 shadow-xl dark:bg-night-900 sm:max-w-4xl sm:p-7">
             <div className="mb-6 flex items-center justify-between border-b border-gray-200 pb-4">
               <div>
                 <p className="text-xs font-black uppercase tracking-wider text-brand-700">Full page editor</p>
                 <h2 className="mt-1 font-serif text-2xl font-black">{draft.id ? 'Edit page' : 'Create page'}</h2>
               </div>
-              <button onClick={() => setDraft(null)} aria-label="Close editor" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600"><X size={17} /></button>
+              <button onClick={() => setDraft(null)} aria-label="Close editor" className="ui-action inline-flex h-11 w-11 items-center justify-center rounded-lg border border-gray-200 text-gray-600 dark:border-white/10"><X size={17} /></button>
             </div>
 
             <form onSubmit={savePage} className="space-y-6">

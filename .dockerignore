@@ -1,0 +1,12 @@
+.git
+.next
+node_modules
+coverage
+*.log
+prisma/*.db
+prisma/*.db-shm
+prisma/*.db-wal
+.env*
+!.env.example
+remotion-vfx
+*.db-journal

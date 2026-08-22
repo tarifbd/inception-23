@@ -9,21 +9,21 @@ import { Magnetic, SplitText } from '@/components/ui/HyperEffects';
 const articles = [
   {
     category: 'Strategy',
-    title: 'The Quantum Pivot: Rethinking Corporate Velocity in a Stagnant Market.',
+    title: 'How to make strategy easier for teams to execute.',
     date: 'OCT 2026',
     read: '7 min',
     img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop',
   },
   {
-    category: 'Defense',
-    title: 'Navigating the New EU Regulatory Frameworks.',
+    category: 'Compliance',
+    title: 'Keeping business documents ready before pressure arrives.',
     date: 'NOV 2026',
     read: '5 min',
     img: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=900&auto=format&fit=crop',
   },
   {
     category: 'Technology',
-    title: 'Zero-Trust Infrastructures for Financial Institutions.',
+    title: 'Building internal systems that teams can maintain.',
     date: 'DEC 2026',
     read: '9 min',
     img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=900&auto=format&fit=crop',
@@ -52,7 +52,7 @@ export const Insights = () => {
               {lang === 'en' ? 'Publications' : 'Publications'}
             </motion.div>
             <h2 className="max-w-4xl font-serif text-[clamp(2.6rem,5vw,4.75rem)] font-black leading-[1.03] tracking-tight text-brand-950 dark:text-white">
-              <SplitText text={lang === 'en' ? 'Intelligence for operators.' : 'Intelligence for operators.'} />
+              <SplitText text={lang === 'en' ? 'Notes for operators.' : 'Notes for operators.'} />
             </h2>
           </div>
 
@@ -62,7 +62,7 @@ export const Insights = () => {
                 <Sparkles size={18} />
               </span>
               <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                Field notes on strategy, regulatory pressure, AI deployment, and operating-model transformation.
+                Field notes on strategy, compliance pressure, digital systems, and operating-model improvement.
               </p>
             </div>
           </div>

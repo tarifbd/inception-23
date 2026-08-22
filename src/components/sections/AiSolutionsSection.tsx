@@ -9,7 +9,7 @@ export function AiSolutionsSection({ content, capabilities }: { content: Homepag
   const displayCapabilities = (capabilities?.length ? capabilities : aiCapabilities) as typeof aiCapabilities;
 
   return (
-    <AnimatedSection id="ai-solutions" className="bg-white">
+    <AnimatedSection id="ai-solutions" motionVariant="from-right" className="bg-white">
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.3fr] lg:items-center">
         <div>
           <SectionHeader
@@ -24,9 +24,9 @@ export function AiSolutionsSection({ content, capabilities }: { content: Homepag
             </p>
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div data-motion-grid className="grid gap-4 sm:grid-cols-2">
           {displayCapabilities.map((feature, index) => (
-            <FeatureCard key={feature.title} {...feature} serviceKey="it" index={index} />
+            <FeatureCard key={feature.title} {...feature} serviceKey="it" index={index} visualStyle="fabric" />
           ))}
         </div>
       </div>

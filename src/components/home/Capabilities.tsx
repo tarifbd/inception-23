@@ -122,12 +122,12 @@ export const Capabilities = () => {
           </motion.div>
           
           <h2 className="text-[clamp(2.6rem,5vw,4.75rem)] font-serif font-black mb-5 text-brand-950 dark:text-white leading-[1.03] tracking-tight">
-            <SplitText text={lang === 'en' ? 'Enterprise Solutions' : 'এন্টারপ্রাইজ সমাধান'} />
+            <SplitText text={lang === 'en' ? 'Practical Services' : 'এন্টারপ্রাইজ সমাধান'} />
           </h2>
           
           <p className="text-gray-500 dark:text-gray-400 max-w-2xl text-base md:text-lg leading-relaxed font-light">
             {lang === 'en' 
-              ? 'Comprehensive, data-driven frameworks designed to scale corporate operations, defend assets, and automate computational pipelines.' 
+              ? 'Practical service areas for operations, finance, legal readiness, software, reporting, and market-facing work.'
               : 'আধুনিক উদ্যোগের জটিল প্রয়োজনের জন্য ডিজাইন করা ব্যাপক সমাধান।'}
           </p>
         </div>
@@ -212,8 +212,8 @@ export const Capabilities = () => {
               );
             })}
 
-            {/* LIVE WEBSITE DEVELOPMENT TECH SHOWCASE CARD */}
-            {/* Displayed at the end of the IT & AI tab dynamically as solid live proof! */}
+            {/* Website development showcase card */}
+            {/* Displayed at the end of the technology tab. */}
             {activeCategory.id === 'it' && (
               <motion.div
                 key="web-showcase-card"
@@ -230,16 +230,16 @@ export const Capabilities = () => {
                     
                     <div className="space-y-4 max-w-xl relative z-10">
                       <div className="inline-flex px-3 py-1 bg-brand-500/15 border border-brand-500/30 text-brand-400 text-[10px] font-black uppercase tracking-widest rounded-md">
-                        LIVE WEB SHOWCASE
+                        WEBSITE SHOWCASE
                       </div>
                       
                       <h3 className="text-3xl font-serif font-black bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-100 to-brand-300">
-                        {lang === 'en' ? 'Craftsmanship In Action' : 'বাস্তব প্রমাণ ও প্রযুক্তি'}
+                        {lang === 'en' ? 'A Working Example' : 'বাস্তব প্রমাণ ও প্রযুক্তি'}
                       </h3>
                       
                       <p className="text-gray-400 text-sm leading-relaxed font-light">
                         {lang === 'en' 
-                          ? "This entire website serves as live visual evidence of our Custom Web Development capabilities. We don't build standard static pages. This platform is driven by: Next.js SSR, React Three Fiber canvas 3D engines, custom local SQLite database storage, dynamic Prisma ORM structures, and a real-time Headless CMS Admin Panel (/admin) where you can instantly reorganize the site's layout."
+                          ? "This website is a working example of our custom web development capability: Next.js pages, responsive sections, structured content, Prisma data models, local database storage, and an admin area for updating content."
                           : "এই সম্পূর্ণ ওয়েবসাইটটি আমাদের কাস্টম ওয়েব ডেভেলপমেন্ট দক্ষতার জীবন্ত প্রমাণ।"}
                       </p>
 
@@ -256,8 +256,8 @@ export const Capabilities = () => {
                       <div className="w-12 h-12 rounded-full bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400 mb-3 group-hover:rotate-180 transition-transform duration-700">
                         <Cpu size={24} />
                       </div>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-brand-400 block mb-1">PROVED LIVE</span>
-                      <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">100% SUCCESS</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-brand-400 block mb-1">LIVE SITE</span>
+                      <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">WORKING BUILD</span>
                     </div>
 
                   </div>

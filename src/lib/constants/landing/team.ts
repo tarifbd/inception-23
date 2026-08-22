@@ -23,7 +23,7 @@ export const teamCategories: Array<{ id: LandingTeamCategory; label: string; sum
   {
     id: 'advisor-consultant',
     label: 'Advisor & Consultant',
-    summary: 'Specialist advisory capacity across growth, technology, legal, and market systems.',
+    summary: 'Specialist advisory capacity across growth, technology, legal, finance, and market work.',
   },
   {
     id: 'executive',
@@ -31,7 +31,6 @@ export const teamCategories: Array<{ id: LandingTeamCategory; label: string; sum
     summary: 'Execution support for operations, delivery, coordination, and client experience.',
   },
 ];
-
 export const landingTeam: LandingTeamMember[] = [
   {
     id: 'khadimul-hasan',
@@ -45,23 +44,12 @@ export const landingTeam: LandingTeamMember[] = [
     linkedinHref: '#',
   },
   {
-    id: 'gaizi-faisal',
-    category: 'management',
-    name: 'Gaizi Faisal',
-    role: 'Management Partner',
-    expertise: ['Risk', 'Legal', 'Operations'],
-    bio: 'Connects business decisions with compliance, risk control, and operating continuity.',
-    initials: 'GF',
-    themeKey: 'legal',
-    linkedinHref: '#',
-  },
-  {
     id: 'mahmudul-hasan',
     category: 'management',
     name: 'Mahmudul Hasan',
     role: 'Technology Management',
-    expertise: ['AI Systems', 'Software', 'Automation'],
-    bio: 'Shapes technical delivery, AI architecture, and scalable digital operating systems.',
+    expertise: ['Software', 'Systems', 'Automation'],
+    bio: 'Shapes technical delivery, internal tools, reporting systems, and practical automation.',
     initials: 'MH',
     themeKey: 'it',
     linkedinHref: '#',
@@ -72,7 +60,7 @@ export const landingTeam: LandingTeamMember[] = [
     name: `Management Seat ${String(index + 4).padStart(2, '0')}`,
     role: 'Management Seat',
     expertise: ['Leadership', 'Delivery', 'Control'],
-    bio: 'Reserved leadership capacity for future management expansion.',
+    bio: 'Open leadership capacity for management expansion.',
     initials: `M${index + 4}`,
     themeKey: 'consultancy' as const,
     linkedinHref: '#',
@@ -82,8 +70,8 @@ export const landingTeam: LandingTeamMember[] = [
     category: 'advisor-consultant',
     name: 'K M Khairul Hasan Arif',
     role: 'Strategic Advisor',
-    expertise: ['Strategy', 'Digital Growth', 'Advisory'],
-    bio: 'Advises on market direction, strategic positioning, and transformation priorities.',
+    expertise: ['Strategy', 'Growth', 'Advisory'],
+    bio: 'Advises on market direction, strategic positioning, and execution priorities.',
     initials: 'KA',
     themeKey: 'consultancy',
     linkedinHref: '#',
@@ -94,7 +82,7 @@ export const landingTeam: LandingTeamMember[] = [
     name: index < 4 ? `Advisor Seat ${String(index + 2).padStart(2, '0')}` : `Consultant Seat ${String(index + 2).padStart(2, '0')}`,
     role: index < 4 ? 'Advisor Seat' : 'Consultant Seat',
     expertise: ['Advisory', 'Systems', 'Execution'],
-    bio: 'Reserved specialist capacity for advisory and consulting assignments.',
+    bio: 'Open specialist capacity for advisory and consulting assignments.',
     initials: `AC${index + 2}`,
     themeKey: (index % 4 === 0 ? 'it' : index % 4 === 1 ? 'consultancy' : index % 4 === 2 ? 'legal' : 'creative') as LandingServiceKey,
     linkedinHref: '#',

@@ -2,10 +2,33 @@ export function jsonError(message: string, status = 400, details?: unknown) {
   return Response.json({ error: message, details }, { status });
 }
 
-export async function readJson<T = unknown>(request: Request): Promise<T> {
+export async function readJson<T = unknown>(request: Request, maxBytes = 64 * 1024): Promise<T> {
+  const declaredLength = Number.parseInt(request.headers.get('content-length') || '0', 10);
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+    throw new Error('Request body is too large');
+  }
+
   try {
-    return (await request.json()) as T;
-  } catch {
+    if (!request.body) throw new Error('Invalid JSON body');
+    const reader = request.body.getReader();
+    const decoder = new TextDecoder();
+    let total = 0;
+    let text = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel();
+        throw new Error('Request body is too large');
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
+    return JSON.parse(text) as T;
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Request body is too large') throw error;
     throw new Error('Invalid JSON body');
   }
 }

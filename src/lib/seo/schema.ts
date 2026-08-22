@@ -61,3 +61,59 @@ export function breadcrumbSchema(items: Array<{ name: string; item: string }>) {
     })),
   };
 }
+
+export function serviceSchema(input: {
+  name: string;
+  description: string;
+  url: string;
+  providerName: string;
+  providerUrl: string;
+  areaServed?: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: input.name,
+    description: input.description,
+    url: input.url,
+    areaServed: input.areaServed,
+    provider: {
+      '@type': 'Organization',
+      name: input.providerName,
+      url: input.providerUrl,
+    },
+  };
+}
+
+export function articleSchema(input: {
+  headline: string;
+  description: string;
+  url: string;
+  image?: string | null;
+  datePublished?: Date | string | null;
+  dateModified?: Date | string | null;
+  publisherName: string;
+  publisherLogo: string;
+}) {
+  const toIso = (value: Date | string | null | undefined) =>
+    value ? new Date(value).toISOString() : undefined;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: input.headline,
+    description: input.description,
+    mainEntityOfPage: input.url,
+    image: input.image || undefined,
+    datePublished: toIso(input.datePublished),
+    dateModified: toIso(input.dateModified),
+    publisher: {
+      '@type': 'Organization',
+      name: input.publisherName,
+      logo: {
+        '@type': 'ImageObject',
+        url: input.publisherLogo,
+      },
+    },
+  };
+}

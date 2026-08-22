@@ -37,7 +37,7 @@ import { solutions as packagedSolutions } from '@/lib/constants/solutions';
 import { subServices } from '@/lib/constants/sub-services';
 
 type Props = {
-  service: Pick<ServiceDefinition, 'shortId'>;
+  service: Pick<ServiceDefinition, 'shortId' | 'problems' | 'solutions' | 'process' | 'deliverables' | 'useCases'>;
 };
 
 type Item = {
@@ -99,17 +99,17 @@ const palette = {
   },
 };
 
-const aiSolutions: Item[] = [
-  { title: 'AI Chatbots & Virtual Assistants', body: 'Support, sales, and internal knowledge assistants with governed response behavior.', icon: MessageSquareText, bullets: ['Lead capture', 'Knowledge search', 'Support triage'] },
-  { title: 'AI Agents & Workflow Automation', body: 'Agents that coordinate tasks across tools, data, teams, and documents.', icon: Bot, bullets: ['Task routing', 'Data entry', 'Status updates'] },
-  { title: 'Generative AI Integration', body: 'AI features embedded into products, portals, dashboards, and internal systems.', icon: Sparkles, bullets: ['Content generation', 'Document drafting', 'Decision support'] },
-  { title: 'Document AI & Knowledge Base Chatbots', body: 'Search, summarize, classify, and ask questions across policies, contracts, and files.', icon: FileSearch, bullets: ['OCR pipelines', 'RAG search', 'Secure sources'] },
-  { title: 'AI-Powered CRM & Customer Support', body: 'Smarter follow-ups, ticket summaries, call notes, and customer intelligence.', icon: BriefcaseBusiness, bullets: ['Ticket scoring', 'Call notes', 'Pipeline nudges'] },
-  { title: 'Predictive Analytics', body: 'Forecast demand, risk, revenue, and operational patterns from business data.', icon: LineChart, bullets: ['Risk signals', 'Trend analysis', 'Executive reporting'] },
-  { title: 'Computer Vision Solutions', body: 'Image and video intelligence for inspection, detection, verification, and monitoring.', icon: Network, bullets: ['Object detection', 'Quality checks', 'Visual search'] },
-  { title: 'Natural Language Processing', body: 'Text intelligence for classification, extraction, search, translation, and sentiment.', icon: DatabaseZap, bullets: ['Entity extraction', 'Sentiment', 'Semantic search'] },
-  { title: 'Voice AI & Speech Automation', body: 'Voice agents, transcription, summarization, and speech-enabled workflows.', icon: Zap, bullets: ['Voice bots', 'Transcription', 'Call summaries'] },
-  { title: 'AI Business Process Automation', body: 'AI-assisted business operations with approval control and audit visibility.', icon: Workflow, bullets: ['Ops workflows', 'Human approval', 'Audit trail'] },
+const digitalSystemItems: Item[] = [
+  { title: 'Customer Support Tools', body: 'Support, sales, and internal knowledge tools with clear response rules.', icon: MessageSquareText, bullets: ['Lead capture', 'Knowledge search', 'Support triage'] },
+  { title: 'Workflow Automation', body: 'Task routing, reminders, data entry support, and status updates across teams.', icon: Bot, bullets: ['Task routing', 'Data entry', 'Status updates'] },
+  { title: 'Product Feature Integration', body: 'Useful digital features embedded into products, portals, dashboards, and internal systems.', icon: Sparkles, bullets: ['Content support', 'Document drafting', 'Decision support'] },
+  { title: 'Document Search & Knowledge Base', body: 'Search, summarize, classify, and ask questions across policies, contracts, and files.', icon: FileSearch, bullets: ['OCR pipelines', 'Knowledge search', 'Secure sources'] },
+  { title: 'CRM & Customer Support', body: 'Follow-up reminders, ticket summaries, call notes, and customer context in one place.', icon: BriefcaseBusiness, bullets: ['Ticket scoring', 'Call notes', 'Pipeline nudges'] },
+  { title: 'Business Analytics', body: 'Forecast demand, risk, revenue, and operational patterns from business data.', icon: LineChart, bullets: ['Risk signals', 'Trend analysis', 'Management reporting'] },
+  { title: 'Visual Inspection Workflows', body: 'Image and video review for inspection, detection, verification, and monitoring.', icon: Network, bullets: ['Object detection', 'Quality checks', 'Visual search'] },
+  { title: 'Text Processing', body: 'Text classification, extraction, search, translation, and sentiment review.', icon: DatabaseZap, bullets: ['Entity extraction', 'Sentiment', 'Semantic search'] },
+  { title: 'Voice & Speech Workflows', body: 'Transcription, summarization, and speech-enabled workflows for service teams.', icon: Zap, bullets: ['Voice notes', 'Transcription', 'Call summaries'] },
+  { title: 'Business Process Automation', body: 'Assisted operations with approval control and audit visibility.', icon: Workflow, bullets: ['Ops workflows', 'Human approval', 'Audit trail'] },
 ];
 
 const whyChoose: Item[] = [
@@ -139,7 +139,7 @@ const process = [
   ['02', 'Strategy', 'Map the product architecture, roadmap, integrations, delivery model, and operating priorities.'],
   ['03', 'Design', 'Create information architecture, user flows, and responsive interface systems.'],
   ['04', 'Develop', 'Build stable features, APIs, automation, data models, and admin-ready foundations.'],
-  ['05', 'Automate', 'Integrate AI, workflows, reporting, notifications, and intelligent business operations.'],
+  ['05', 'Automate', 'Integrate workflows, reporting, notifications, and practical business operations.'],
   ['06', 'Launch', 'Deploy, validate, document, train teams, and stabilize the production environment.'],
   ['07', 'Scale', 'Improve performance, security, analytics, adoption, and long-term maintainability.'],
 ];
@@ -160,7 +160,7 @@ const serviceFoundations: Record<
     groups: [
       { group: 'Frontend', tools: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
       { group: 'Backend', tools: ['Node.js', 'Next.js API', 'Prisma', 'PostgreSQL', 'REST APIs'] },
-      { group: 'AI & Automation', tools: ['OpenAI', 'LangChain', 'Vector Search', 'RAG', 'Workflow Agents'] },
+      { group: 'Automation & Search', tools: ['Workflow tools', 'Vector search', 'Knowledge search', 'Document parsing', 'Internal assistants'] },
       { group: 'Cloud & DevOps', tools: ['Vercel', 'Docker', 'CI/CD', 'Monitoring', 'Cloud Storage'] },
     ],
   },
@@ -203,7 +203,7 @@ const teams = [
   {
     title: 'Management',
     count: '06 seats',
-    members: ['Khadimul Hasan', 'Gaizi Faisal', 'Mahmudul Hasan', 'Management Seat 04', 'Management Seat 05', 'Management Seat 06'],
+    members: ['Khadimul Hasan', 'Mahmudul Hasan', 'Management Seat 03', 'Management Seat 04', 'Management Seat 05', 'Management Seat 06'],
   },
   {
     title: 'Advisor & Consultant',
@@ -225,7 +225,7 @@ const iconSets: Record<ServiceDefinition['shortId'], LucideIcon[]> = {
 };
 
 const fallbackBodies: Record<ServiceDefinition['shortId'], string> = {
-  it: 'Digital systems, automation, data, AI, and secure software delivery for measurable operational advantage.',
+  it: 'Digital systems, automation, data, and secure software delivery for measurable operational advantage.',
   consultancy: 'CA-aware business advisory, finance control, tax/VAT support, management reporting, and operating discipline.',
   legal: 'Professional legal support, documentation assistance, compliance coordination, and practical business risk control.',
   creative: 'Brand, content, design, communication, and market-facing assets that make complex offers easier to trust.',
@@ -233,9 +233,9 @@ const fallbackBodies: Record<ServiceDefinition['shortId'], string> = {
 
 const focusCopy: Record<ServiceDefinition['shortId'], { eyebrow: string; title: string; body: string }> = {
   it: {
-    eyebrow: 'AI solutions',
-    title: 'Intelligent systems for real operations.',
-    body: 'AI that improves workflows, decisions, customer experience, reporting, and execution without turning the product heavy.',
+    eyebrow: 'Digital systems',
+    title: 'Useful systems for real operations.',
+    body: 'Software that improves workflows, decisions, customer experience, reporting, and execution without making the product heavy.',
   },
   consultancy: {
     eyebrow: 'CA, finance and management advisory',
@@ -329,7 +329,7 @@ function CapabilityCard({ entry, service }: { entry: Item; service: Pick<Service
   return (
     <motion.article
       variants={itemMotion}
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -4 }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
       className={`group relative overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm ring-0 transition duration-300 hover:shadow-2xl hover:shadow-slate-950/10 ${p.ring} hover:ring-8`}
     >
@@ -353,7 +353,7 @@ function SolutionCard({ entry, service }: { entry: Item; service: Pick<ServiceDe
   return (
     <motion.article
       variants={itemMotion}
-      whileHover={{ y: -8, scale: 1.01 }}
+      whileHover={{ y: -4 }}
       className={`group relative overflow-hidden rounded-[1.5rem] border ${p.border} bg-white p-5 shadow-sm transition hover:shadow-2xl hover:shadow-slate-950/10`}
     >
       <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${p.gradient}`} />
@@ -379,9 +379,15 @@ function SolutionCard({ entry, service }: { entry: Item; service: Pick<ServiceDe
 export function ServiceDetailExperience({ service }: Props) {
   const p = palette[service.shortId];
   const category = getCategory(service);
-  const capabilityItems = buildSubServiceItems(service, 12);
-  const focusItems = service.shortId === 'it' ? aiSolutions : buildSubServiceItems(service, 10);
-  const featuredItems = buildFeaturedItems(service);
+  const icons = iconSets[service.shortId];
+  const editableItems = (values: string[], fallback: Item[]) => values.length
+    ? values.map((title, index) => ({ title, body: fallbackBodies[service.shortId], icon: icons[index % icons.length] }))
+    : fallback;
+  const capabilityItems = editableItems(service.solutions, buildSubServiceItems(service, 12));
+  const focusItems = editableItems(service.problems, service.shortId === 'it' ? digitalSystemItems : buildSubServiceItems(service, 10));
+  const featuredItems = service.deliverables.length
+    ? service.deliverables.map((title, index) => ({ title, body: `A practical ${title.toLowerCase()} prepared for implementation and handover.`, icon: icons[index % icons.length], meta: 'Deliverable', bullets: service.useCases.slice(0, 3) }))
+    : buildFeaturedItems(service);
   const focus = focusCopy[service.shortId];
   const foundation = serviceFoundations[service.shortId];
 
@@ -394,7 +400,7 @@ export function ServiceDetailExperience({ service }: Props) {
             service={service}
             eyebrow="Our services"
             title={`${category?.shortTitle ?? 'Service'} capabilities.`}
-            body={category?.description ?? 'End-to-end services designed to transform complex requirements into reliable, measurable business systems.'}
+            body={category?.description ?? 'End-to-end services designed to turn complex requirements into reliable, measurable business systems.'}
           />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {capabilityItems.map((entry) => (
@@ -441,10 +447,10 @@ export function ServiceDetailExperience({ service }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Industries we serve" title="Built for multiple operating realities." body="Specialized systems for teams that need clarity, performance, accountability, and market-ready execution." />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {industries.map((entry) => {
+            {(service.useCases.length ? service.useCases.map((title, index) => ({ title, body: fallbackBodies[service.shortId], icon: icons[index % icons.length] })) : industries).map((entry) => {
               const Icon = entry.icon;
               return (
-                <motion.article key={entry.title} variants={itemMotion} whileHover={{ y: -6 }} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-xl">
+                <motion.article key={entry.title} variants={itemMotion} whileHover={{ y: -4 }} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg dark:border-white/10 dark:bg-night-900">
                   <div className={`mb-5 flex h-10 w-10 items-center justify-center rounded-xl ${p.soft} ${p.text}`}>
                     <Icon size={18} />
                   </div>
@@ -459,11 +465,11 @@ export function ServiceDetailExperience({ service }: Props) {
 
       <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <SectionIntro service={service} eyebrow="Our process" title="A disciplined transformation journey." body="From discovery to optimization, every phase has a clear decision point, output, and ownership model." />
+          <SectionIntro service={service} eyebrow="Our process" title="A disciplined delivery journey." body="From discovery to improvement, every phase has a clear decision point, output, and ownership model." />
           <div className="relative mt-14">
             <div className={`absolute bottom-0 left-5 top-0 w-px bg-gradient-to-b ${p.gradient} opacity-30 md:left-1/2`} />
             <div className="space-y-5">
-              {process.map(([num, title, body], index) => (
+              {(service.process.length ? service.process.map((title, index) => [String(index + 1).padStart(2, '0'), title, `A defined ${title.toLowerCase()} stage with clear ownership and documented output.`]) : process).map(([num, title, body], index) => (
                 <motion.div
                   key={num}
                   initial={{ opacity: 0, y: 18 }}
@@ -489,12 +495,12 @@ export function ServiceDetailExperience({ service }: Props) {
 
       <section className={`relative overflow-hidden py-16 sm:py-20 lg:py-28 ${p.soft}`}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionIntro service={service} eyebrow="Featured solutions" title={`${category?.shortTitle ?? 'Service'} solutions ready to customize.`} body="Each solution is structured as a strong starting point for a production-grade advisory, documentation, operating, or digital system." />
+          <SectionIntro service={service} eyebrow="Featured solutions" title={`${category?.shortTitle ?? 'Service'} solutions ready to customize.`} body="Each solution is structured as a practical starting point for an advisory, documentation, operating, or digital system." />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-5 lg:grid-cols-2">
             {featuredItems.map((entry) => {
               const Icon = entry.icon;
               return (
-                <motion.article key={entry.title} variants={itemMotion} whileHover={{ y: -8 }} className="group rounded-[1.6rem] border border-white bg-white p-6 shadow-sm transition hover:shadow-2xl">
+                <motion.article key={entry.title} variants={itemMotion} whileHover={{ y: -4 }} className="group rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-lg dark:border-white/10 dark:bg-night-900">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${p.icon}`}>
                       <Icon size={20} />
@@ -535,7 +541,7 @@ export function ServiceDetailExperience({ service }: Props) {
 
       <section className={`relative overflow-hidden py-16 sm:py-20 lg:py-28 ${p.soft}`}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionIntro service={service} eyebrow="Team structure" title="A modern advisory delivery bench." body="Management, advisors, consultants, and executives work as one accountable delivery system." />
+          <SectionIntro service={service} eyebrow="Team structure" title="Advisory and delivery support." body="Management, advisors, consultants, and executives work as one accountable delivery system." />
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {teams.map((group, groupIndex) => (
               <motion.article

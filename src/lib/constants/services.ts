@@ -77,19 +77,19 @@ export const services: ServiceDefinition[] = [
   {
     slug: 'it-ai-solutions',
     shortId: 'it',
-    title: 'IT & AI Solutions',
-    eyebrow: 'Enterprise intelligence systems',
-    summary: 'Production-grade AI, software, automation, and data platforms for measurable operational advantage.',
+    title: 'Technology & Software Solutions',
+    eyebrow: 'Software, systems, dashboards',
+    summary: 'Business software, workflow automation, and data platforms for measurable operational clarity.',
     description:
-      'We design and implement secure digital systems that connect data, workflows, people, and AI into dependable business infrastructure.',
+      'We design and implement secure digital systems that connect data, workflows, and people into dependable business infrastructure.',
     icon: BrainCircuit,
     lottie: '/animations/it-new.json',
     theme: serviceThemes['it-ai-solutions'],
-    problems: ['Manual workflows blocking scale', 'Disconnected data and reporting', 'Legacy websites that cannot convert', 'AI pilots that never reach production'],
-    solutions: ['Custom software and portals', 'AI agents and workflow automation', 'Data dashboards and analytics layers', 'Cloud, DevOps, and integration architecture'],
+    problems: ['Manual workflows blocking scale', 'Disconnected data and reporting', 'Legacy websites that cannot convert', 'Tools that never reach daily use'],
+    solutions: ['Custom software and portals', 'Workflow automation', 'Data dashboards and analytics layers', 'Cloud, DevOps, and integration architecture'],
     process: ['Assess systems and data maturity', 'Design the operating architecture', 'Build secure product increments', 'Deploy, measure, and optimize'],
-    deliverables: ['AI automation roadmap', 'Production web application', 'Data and reporting dashboard', 'Technical documentation'],
-    useCases: ['AI voice agents', 'Client portals', 'Business intelligence platforms', 'Internal workflow automation'],
+    deliverables: ['Automation roadmap', 'Production web application', 'Data and reporting dashboard', 'Technical documentation'],
+    useCases: ['Support tools', 'Client portals', 'Business intelligence platforms', 'Internal workflow automation'],
   },
   {
     slug: 'management-consultancy',
@@ -113,7 +113,7 @@ export const services: ServiceDefinition[] = [
     shortId: 'legal',
     title: 'Legal Support',
     eyebrow: 'Compliance and risk control',
-    summary: 'Corporate legal support, compliance readiness, governance documents, and risk mitigation frameworks.',
+    summary: 'Corporate legal support, compliance readiness, governance documents, and risk review frameworks.',
     description:
       'We support companies with practical legal and regulatory structures that protect decisions, contracts, and operating continuity.',
     icon: Scale,
@@ -130,7 +130,7 @@ export const services: ServiceDefinition[] = [
     shortId: 'creative',
     title: 'Creative & Others',
     eyebrow: 'Brand and experience systems',
-    summary: 'Brand strategy, creative direction, campaign systems, and premium digital experience design.',
+    summary: 'Brand strategy, creative direction, campaign systems, and clear digital experience design.',
     description:
       'We shape the market-facing side of business with structured creative systems that make complex offers easier to trust and buy.',
     icon: Sparkles,
@@ -146,12 +146,12 @@ export const services: ServiceDefinition[] = [
 
 export const caseStudies = [
   {
-    slug: 'ai-operations-control-room',
-    title: 'AI Operations Control Room',
-    service: 'IT & AI Solutions',
+    slug: 'operations-control-room',
+    title: 'Operations Control Room',
+    service: 'Technology & Software Solutions',
     serviceSlug: 'it-ai-solutions' as ServiceSlug,
-    summary: 'Designed an AI-assisted reporting and workflow layer for leadership visibility across teams.',
-    metric: '42% faster reporting cycles',
+    summary: 'Designed a reporting and workflow layer for leadership visibility across teams.',
+    metric: 'Faster reporting cycles',
   },
   {
     slug: 'growth-operating-model',
@@ -159,7 +159,7 @@ export const caseStudies = [
     service: 'Management Consultancy',
     serviceSlug: 'management-consultancy' as ServiceSlug,
     summary: 'Rebuilt management cadence, ownership model, and KPI review system for a scaling service company.',
-    metric: '3x clearer accountability',
+    metric: 'Clearer accountability',
   },
   {
     slug: 'compliance-readiness-system',
@@ -167,16 +167,16 @@ export const caseStudies = [
     service: 'Legal Support',
     serviceSlug: 'legal-support' as ServiceSlug,
     summary: 'Created compliance documentation, risk tracker, and governance workflow for recurring review.',
-    metric: '0 unresolved priority gaps',
+    metric: 'Priority gaps tracked',
   },
 ];
 
 export const insights = [
   {
-    slug: 'why-ai-projects-fail-after-the-demo',
-    title: 'Why AI projects fail after the demo',
-    category: 'AI Strategy',
-    summary: 'Production AI needs governance, workflow integration, and business ownership before model choice.',
+    slug: 'why-digital-projects-fail-after-the-demo',
+    title: 'Why digital projects fail after the demo',
+    category: 'Technology',
+    summary: 'Useful software needs governance, workflow integration, and business ownership before tool choice.',
   },
   {
     slug: 'operating-rhythm-for-founder-led-companies',
