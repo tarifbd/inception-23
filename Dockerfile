@@ -1,16 +1,19 @@
 FROM node:20-bookworm-slim AS dependencies
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL=file:/app/prisma/dev.db
 COPY package.json package-lock.json ./
 COPY prisma ./prisma
 RUN npm ci
-RUN npx prisma migrate deploy
+RUN touch /app/prisma/dev.db && npx prisma migrate deploy
 
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL=file:/app/prisma/dev.db
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
+COPY --from=dependencies /app/prisma/dev.db ./prisma/dev.db
 RUN npm run build
 
 FROM node:20-bookworm-slim AS runner
