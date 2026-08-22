@@ -3,6 +3,7 @@
 import type { EcosystemCategory } from '@/lib/constants/service-ecosystem';
 import type { ServiceKey } from '@/lib/constants/theme';
 import { serviceThemes } from '@/lib/constants/theme';
+import { ContextIcon } from '@/components/ui/ContextIcon';
 
 type ServiceCategoryTabsProps = {
   categories: EcosystemCategory[];
@@ -49,8 +50,9 @@ export function ServiceCategoryTabs({ categories, activeKey, onChange, idPrefix 
                 : 'text-slate-600 hover:bg-slate-50 hover:text-brand-950 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
             }`}
           >
-            <span className="relative z-10 text-sm font-semibold">
-              {label}
+            <span className="relative z-10 flex min-w-0 items-center gap-2.5 text-sm font-semibold">
+              <ContextIcon context={`${category.title} ${category.eyebrow}`} size={17} />
+              <span>{label}</span>
             </span>
             <span
               aria-hidden="true"

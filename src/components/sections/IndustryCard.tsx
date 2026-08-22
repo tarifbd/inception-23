@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LandingIcon } from '@/components/landing/icons';
+import { ContextIcon } from '@/components/ui/ContextIcon';
 import type { Industry } from '@/lib/constants/industries';
 import { serviceThemes } from '@/lib/constants/theme';
 
@@ -24,7 +24,7 @@ export function IndustryCard({ industry, index = 0 }: IndustryCardProps) {
       className="group rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-lg dark:border-white/10 dark:bg-night-900"
     >
       <div className={`mb-5 flex h-11 w-11 items-center justify-center rounded-lg ${theme.bg} ${theme.text}`}>
-        <LandingIcon name={industry.icon} size={19} />
+        <ContextIcon context={`${industry.title} ${industry.value} ${industry.icon}`} size={20} />
       </div>
       <h3 className="font-bold leading-tight text-brand-950">{industry.title}</h3>
       <p className="mt-3 text-sm leading-7 text-slate-600">{industry.value}</p>

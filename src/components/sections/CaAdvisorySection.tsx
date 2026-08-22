@@ -1,4 +1,4 @@
-import { CheckCircle2 } from 'lucide-react';
+import { ContextIcon } from '@/components/ui/ContextIcon';
 import { caAdvisoryFocus } from '@/lib/constants/solutions';
 import { AnimatedSection } from './AnimatedSection';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
@@ -98,7 +98,7 @@ export function CaAdvisorySection({ content, focusItems }: { content: HomepageSe
                 >
                   <span className={`absolute inset-y-0 left-0 w-0.5 ${accent.line}`} aria-hidden="true" />
                   <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${accent.icon}`}>
-                    <CheckCircle2 size={17} strokeWidth={2} aria-hidden="true" />
+                    <ContextIcon context={item} size={17} strokeWidth={1.9} />
                   </span>
                   <span className="min-w-0 text-sm font-bold leading-5 text-slate-700 dark:text-slate-200">
                     {item}

@@ -1,5 +1,5 @@
 import { whyChooseItems } from '@/lib/constants/why-choose';
-import { LandingIcon } from '@/components/landing/icons';
+import { ContextIcon } from '@/components/ui/ContextIcon';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
@@ -53,7 +53,7 @@ export function WhyChooseSection({ content, items }: { content: HomepageSectionC
               <article data-interactive-surface key={item.title} className={`group relative overflow-hidden rounded-lg border p-5 transition hover:-translate-y-1 hover:shadow-xl ${accent.card}`}>
                 <div className="relative mb-6 inline-flex border border-white/70 bg-white/65 p-1 shadow-sm dark:border-white/10 dark:bg-[#080d17]/80">
                   <div className={`flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-br text-white shadow-md ${accent.icon}`}>
-                    <LandingIcon name={item.icon} size={21} strokeWidth={1.9} />
+                    <ContextIcon context={`${item.title} ${item.description} ${item.icon}`} size={22} strokeWidth={1.8} />
                   </div>
                 </div>
                 <p className={`relative text-[10px] font-black uppercase tracking-[0.2em] ${accent.text}`}>0{index + 1}</p>

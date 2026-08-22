@@ -1,0 +1,131 @@
+import {
+  BadgeCheck,
+  BarChart3,
+  Bot,
+  BrainCircuit,
+  BriefcaseBusiness,
+  Building2,
+  CalendarRange,
+  ChartNoAxesCombined,
+  CheckCircle2,
+  Clapperboard,
+  ClipboardCheck,
+  CloudCog,
+  Code2,
+  Database,
+  DatabaseZap,
+  Factory,
+  FileCheck2,
+  FileSearch,
+  FolderKanban,
+  GraduationCap,
+  HandHeart,
+  Handshake,
+  HardHat,
+  HeartPulse,
+  Landmark,
+  Layers3,
+  LayoutDashboard,
+  Lightbulb,
+  LockKeyhole,
+  Mail,
+  MapPinned,
+  Megaphone,
+  MessageSquareText,
+  Network,
+  Palette,
+  PanelsTopLeft,
+  PenTool,
+  PlugZap,
+  Presentation,
+  ReceiptText,
+  Rocket,
+  Scale,
+  Search,
+  ServerCog,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Store,
+  Target,
+  UsersRound,
+  Workflow,
+  Zap,
+  type LucideIcon,
+  type LucideProps,
+} from 'lucide-react';
+
+type IconRule = {
+  terms: string[];
+  icon: LucideIcon;
+};
+
+const iconRules: IconRule[] = [
+  { terms: ['conference', 'seminar', 'presentation', 'speaker'], icon: Presentation },
+  { terms: ['product launch', 'startup', 'mvp', 'scale up'], icon: Rocket },
+  { terms: ['brand activation', 'campaign', 'marketing', 'promotion'], icon: Megaphone },
+  { terms: ['workshop', 'training', 'education', 'edtech', 'learning'], icon: GraduationCap },
+  { terms: ['exhibition', 'booth', 'expo'], icon: PanelsTopLeft },
+  { terms: ['venue', 'vendor', 'location'], icon: MapPinned },
+  { terms: ['event creative', 'media', 'video', 'content production'], icon: Clapperboard },
+  { terms: ['corporate event', 'event management', 'event work'], icon: CalendarRange },
+  { terms: ['real estate', 'construction', 'property'], icon: HardHat },
+  { terms: ['manufacturing', 'garments', 'factory', 'production'], icon: Factory },
+  { terms: ['healthcare', 'clinic', 'patient', 'health'], icon: HeartPulse },
+  { terms: ['e-commerce', 'ecommerce', 'retail', 'storefront', 'shopping'], icon: ShoppingBag },
+  { terms: ['ngo', 'nonprofit', 'social impact', 'donor', 'charity'], icon: HandHeart },
+  { terms: ['finance', 'accounting', 'financial', 'cash flow', 'budget'], icon: Landmark },
+  { terms: ['tax', 'vat', 'invoice', 'customs', 'filing'], icon: ReceiptText },
+  { terms: ['legal', 'law', 'contract', 'case', 'policy'], icon: Scale },
+  { terms: ['compliance', 'governance', 'audit', 'risk'], icon: ShieldCheck },
+  { terms: ['security', 'secure', 'access control', 'privacy'], icon: LockKeyhole },
+  { terms: ['dashboard', 'reporting', 'analytics', 'kpi', 'business intelligence'], icon: LayoutDashboard },
+  { terms: ['database', 'databasezap', 'data warehouse', 'data platform', 'data model'], icon: DatabaseZap },
+  { terms: ['cloud', 'cloudcog', 'devops', 'deployment', 'infrastructure'], icon: CloudCog },
+  { terms: ['backend', 'server', 'servercog', 'api route'], icon: ServerCog },
+  { terms: ['frontend', 'website', 'web application', 'software development', 'code2', 'code'], icon: Code2 },
+  { terms: ['api integration', 'integration', 'connector'], icon: PlugZap },
+  { terms: ['workflow', 'process automation', 'task routing', 'approval flow'], icon: Workflow },
+  { terms: ['automation', 'trigger'], icon: Zap },
+  { terms: ['crm', 'customer support', 'client relationship', 'help desk'], icon: MessageSquareText },
+  { terms: ['erp', 'business operating system', 'connected department'], icon: Network },
+  { terms: ['document search', 'knowledge search', 'search system', 'filesearch', 'research', 'discover'], icon: FileSearch },
+  { terms: ['document', 'documentation', 'deliverable', 'handover'], icon: FileCheck2 },
+  { terms: ['artificial intelligence', 'braincircuit', 'ai ', ' ai', 'machine learning', 'intelligence', 'diagnose'], icon: BrainCircuit },
+  { terms: ['assistant', 'chatbot', 'bot'], icon: Bot },
+  { terms: ['creative', 'brand', 'visual identity', 'ui/ux'], icon: Palette },
+  { terms: ['design system', 'interface design', 'graphic design'], icon: PenTool },
+  { terms: ['strategy', 'strategize', 'target', 'assessment', 'goal', 'roadmap'], icon: Target },
+  { terms: ['team', 'people', 'associate', 'advisor', 'consultant'], icon: UsersRound },
+  { terms: ['management', 'business advisory', 'professional service'], icon: BriefcaseBusiness },
+  { terms: ['company', 'enterprise', 'sme'], icon: Building2 },
+  { terms: ['portfolio', 'project', 'case study'], icon: FolderKanban },
+  { terms: ['insight', 'idea', 'innovation'], icon: Lightbulb },
+  { terms: ['email', 'newsletter', 'mail'], icon: Mail },
+  { terms: ['search'], icon: Search },
+  { terms: ['growth', 'chartnoaxescombined', 'performance', 'forecast', 'optimize'], icon: ChartNoAxesCombined },
+  { terms: ['chart', 'metric'], icon: BarChart3 },
+  { terms: ['partnership', 'collaboration'], icon: Handshake },
+  { terms: ['quality', 'verified', 'credential'], icon: BadgeCheck },
+  { terms: ['check', 'complete'], icon: CheckCircle2 },
+  { terms: ['system', 'layers3', 'architecture', 'platform'], icon: Layers3 },
+  { terms: ['idea', 'feature'], icon: Sparkles },
+  { terms: ['shop', 'small business'], icon: Store },
+  { terms: ['brief', 'checklist'], icon: ClipboardCheck },
+  { terms: ['data'], icon: Database },
+];
+
+export function getContextIcon(context: string, fallback: LucideIcon = Sparkles): LucideIcon {
+  const normalized = context.toLowerCase().replace(/[^a-z0-9/&+ -]/g, ' ');
+  return iconRules.find((rule) => rule.terms.some((term) => normalized.includes(term)))?.icon ?? fallback;
+}
+
+type ContextIconProps = Omit<LucideProps, 'ref'> & {
+  context: string;
+  fallback?: LucideIcon;
+};
+
+export function ContextIcon({ context, fallback, strokeWidth = 1.85, ...props }: ContextIconProps) {
+  const Icon = getContextIcon(context, fallback);
+  return <Icon strokeWidth={strokeWidth} aria-hidden="true" {...props} />;
+}

@@ -31,6 +31,7 @@ import {
   Zap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { getContextIcon } from '@/components/ui/ContextIcon';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import type { ServiceDefinition } from '@/lib/constants/services';
 import { solutions as packagedSolutions } from '@/lib/constants/solutions';
@@ -263,7 +264,7 @@ function buildSubServiceItems(service: Pick<ServiceDefinition, 'shortId'>, limit
   return subServices[service.shortId].slice(0, limit).map((entry, index) => ({
     title: entry.title,
     body: entry.summary ?? fallbackBodies[service.shortId],
-    icon: icons[index % icons.length],
+    icon: getContextIcon(`${entry.title} ${entry.summary ?? ''}`, icons[index % icons.length]),
   }));
 }
 
@@ -275,7 +276,7 @@ function buildFeaturedItems(service: Pick<ServiceDefinition, 'shortId'>): Item[]
     return related.map((solution, index) => ({
       title: solution.title,
       body: solution.description,
-      icon: icons[index % icons.length],
+      icon: getContextIcon(`${solution.title} ${solution.description}`, icons[index % icons.length]),
       meta: solution.badge,
       bullets: solution.modules,
     }));
@@ -381,12 +382,12 @@ export function ServiceDetailExperience({ service }: Props) {
   const category = getCategory(service);
   const icons = iconSets[service.shortId];
   const editableItems = (values: string[], fallback: Item[]) => values.length
-    ? values.map((title, index) => ({ title, body: fallbackBodies[service.shortId], icon: icons[index % icons.length] }))
+    ? values.map((title, index) => ({ title, body: fallbackBodies[service.shortId], icon: getContextIcon(title, icons[index % icons.length]) }))
     : fallback;
   const capabilityItems = editableItems(service.solutions, buildSubServiceItems(service, 12));
   const focusItems = editableItems(service.problems, service.shortId === 'it' ? digitalSystemItems : buildSubServiceItems(service, 10));
   const featuredItems = service.deliverables.length
-    ? service.deliverables.map((title, index) => ({ title, body: `A practical ${title.toLowerCase()} prepared for implementation and handover.`, icon: icons[index % icons.length], meta: 'Deliverable', bullets: service.useCases.slice(0, 3) }))
+    ? service.deliverables.map((title, index) => ({ title, body: `A practical ${title.toLowerCase()} prepared for implementation and handover.`, icon: getContextIcon(title, icons[index % icons.length]), meta: 'Deliverable', bullets: service.useCases.slice(0, 3) }))
     : buildFeaturedItems(service);
   const focus = focusCopy[service.shortId];
   const foundation = serviceFoundations[service.shortId];
@@ -447,7 +448,7 @@ export function ServiceDetailExperience({ service }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionIntro service={service} eyebrow="Industries we serve" title="Built for multiple operating realities." body="Specialized systems for teams that need clarity, performance, accountability, and market-ready execution." />
           <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {(service.useCases.length ? service.useCases.map((title, index) => ({ title, body: fallbackBodies[service.shortId], icon: icons[index % icons.length] })) : industries).map((entry) => {
+            {(service.useCases.length ? service.useCases.map((title, index) => ({ title, body: fallbackBodies[service.shortId], icon: getContextIcon(title, icons[index % icons.length]) })) : industries).map((entry) => {
               const Icon = entry.icon;
               return (
                 <motion.article key={entry.title} variants={itemMotion} whileHover={{ y: -4 }} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg dark:border-white/10 dark:bg-night-900">

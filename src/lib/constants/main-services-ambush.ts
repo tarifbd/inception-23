@@ -11,6 +11,7 @@ export type MainServicesAmbushItem = {
   href: string;
   image: string;
   imageAlt: string;
+  imagePosition?: string;
   accent: string;
   softAccent: string;
   textClass: string;
@@ -21,10 +22,11 @@ export type MainServicesAmbushItem = {
   services: string[];
 };
 
-const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'imageAlt' | 'accent' | 'softAccent' | 'textClass' | 'borderClass' | 'badgeClass' | 'proof' | 'outcome'>> = {
+const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'imageAlt' | 'imagePosition' | 'accent' | 'softAccent' | 'textClass' | 'borderClass' | 'badgeClass' | 'proof' | 'outcome'>> = {
   it: {
-    image: '/main-services/it-ai-solutions.webp',
-    imageAlt: 'Cloud tools, data dashboards, and connected business software systems',
+    image: '/main-services/it-ai-solutions-photo.webp',
+    imageAlt: 'Software developers collaborating at workstations in a modern technology office',
+    imagePosition: 'center 58%',
     accent: '#087EA4',
     softAccent: 'rgba(8,145,178,0.12)',
     textClass: 'text-cyan-700',
@@ -34,8 +36,9 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'im
     outcome: 'Turn scattered operations into measurable digital systems.',
   },
   consultancy: {
-    image: '/main-services/management-finance.webp',
-    imageAlt: 'Management strategy, financial reporting, controls, and growth planning system',
+    image: '/main-services/management-finance-photo.webp',
+    imageAlt: 'Financial advisers reviewing market reports and performance data together',
+    imagePosition: 'center 52%',
     accent: '#0F766E',
     softAccent: 'rgba(5,150,105,0.12)',
     textClass: 'text-emerald-700',
@@ -45,8 +48,9 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'im
     outcome: 'Build operating clarity for leadership, compliance, and scale.',
   },
   legal: {
-    image: '/main-services/legal-support.webp',
-    imageAlt: 'Legal documentation, compliance controls, governance, and secure records',
+    image: '/main-services/legal-support-photo.webp',
+    imageAlt: 'A legal adviser discussing documents with clients in a professional office',
+    imagePosition: 'center 42%',
     accent: '#7B2447',
     softAccent: 'rgba(109,40,217,0.12)',
     textClass: 'text-violet-700',
@@ -56,8 +60,9 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'im
     outcome: 'Protect decisions with careful records and governance support.',
   },
   creative: {
-    image: '/main-services/creative-execution.webp',
-    imageAlt: 'Brand design, visual identity, content production, and creative campaign studio',
+    image: '/main-services/creative-execution-photo.webp',
+    imageAlt: 'A creative team reviewing graphic design concepts and material samples',
+    imagePosition: 'center 48%',
     accent: '#8B3FA8',
     softAccent: 'rgba(249,115,22,0.14)',
     textClass: 'text-orange-700',

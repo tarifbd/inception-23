@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, CalendarDays, Check, ClipboardCheck } from 'lucide-react';
+import { ContextIcon } from '@/components/ui/ContextIcon';
 import { eventManagementMenu } from '@/lib/constants/navigation';
 import { AnimatedSection } from './AnimatedSection';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
@@ -81,8 +82,13 @@ export function EventManagementSection({ content, collections }: { content: Home
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <span className="px-4 py-4 lg:px-5 lg:py-5">
-                    <span className="flex items-center justify-between gap-3 text-base font-bold text-brand-950 dark:text-white">
-                      {String(item.label || '')}
+                    <span className="flex items-start justify-between gap-3 text-base font-bold text-brand-950 dark:text-white">
+                      <span className="flex min-w-0 items-start gap-3">
+                        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#dfe7c2] bg-[#f4f8df] text-[#607019] dark:border-lime-200/15 dark:bg-lime-300/[0.08] dark:text-lime-200">
+                          <ContextIcon context={String(item.label || '')} size={16} />
+                        </span>
+                        <span>{String(item.label || '')}</span>
+                      </span>
                       <ArrowRight size={15} className="shrink-0 text-[#8a9650] opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100 dark:text-lime-300" />
                     </span>
                     <span className="mt-1 block text-sm leading-6 text-slate-600 dark:text-slate-300">{String(item.description || '')}</span>

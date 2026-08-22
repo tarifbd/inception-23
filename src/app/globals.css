@@ -160,11 +160,6 @@
     scroll-margin-top: 88px;
   }
 
-  section:not(:first-of-type) {
-    content-visibility: auto;
-    contain-intrinsic-size: 720px;
-  }
-
   button,
   input,
   select,
@@ -1726,10 +1721,4 @@ html[lang='bn'] [class*='tracking-'] {
 @keyframes gradient-title-drift {
   from { background-position: 0% 50%; }
   to { background-position: 100% 50%; }
-}
-
-/* Keep the long homepage inexpensive until each section nears the viewport. */
-[data-native-reveal] {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 900px;
 }

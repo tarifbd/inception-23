@@ -3,37 +3,9 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import {
-  ArrowRight,
-  BookOpen,
-  BriefcaseBusiness,
-  Building2,
-  Clapperboard,
-  Factory,
-  FileText,
-  FolderKanban,
-  GraduationCap,
-  HandHeart,
-  HeartPulse,
-  Landmark,
-  Library,
-  Lightbulb,
-  MapPin,
-  Megaphone,
-  Newspaper,
-  Presentation,
-  ReceiptText,
-  Rocket,
-  Route,
-  ShieldCheck,
-  ShoppingBag,
-  Store,
-  Target,
-  Users,
-  Workflow,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { LandingIcon } from '@/components/landing/icons';
+import { ContextIcon } from '@/components/ui/ContextIcon';
 import {
   aboutMenu,
   eventManagementMenu,
@@ -77,12 +49,6 @@ type MenuCardProps = {
   eyebrowTone?: string;
   onNavigate: () => void;
 };
-
-const eventIcons = [Building2, Presentation, Rocket, Megaphone, GraduationCap, Store, MapPin, Clapperboard] as const;
-const industryIcons = [Rocket, BriefcaseBusiness, Building2, Landmark, GraduationCap, ShoppingBag, HeartPulse, Factory, ReceiptText, HandHeart] as const;
-const insightIcons = [Newspaper, BookOpen, FileText, ReceiptText, Workflow, FolderKanban] as const;
-const resourceIcons = [Library, Lightbulb, FolderKanban] as const;
-const aboutIcons = [Building2, Target, Users, ShieldCheck, Route] as const;
 
 const iconTones = [
   'border-cyan-200 bg-cyan-50 text-cyan-700 dark:border-cyan-300/20 dark:bg-cyan-300/10 dark:text-cyan-200',
@@ -144,10 +110,6 @@ function MenuCard({
       </Link>
     </motion.div>
   );
-}
-
-function LucideMenuIcon({ Icon }: { Icon: LucideIcon }) {
-  return <Icon size={19} strokeWidth={1.85} aria-hidden="true" />;
 }
 
 export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
@@ -216,7 +178,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Discuss this"
-                icon={<LucideMenuIcon Icon={eventIcons[index]} />}
+                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -254,7 +216,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="View industry"
-                icon={<LucideMenuIcon Icon={industryIcons[index]} />}
+                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -271,7 +233,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Read more"
-                icon={<LucideMenuIcon Icon={insightIcons[index]} />}
+                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -288,7 +250,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Open resource"
-                icon={<LucideMenuIcon Icon={resourceIcons[index]} />}
+                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -305,7 +267,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Explore"
-                icon={<LucideMenuIcon Icon={aboutIcons[index]} />}
+                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />

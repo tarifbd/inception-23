@@ -16,6 +16,13 @@ const concealedClip = {
   mobile: 'inset(100% 0% 0% 0%)',
 } as const;
 
+const realServiceImageByLegacyPath: Record<string, string> = {
+  '/main-services/it-ai-solutions.webp': '/main-services/it-ai-solutions-photo.webp',
+  '/main-services/management-finance.webp': '/main-services/management-finance-photo.webp',
+  '/main-services/legal-support.webp': '/main-services/legal-support-photo.webp',
+  '/main-services/creative-execution.webp': '/main-services/creative-execution-photo.webp',
+};
+
 export function MainServicesAmbushSection({ content, services }: { content: HomepageSectionContent; services?: CollectionRecord[] }) {
   const serviceItems = useMemo(
     () => (services?.length ? services : mainServicesAmbush) as MainServicesAmbushItem[],
@@ -80,7 +87,7 @@ export function MainServicesAmbushSection({ content, services }: { content: Home
           scrollTrigger: {
             trigger: stage,
             start: () => `top top+=${isDesktop ? 72 : 64}`,
-            end: () => `+=${Math.round(window.innerHeight * segments * (isDesktop ? 1.38 : 1.08))}`,
+            end: () => `+=${Math.round(window.innerHeight * segments * (isDesktop ? 1.08 : 0.96))}`,
             pin: true,
             pinSpacing: true,
             scrub: isDesktop ? 0.48 : 0.34,
@@ -339,7 +346,7 @@ export function MainServicesAmbushSection({ content, services }: { content: Home
         ref={stageRef}
         className="relative min-h-[calc(100svh-4rem)] overflow-hidden border-t border-slate-300 bg-[#edf2f1] dark:border-white/10 dark:bg-night-900 motion-reduce:min-h-0 motion-reduce:overflow-visible"
       >
-        <div className="ui-shell relative min-h-[calc(100svh-4rem)] motion-reduce:min-h-0">
+        <div className="relative mx-auto min-h-[calc(100svh-4rem)] w-full max-w-[108rem] px-4 sm:px-6 lg:px-[clamp(2rem,4vw,5rem)] motion-reduce:min-h-0">
           <div className="absolute inset-x-5 top-6 z-20 sm:inset-x-8 lg:inset-x-0 lg:top-8">
             <div className="flex items-center justify-between font-utility uppercase tracking-[0.14em]">
               <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400">Scroll to explore</p>
@@ -385,10 +392,12 @@ function ServiceStory({
   index: number;
   total: number;
 }) {
+  const imageSrc = realServiceImageByLegacyPath[service.image] ?? service.image;
+
   return (
     <article
       data-service-slide
-      className="invisible absolute inset-0 grid min-h-[calc(100svh-4rem)] content-center gap-5 pb-6 pt-20 opacity-0 first:visible first:opacity-100 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-center lg:gap-14 lg:pb-10 lg:pt-24 motion-reduce:visible motion-reduce:static motion-reduce:min-h-0 motion-reduce:border-b motion-reduce:border-slate-200 motion-reduce:py-10 motion-reduce:opacity-100 motion-reduce:last:border-b-0 dark:motion-reduce:border-white/10"
+      className="invisible absolute inset-0 grid min-h-[calc(100svh-4rem)] content-center gap-5 pb-6 pt-20 opacity-0 first:visible first:opacity-100 lg:grid-cols-[minmax(26rem,0.82fr)_minmax(34rem,1.18fr)] lg:items-center lg:gap-[clamp(3rem,5vw,7rem)] lg:pb-10 lg:pt-24 motion-reduce:visible motion-reduce:static motion-reduce:min-h-0 motion-reduce:border-b motion-reduce:border-slate-200 motion-reduce:py-10 motion-reduce:opacity-100 motion-reduce:last:border-b-0 dark:motion-reduce:border-white/10"
     >
       <div
         data-service-copy
@@ -448,7 +457,7 @@ function ServiceStory({
 
       <div
         data-service-media
-        className="relative isolate h-[13rem] will-change-[transform,opacity] sm:h-[18rem] lg:order-2 lg:aspect-[7/5] lg:h-auto"
+        className="relative isolate h-[15rem] will-change-[transform,opacity] sm:h-[21rem] lg:order-2 lg:aspect-[8/5] lg:h-auto lg:min-h-[29rem]"
       >
         <div
           data-service-backplane
@@ -460,12 +469,13 @@ function ServiceStory({
         <div data-service-viewport className="absolute inset-0 overflow-hidden border border-slate-300 bg-white shadow-sm will-change-[clip-path] dark:border-white/15 dark:bg-night-800">
           <div data-service-image className="absolute inset-0 will-change-transform">
             <Image
-              src={service.image}
+              src={imageSrc}
               alt={service.imageAlt}
               fill
               priority={index === 0}
               sizes="(min-width: 1024px) 52vw, 92vw"
-              className="object-cover saturate-[0.96] contrast-[1.025]"
+              className="object-cover saturate-[0.9] contrast-[1.04]"
+              style={{ objectPosition: service.imagePosition ?? 'center' }}
             />
           </div>
 
