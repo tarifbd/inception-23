@@ -56,7 +56,7 @@ export async function Footer() {
     <footer
       id="site-footer"
       data-site-footer
-      className="relative overflow-hidden border-t border-slate-300 bg-[#e8eff2] text-brand-950"
+      className="relative overflow-hidden border-t border-white/15 bg-[#09111d] text-white"
     >
       <div className="absolute inset-x-0 top-0 grid h-1 grid-cols-4" aria-hidden="true">
         <span className="bg-cyan-500" />
@@ -66,61 +66,51 @@ export async function Footer() {
       </div>
 
       <div className="relative mx-auto max-w-[1480px] px-5 sm:px-8 lg:px-12">
-        <div className="flex flex-col gap-5 border-b border-slate-300 py-7 sm:flex-row sm:items-center sm:justify-between lg:py-9">
+        <div className="flex flex-col gap-5 border-b border-white/15 py-6 sm:flex-row sm:items-center sm:justify-between lg:py-8">
           <Link href="/" className="inline-flex min-w-0 items-center gap-3 focus:outline-none focus:ring-4 focus:ring-cyan-400/20">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden bg-white p-1.5">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border border-white/15 bg-white p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.22)]">
               <Image src="/inception23-mark.png" alt="Inception 23 mark" width={88} height={88} className="h-full w-full object-contain" />
             </span>
             <span className="min-w-0">
-              <span className="block text-sm font-black uppercase tracking-[0.16em] text-brand-950 sm:text-base">Inception 23</span>
-              <span className="mt-1 block font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-slate-500">Advisory / Consulting / Solutions</span>
+              <span className="block text-sm font-black uppercase tracking-[0.16em] sm:text-base">Inception 23</span>
+              <span className="mt-1 block font-mono text-[8px] font-bold uppercase tracking-[0.14em]">Advisory / Consulting / Solutions</span>
             </span>
           </Link>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-slate-600">
-            <span className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 bg-emerald-400" />Dhaka, Bangladesh</span>
-            <span>UTC +06</span>
-            <span className="text-cyan-800">Worldwide engagements</span>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[9px] font-bold uppercase tracking-[0.14em]">
+            <span className="inline-flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.8)]" />Dhaka, Bangladesh</span>
+            <span className="border-l border-white/20 pl-6">UTC +06</span>
+            <span className="border-l border-white/20 pl-6">Worldwide engagements</span>
           </div>
         </div>
 
-        <div className="grid gap-12 py-16 lg:grid-cols-[minmax(0,1.45fr)_minmax(20rem,0.55fr)] lg:gap-20 lg:py-24">
+        <div className="grid gap-12 py-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(22rem,0.8fr)] lg:gap-20 lg:py-20">
           <div data-footer-reveal>
-            <p className="flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-orange-800">
-              <span className="h-px w-10 bg-orange-600" aria-hidden="true" />
+            <p className="flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em]">
+              <span className="h-0.5 w-10 bg-gradient-to-r from-cyan-400 to-violet-400" aria-hidden="true" />
               Start with the consequential question
             </p>
-            <h2 className="mt-7 max-w-5xl font-serif text-[clamp(3rem,6.3vw,6.8rem)] font-bold leading-[0.91] text-brand-950">
+            <h2 className="mt-7 max-w-4xl text-balance font-serif text-[clamp(2.8rem,5.4vw,5.8rem)] font-bold leading-[0.94]">
               Clear decisions.<br />Accountable delivery.
             </h2>
-            <p className="mt-8 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+            <p className="mt-7 max-w-2xl text-base leading-8 sm:text-lg">
               Inception 23 connects technology, management, finance, legal support, compliance, and creative execution through one accountable working relationship.
             </p>
-            <div className="mt-10 grid max-w-4xl border-t border-slate-300 sm:grid-cols-3">
-              {trustPoints.slice(0, 3).map((point, index) => (
-                <div key={point} className={`grid grid-cols-[2rem_1fr] gap-3 py-5 sm:pr-5 ${index > 0 ? 'sm:border-l sm:border-slate-300 sm:pl-5' : ''}`}>
-                  <span className={index === 0 ? 'font-mono text-[9px] font-bold text-cyan-800' : index === 1 ? 'font-mono text-[9px] font-bold text-emerald-800' : 'font-mono text-[9px] font-bold text-orange-800'}>
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <p className="text-xs font-semibold leading-5 text-slate-600">{point}</p>
-                </div>
-              ))}
-            </div>
           </div>
 
-          <div data-footer-reveal className="border-l border-slate-300 pl-6 lg:mr-12 lg:self-end lg:pl-9 2xl:mr-0">
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-800">Confidential advisory intake</p>
-            <h3 className="mt-5 font-serif text-3xl font-bold leading-[1.05] text-brand-950 sm:text-4xl">
+          <div data-footer-reveal className="border-t border-white/15 pt-8 lg:self-end lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em]">Confidential advisory intake</p>
+            <h3 className="mt-5 max-w-lg font-serif text-3xl font-bold leading-[1.08] sm:text-4xl">
               Bring us the decision, constraint, or opportunity.
             </h3>
-            <p className="mt-5 max-w-md text-sm leading-7 text-slate-600">
+            <p className="mt-5 max-w-md text-sm leading-7">
               We will help define the right advisory path and the practical next step.
             </p>
-            <div className="mt-8 flex flex-col gap-3">
-              <Link href="/contact" className="ui-action group inline-flex min-h-14 items-center justify-between bg-brand-950 px-6 text-sm font-bold text-white hover:bg-[#32193a]">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+              <Link href="/contact" className="ui-action group inline-flex min-h-[3.25rem] flex-1 items-center justify-between border border-cyan-300/30 bg-gradient-to-r from-cyan-700 to-teal-600 px-5 text-sm font-bold text-white shadow-[0_16px_40px_rgba(8,145,178,0.2)] hover:from-cyan-600 hover:to-teal-500">
                 Start a confidential brief
                 <ArrowRight size={16} className="transition group-hover:translate-x-1" />
               </Link>
-              <Link href="/services" className="ui-action inline-flex min-h-12 items-center justify-between border-b border-slate-400 px-1 text-sm font-bold text-brand-950 hover:border-cyan-700 hover:text-cyan-800">
+              <Link href="/services" className="ui-action inline-flex min-h-[3.25rem] flex-1 items-center justify-between border border-white/20 bg-white/[0.04] px-5 text-sm font-bold hover:border-cyan-300/60 hover:bg-white/[0.08]">
                 Explore services
                 <ArrowRight size={15} />
               </Link>
@@ -128,24 +118,35 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="grid border-y border-slate-300 lg:grid-cols-[0.72fr_1.28fr]">
-          <div data-footer-reveal className="border-b border-slate-300 py-12 lg:border-b-0 lg:border-r lg:pr-12">
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">Direct contact / 01</p>
-            <a href="mailto:hello@inception23.com" className="mt-5 inline-flex break-all font-serif text-2xl font-bold text-brand-950 transition hover:text-cyan-800 sm:text-3xl">
+        <div className="grid border-y border-white/15 sm:grid-cols-3">
+          {trustPoints.slice(0, 3).map((point, index) => (
+            <div key={point} data-footer-reveal className={`grid grid-cols-[2.25rem_1fr] gap-3 py-5 sm:px-6 sm:py-6 ${index === 0 ? 'sm:pl-0' : 'sm:border-l sm:border-white/15'} ${index === 2 ? 'sm:pr-0' : ''}`}>
+              <span className="flex h-8 w-8 items-center justify-center border border-white/20 bg-white/[0.05] font-mono text-[9px] font-bold">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <p className="self-center text-xs font-semibold leading-5">{point}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-12 py-12 lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)] lg:gap-16 lg:py-16">
+          <div data-footer-reveal className="lg:border-r lg:border-white/15 lg:pr-12">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em]">Direct contact</p>
+            <a href="mailto:hello@inception23.com" className="mt-5 inline-flex break-all font-serif text-2xl font-bold transition hover:text-cyan-300 sm:text-3xl">
               hello@inception23.com
             </a>
-            <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600"><MapPin size={15} className="text-orange-700" />Dhaka, Bangladesh</p>
+            <p className="mt-3 flex items-center gap-2 text-sm font-semibold"><MapPin size={15} />Dhaka, Bangladesh</p>
 
             <div className="mt-8 flex flex-wrap gap-2">
               {visibleSocialLinks.map(({ label, href, icon }) => {
                 const Icon = iconMap[icon as keyof typeof iconMap] ?? Linkedin;
                 return (
-                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="ui-action flex h-10 w-10 items-center justify-center border border-slate-400 text-slate-600 hover:border-cyan-700 hover:text-cyan-800">
+                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="ui-action flex h-11 w-11 items-center justify-center border border-white/20 bg-white/[0.04] hover:border-cyan-300/60 hover:bg-white/[0.08]">
                     <Icon size={17} />
                   </a>
                 );
               })}
-              <a href="mailto:hello@inception23.com" aria-label="Email" className="ui-action flex h-10 w-10 items-center justify-center border border-slate-400 text-slate-600 hover:border-cyan-700 hover:text-cyan-800">
+              <a href="mailto:hello@inception23.com" aria-label="Email" className="ui-action flex h-11 w-11 items-center justify-center border border-white/20 bg-white/[0.04] hover:border-cyan-300/60 hover:bg-white/[0.08]">
                 <Mail size={17} />
               </a>
             </div>
@@ -153,41 +154,38 @@ export async function Footer() {
             <NewsletterForm />
           </div>
 
-          <div className="grid gap-y-10 py-12 min-[480px]:grid-cols-2 min-[480px]:gap-x-8 lg:pl-12 xl:grid-cols-4">
-            <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
-            <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
-            <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
-            <FooterColumn title="Company" links={[...companyLinks, ...insightsMenu.slice(0, 1)]} />
+          <div>
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em]">Explore Inception 23</p>
+            <div className="mt-7 grid gap-x-8 gap-y-10 min-[480px]:grid-cols-2 xl:grid-cols-4">
+              <FooterColumn title="Services" links={serviceCategories.map((item) => ({ label: item.shortTitle, href: item.href }))} />
+              <FooterColumn title="Industries" links={industriesMenu.slice(0, 5)} />
+              <FooterColumn title="Solutions" links={solutionMenu.slice(0, 5).map((item) => ({ label: item.title, href: item.href }))} />
+              <FooterColumn title="Company" links={[...companyLinks, ...insightsMenu.slice(0, 1)]} />
+            </div>
           </div>
         </div>
 
-        <div className="grid border-b border-slate-300 sm:grid-cols-3">
-          {contactHighlights.map(({ label, value, icon }, index) => {
+        <div className="grid border-t border-white/15 sm:grid-cols-3">
+          {contactHighlights.slice(0, 3).map(({ label, value, icon }, index) => {
             const Icon = iconMap[icon as keyof typeof iconMap] ?? Clock3;
             return (
-              <div key={label} className={`flex gap-3 border-b border-slate-300 py-7 last:border-b-0 sm:border-b-0 ${index > 0 ? 'sm:border-l sm:border-slate-300 sm:pl-6' : ''} ${index < contactHighlights.length - 1 ? 'sm:pr-6' : ''}`}>
-                <Icon size={17} className={index === 0 ? 'text-emerald-800' : index === 1 ? 'text-orange-800' : 'text-violet-800'} aria-hidden="true" />
+              <div key={label} className={`flex gap-4 border-b border-white/15 py-6 last:border-b-0 sm:border-b-0 ${index > 0 ? 'sm:border-l sm:border-white/15 sm:pl-6' : ''} ${index < 2 ? 'sm:pr-6' : ''}`}>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/20 bg-white/[0.05]"><Icon size={16} aria-hidden="true" /></span>
                 <div>
-                  <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-slate-500">{label}</p>
-                  <p className="mt-2 text-xs font-semibold leading-5 text-slate-700">{value}</p>
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em]">{label}</p>
+                  <p className="mt-2 text-xs font-semibold leading-5">{value}</p>
                 </div>
               </div>
             );
           })}
         </div>
 
-        <div className="overflow-hidden border-b border-slate-300 py-7" aria-hidden="true">
-          <p className="whitespace-nowrap font-serif text-[clamp(4rem,12.5vw,12rem)] font-bold leading-[0.78] text-brand-950/[0.055]">
-            INCEPTION <span className="text-brand-950/[0.14]">23</span>
-          </p>
-        </div>
-
-        <div data-footer-reveal className="flex flex-col gap-5 py-7 text-xs font-semibold text-slate-500 md:flex-row md:items-center md:justify-between">
+        <div data-footer-reveal className="flex flex-col gap-5 border-t border-white/15 py-7 text-xs font-semibold md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} Inception 23. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/privacy" className="transition hover:text-brand-950">Privacy</Link>
-            <Link href="/terms" className="transition hover:text-brand-950">Terms</Link>
-            <span className="inline-flex items-center gap-2 text-emerald-800">
+            <Link href="/privacy" className="transition hover:text-cyan-300">Privacy</Link>
+            <Link href="/terms" className="transition hover:text-cyan-300">Terms</Link>
+            <span className="inline-flex items-center gap-2">
               <ShieldCheck size={14} />
               Confidential by design
             </span>
@@ -200,12 +198,12 @@ export async function Footer() {
 function FooterColumn({ title, links }: { title: string; links: Array<{ label: string; href: string }> }) {
   return (
     <nav data-footer-reveal aria-label={title}>
-      <h3 className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">{title}</h3>
-      <ul className="mt-5 space-y-3.5">
+      <h3 className="border-b border-white/15 pb-3 font-mono text-[9px] font-bold uppercase tracking-[0.15em]">{title}</h3>
+      <ul className="mt-4 space-y-2.5">
         {links.map((link) => (
           <li key={`${title}-${link.label}`}>
-            <Link href={link.href} className="group inline-flex items-start gap-2 text-sm font-semibold leading-6 text-slate-600 transition hover:text-brand-950">
-              <span className="mt-[0.68rem] h-px w-0 shrink-0 bg-cyan-700 transition-all group-hover:w-3" aria-hidden="true" />
+            <Link href={link.href} className="group inline-flex items-start gap-2 text-sm font-semibold leading-6 transition duration-300 hover:translate-x-1 hover:text-cyan-300">
+              <span className="mt-[0.68rem] h-px w-0 shrink-0 bg-cyan-300 transition-all duration-300 group-hover:w-3" aria-hidden="true" />
               <span>{link.label}</span>
             </Link>
           </li>

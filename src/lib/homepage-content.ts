@@ -76,7 +76,7 @@ export const defaultHomepageContent: HomepageContent = {
         copy: 'Custom software, data dashboards, internal tools, and secure web systems shaped around how your business already works.',
         chips: ['Custom Software', 'Dashboards', 'Internal Tools', 'Cloud Setup'],
         visualType: 'lottie',
-        visualUrl: '/animations/it-new.json',
+        visualUrl: '/animations/consultancy.lottie',
         visualAlt: 'Technology systems animated hero visual',
       },
       {
@@ -89,7 +89,7 @@ export const defaultHomepageContent: HomepageContent = {
         copy: 'Strategy, reporting rhythm, KPI systems, process improvement, finance controls, and practical support for teams that need clarity while growing.',
         chips: ['Strategy', 'Finance Control', 'Process Design', 'Reporting'],
         visualType: 'lottie',
-        visualUrl: '/animations/consultancy-new.json',
+        visualUrl: '/animations/business-operations.json',
         visualAlt: 'Management consultancy animated hero visual',
       },
       {
@@ -102,7 +102,7 @@ export const defaultHomepageContent: HomepageContent = {
         copy: 'Corporate documentation, compliance coordination, governance records, and practical risk review support for day-to-day business decisions.',
         chips: ['Compliance', 'Documents', 'Governance', 'Risk Review'],
         visualType: 'lottie',
-        visualUrl: '/animations/legal-new.json',
+        visualUrl: '/animations/legal.json',
         visualAlt: 'Legal support animated hero visual',
       },
       {
@@ -115,7 +115,7 @@ export const defaultHomepageContent: HomepageContent = {
         copy: 'Brand direction, visual identity, campaign planning, interface design, and client-facing materials that make your offer easier to understand.',
         chips: ['Brand Strategy', 'Campaigns', 'Website UX', 'Content'],
         visualType: 'lottie',
-        visualUrl: '/animations/creative-new.json',
+        visualUrl: '/animations/creative.lottie',
         visualAlt: 'Creative services animated hero visual',
       },
     ],

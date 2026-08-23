@@ -12,8 +12,9 @@ const toneClasses = {
   creative: 'gradient-title-creative',
 } as const;
 
-export function GradientTitle({ text, accentWords = 2, tone = 'brand' }: GradientTitleProps) {
+export function GradientTitle({ text, accentWords = 1, tone = 'brand' }: GradientTitleProps) {
   const words = text.trim().split(/\s+/);
+  if (words.length < 5) return <>{text}</>;
   const splitAt = Math.max(1, words.length - Math.min(accentWords, words.length - 1));
 
   return (

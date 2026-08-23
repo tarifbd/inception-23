@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -21,6 +21,13 @@ const realServiceImageByLegacyPath: Record<string, string> = {
   '/main-services/management-finance.webp': '/main-services/management-finance-photo.webp',
   '/main-services/legal-support.webp': '/main-services/legal-support-photo.webp',
   '/main-services/creative-execution.webp': '/main-services/creative-execution-photo.webp',
+};
+
+const fallbackServiceImages: Record<MainServicesAmbushItem['key'], string> = {
+  it: '/main-services/it-ai-solutions-photo.webp',
+  consultancy: '/main-services/management-finance-photo.webp',
+  legal: '/main-services/legal-support-photo.webp',
+  creative: '/main-services/creative-execution-photo.webp',
 };
 
 export function MainServicesAmbushSection({ content, services }: { content: HomepageSectionContent; services?: CollectionRecord[] }) {
@@ -392,7 +399,9 @@ function ServiceStory({
   index: number;
   total: number;
 }) {
-  const imageSrc = realServiceImageByLegacyPath[service.image] ?? service.image;
+  const fallbackImageSrc = fallbackServiceImages[service.key];
+  const initialImageSrc = realServiceImageByLegacyPath[service.image] ?? service.image ?? fallbackImageSrc;
+  const [imageSrc, setImageSrc] = useState(initialImageSrc);
 
   return (
     <article
@@ -473,9 +482,14 @@ function ServiceStory({
               alt={service.imageAlt}
               fill
               priority={index === 0}
+              loading={index === 0 ? undefined : 'eager'}
+              unoptimized
               sizes="(min-width: 1024px) 52vw, 92vw"
               className="object-cover saturate-[0.9] contrast-[1.04]"
               style={{ objectPosition: service.imagePosition ?? 'center' }}
+              onError={() => {
+                if (imageSrc !== fallbackImageSrc) setImageSrc(fallbackImageSrc);
+              }}
             />
           </div>
 

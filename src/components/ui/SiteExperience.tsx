@@ -22,7 +22,7 @@ export function SiteExperience() {
     root.classList.toggle('dark', theme === 'dark');
     root.style.colorScheme = theme;
 
-    const timeout = window.setTimeout(() => root.classList.remove('theme-transition'), 280);
+    const timeout = window.setTimeout(() => root.classList.remove('theme-transition'), 620);
     return () => window.clearTimeout(timeout);
   }, [theme]);
 
@@ -87,59 +87,24 @@ export function SiteExperience() {
       return;
     }
 
-    translateTree(document.body);
-    const observer = new MutationObserver((mutations) => {
-      if (applying) return;
-      for (const mutation of mutations) {
-        mutation.addedNodes.forEach((node) => translateTree(node));
-        if (mutation.type === 'characterData') translateTree(mutation.target);
-      }
-    });
-    observer.observe(document.body, { subtree: true, childList: true, characterData: true });
-    return () => observer.disconnect();
-  }, [isAdmin, lang]);
-
-  useEffect(() => {
-    if (isAdmin || window.matchMedia('(pointer: coarse), (prefers-reduced-motion: reduce)').matches) return;
-
-    let frame = 0;
-    let activeSurface: HTMLElement | null = null;
-
-    const updateSurface = (event: PointerEvent) => {
-      const surface = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-interactive-surface]') ?? null;
-      if (!surface) {
-        activeSurface?.removeAttribute('data-pointer-active');
-        activeSurface = null;
-        return;
-      }
-
-      if (activeSurface !== surface) {
-        activeSurface?.removeAttribute('data-pointer-active');
-        activeSurface = surface;
-        surface.setAttribute('data-pointer-active', 'true');
-      }
-
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        const rect = surface.getBoundingClientRect();
-        surface.style.setProperty('--spot-x', `${event.clientX - rect.left}px`);
-        surface.style.setProperty('--spot-y', `${event.clientY - rect.top}px`);
+    let observer: MutationObserver | null = null;
+    const startTimer = window.setTimeout(() => {
+      translateTree(document.body);
+      observer = new MutationObserver((mutations) => {
+        if (applying) return;
+        for (const mutation of mutations) {
+          mutation.addedNodes.forEach((node) => translateTree(node));
+          if (mutation.type === 'characterData') translateTree(mutation.target);
+        }
       });
-    };
+      observer.observe(document.body, { subtree: true, childList: true, characterData: true });
+    }, 420);
 
-    const clearSurface = () => {
-      activeSurface?.removeAttribute('data-pointer-active');
-      activeSurface = null;
-    };
-
-    document.addEventListener('pointermove', updateSurface, { passive: true });
-    document.documentElement.addEventListener('mouseleave', clearSurface);
     return () => {
-      window.cancelAnimationFrame(frame);
-      document.removeEventListener('pointermove', updateSurface);
-      document.documentElement.removeEventListener('mouseleave', clearSurface);
+      window.clearTimeout(startTimer);
+      observer?.disconnect();
     };
-  }, [isAdmin]);
+  }, [isAdmin, lang]);
 
   if (isAdmin) return null;
 

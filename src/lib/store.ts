@@ -34,7 +34,14 @@ const useStoreBase = create<AppState>()(
     { 
       name: 'inception-storage',
       storage: createJSONStorage(() => localStorage),
-      // This ensures we can handle hydration manually if needed
+      partialize: (state) => ({ theme: state.theme }),
+      merge: (persisted, current) => {
+        const saved = persisted as Partial<AppState> | undefined;
+        return {
+          ...current,
+          theme: saved?.theme === 'dark' ? 'dark' : 'light',
+        };
+      },
       skipHydration: true,
     }
   )

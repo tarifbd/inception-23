@@ -1,17 +1,23 @@
+import Image from 'next/image';
+
 export default function LoadingPage() {
   return (
-    <main className="min-h-screen bg-[#f7f9fa] px-5 pb-16 pt-32 dark:bg-night-950">
-      <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
-        <div className="space-y-5">
-          <div className="ui-skeleton h-5 w-44 rounded-md" />
-          <div className="ui-skeleton h-16 w-full max-w-xl rounded-lg sm:h-20" />
-          <div className="ui-skeleton h-16 w-4/5 max-w-lg rounded-lg sm:h-20" />
-          <div className="ui-skeleton h-24 w-full max-w-2xl rounded-lg" />
-          <div className="ui-skeleton h-12 w-52 rounded-lg" />
+    <main className="grid min-h-dvh place-items-center bg-[var(--color-canvas)] px-6 text-[var(--color-ink)]">
+      <div className="w-full max-w-sm" role="status" aria-live="polite">
+        <div className="flex items-center gap-4">
+          <span className="flex h-12 w-12 items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5 shadow-sm">
+            <Image src="/inception23-mark.png" alt="" width={72} height={72} priority className="h-full w-full object-contain" />
+          </span>
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.08em]">Inception 23</p>
+            <p className="mt-0.5 text-xs text-[var(--color-muted)]">Preparing the advisory workspace</p>
+          </div>
         </div>
-        <div className="ui-skeleton mx-auto aspect-square w-full max-w-[560px] rounded-lg" />
+        <div className="mt-6 h-px overflow-hidden bg-[var(--color-border)]" aria-hidden="true">
+          <span className="page-loading-line block h-full w-2/5 bg-[var(--color-support)]" />
+        </div>
+        <span className="sr-only">Loading page</span>
       </div>
-      <p className="sr-only" role="status">Loading page</p>
     </main>
   );
 }

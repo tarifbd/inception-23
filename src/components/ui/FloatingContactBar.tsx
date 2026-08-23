@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 
@@ -29,6 +30,34 @@ const actions = [
 
 export function FloatingContactBar() {
   const pathname = usePathname();
+  const [edgeVisibility, setEdgeVisibility] = useState({ top: false, bottom: true });
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateVisibility = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const remaining = document.documentElement.scrollHeight - window.innerHeight - scrollTop;
+
+        setEdgeVisibility({
+          top: scrollTop > 240,
+          bottom: remaining > 240,
+        });
+      });
+    };
+
+    updateVisibility();
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    window.addEventListener('resize', updateVisibility);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateVisibility);
+      window.removeEventListener('resize', updateVisibility);
+    };
+  }, [pathname]);
 
   if (pathname.startsWith('/admin')) return null;
 
@@ -48,12 +77,15 @@ export function FloatingContactBar() {
       aria-label="Quick contact"
       className="fixed inset-x-0 bottom-3 z-[70] mx-auto flex w-fit items-center gap-1 rounded-lg border border-white/80 bg-white/82 p-1.5 shadow-xl backdrop-blur-2xl md:inset-x-auto md:bottom-6 md:right-5 md:flex-col dark:border-white/10 dark:bg-night-900/84"
     >
-      <button type="button" onClick={() => scrollToEdge('top')} aria-label="Go to top" title="Go to top" className={scrollButtonClass}>
-        <ArrowUpToLine size={23} aria-hidden="true" />
-        <span className={tooltipClass}>Go to top</span>
-      </button>
-
-      <span aria-hidden="true" className="mx-1 h-7 w-px bg-slate-200 md:mx-0 md:h-px md:w-7 dark:bg-white/10" />
+      {edgeVisibility.top ? (
+        <>
+          <button type="button" onClick={() => scrollToEdge('top')} aria-label="Go to top" title="Go to top" className={scrollButtonClass}>
+            <ArrowUpToLine size={23} aria-hidden="true" />
+            <span className={tooltipClass}>Go to top</span>
+          </button>
+          <span aria-hidden="true" className="mx-1 h-7 w-px bg-slate-200 md:mx-0 md:h-px md:w-7 dark:bg-white/10" />
+        </>
+      ) : null}
 
       {actions.map((action) => {
         return (
@@ -72,12 +104,15 @@ export function FloatingContactBar() {
         );
       })}
 
-      <span aria-hidden="true" className="mx-1 h-7 w-px bg-slate-200 md:mx-0 md:h-px md:w-7 dark:bg-white/10" />
-
-      <button type="button" onClick={() => scrollToEdge('bottom')} aria-label="Go to bottom" title="Go to bottom" className={scrollButtonClass}>
-        <ArrowDownToLine size={23} aria-hidden="true" />
-        <span className={tooltipClass}>Go to bottom</span>
-      </button>
+      {edgeVisibility.bottom ? (
+        <>
+          <span aria-hidden="true" className="mx-1 h-7 w-px bg-slate-200 md:mx-0 md:h-px md:w-7 dark:bg-white/10" />
+          <button type="button" onClick={() => scrollToEdge('bottom')} aria-label="Go to bottom" title="Go to bottom" className={scrollButtonClass}>
+            <ArrowDownToLine size={23} aria-hidden="true" />
+            <span className={tooltipClass}>Go to bottom</span>
+          </button>
+        </>
+      ) : null}
     </aside>
   );
 }

@@ -17,6 +17,19 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
   const languageShift = compact ? 'translate-x-[33px]' : 'translate-x-[38px]';
   const themeThumbSize = compact ? 'h-7 w-7' : 'h-8 w-8';
   const themeShift = compact ? 'translate-x-[34px]' : 'translate-x-[40px]';
+  const handleThemeToggle = () => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const transitionDocument = document as Document & {
+      startViewTransition?: (update: () => void) => { finished: Promise<void> };
+    };
+
+    if (reduceMotion || !transitionDocument.startViewTransition) {
+      toggleTheme();
+      return;
+    }
+
+    transitionDocument.startViewTransition(toggleTheme);
+  };
 
   return (
     <div
@@ -48,7 +61,7 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
 
       <button
         type="button"
-        onClick={toggleTheme}
+        onClick={handleThemeToggle}
         aria-label={`Theme: ${isDark ? 'dark' : 'light'}. Switch to ${isDark ? 'light' : 'dark'} theme`}
         aria-pressed={isDark}
         className={`relative flex ${toggleSize} items-center rounded-full border border-violet-200/80 bg-gradient-to-r from-amber-50 via-white to-violet-50 p-1 transition hover:border-violet-400/60 focus:outline-none focus:ring-4 focus:ring-violet-500/20 dark:border-violet-300/20 dark:from-amber-300/10 dark:via-white/5 dark:to-violet-400/15`}

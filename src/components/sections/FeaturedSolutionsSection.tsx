@@ -45,14 +45,18 @@ export function FeaturedSolutionsSection({
   const activeTheme = serviceThemes[activeService];
 
   return (
-    <AnimatedSection id="solutions" motionVariant="from-left" className="bg-gradient-to-b from-white via-slate-50 to-white">
+    <AnimatedSection
+      id="solutions"
+      motionVariant="from-left"
+      className="bg-white dark:bg-[#090e17]"
+    >
       <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
         <SectionHeader
           eyebrow={content.eyebrow}
           title={content.title}
           description={content.description}
         />
-        <p className="max-w-sm text-sm font-bold leading-7 text-slate-500">
+        <p className="max-w-sm text-sm font-bold leading-7 text-slate-500 dark:text-slate-300">
           {content.supportingText}
         </p>
       </div>
