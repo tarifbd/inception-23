@@ -12,6 +12,7 @@ import {
   FolderOpen,
   Home,
   Image as ImageIcon,
+  Inbox,
   LayoutDashboard,
   ListTree,
   Newspaper,
@@ -421,6 +422,7 @@ export function WebsiteCmsClient() {
               <CmsModuleCard icon={Home} title="Homepage Layout" meta="Hero + sections" copy="Edit hero slides, CTA labels, section order, visibility, headings, and hero visuals." href="/admin/homepage" action="Edit layout" />
               <CmsModuleCard icon={LayoutDashboard} title="Section Builder" meta={`${editableCollections.length - 2} sections`} copy="Edit every live homepage section item: cards, services, team, solutions, and visuals." onClick={() => setView('structure')} action="Open sections" />
               <CmsModuleCard icon={FolderOpen} title="Resources" meta="Downloads/content" copy="Manage resource portal entries, access links, categories, metadata, and publishing." href="/admin/resources" action="Manage resources" />
+              <CmsModuleCard icon={Inbox} title="Leads & Subscribers" meta="Contact operations" copy="Review contact submissions, quick inquiries, and newsletter subscribers from one protected workspace." href="/admin/leads" action="Open leads" />
               <CmsModuleCard icon={RadioTower} title="Pixels / CAPI" meta="Tracking setup" copy="Toggle Google, Meta, LinkedIn, TikTok, X, Clarity, and server-side event settings." href="/admin/tracking" action="Open tracking" />
               <CmsModuleCard icon={Settings2} title="SEO" meta="Search controls" copy="Manage SEO settings, redirects, robots, sitemap, product metadata, and image alt text." href="/admin/seo" action="Open SEO" />
               <CmsModuleCard icon={ExternalLink} title="Preview Website" meta="Public site" copy="Open the public website after publishing CMS changes." href="/" action="View site" />

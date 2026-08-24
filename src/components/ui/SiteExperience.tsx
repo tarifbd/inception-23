@@ -18,12 +18,8 @@ export function SiteExperience() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.add('theme-transition');
     root.classList.toggle('dark', theme === 'dark');
     root.style.colorScheme = theme;
-
-    const timeout = window.setTimeout(() => root.classList.remove('theme-transition'), 600);
-    return () => window.clearTimeout(timeout);
   }, [theme]);
 
   useLayoutEffect(() => {

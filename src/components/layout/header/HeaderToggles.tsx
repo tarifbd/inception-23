@@ -1,7 +1,7 @@
 'use client';
 
 import { Languages, Moon, Sun } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type MouseEvent } from 'react';
 import { useAppStore } from '@/lib/store';
 
 type HeaderTogglesProps = {
@@ -12,6 +12,8 @@ type HeaderTogglesProps = {
 export function HeaderToggles({ className = '', compact = false }: HeaderTogglesProps) {
   const { lang, theme, toggleLang, toggleTheme } = useAppStore();
   const languageTimers = useRef<number[]>([]);
+  const themeTimer = useRef<number | null>(null);
+  const themeTransitioning = useRef(false);
   const isDark = theme === 'dark';
   const iconSize = compact ? 'h-9 w-9' : 'h-10 w-10';
   const toggleSize = compact ? 'h-9 w-[72px]' : 'h-10 w-[82px]';
@@ -22,6 +24,7 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
 
   useEffect(() => () => {
     languageTimers.current.forEach((timer) => window.clearTimeout(timer));
+    if (themeTimer.current) window.clearTimeout(themeTimer.current);
   }, []);
 
   const handleLanguageToggle = () => {
@@ -49,25 +52,54 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
     }, 440));
   };
 
-  const handleThemeToggle = () => {
+  const handleThemeToggle = (event: MouseEvent<HTMLButtonElement>) => {
+    if (themeTransitioning.current) return;
     const root = document.documentElement;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nextTheme = isDark ? 'light' : 'dark';
     const transitionDocument = document as Document & {
       startViewTransition?: (update: () => void) => { finished: Promise<void> };
     };
-    root.classList.add('theme-transition');
-
-    const finish = () => {
-      window.setTimeout(() => root.classList.remove('theme-transition'), 80);
+    const applyTheme = () => {
+      root.style.colorScheme = nextTheme;
+      toggleTheme();
     };
 
-    if (reduceMotion || !transitionDocument.startViewTransition) {
-      toggleTheme();
-      window.setTimeout(finish, reduceMotion ? 0 : 520);
+    if (reduceMotion) {
+      applyTheme();
       return;
     }
 
-    transitionDocument.startViewTransition(toggleTheme).finished.finally(finish);
+    if (!transitionDocument.startViewTransition) {
+      themeTransitioning.current = true;
+      root.classList.add('theme-transition');
+      applyTheme();
+      themeTimer.current = window.setTimeout(() => {
+        root.classList.remove('theme-transition');
+        themeTransitioning.current = false;
+      }, 580);
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    root.style.setProperty('--theme-transition-x', `${x}px`);
+    root.style.setProperty('--theme-transition-y', `${y}px`);
+    root.style.setProperty('--theme-transition-radius', `${radius}px`);
+    themeTransitioning.current = true;
+    root.classList.add('theme-view-transition');
+    const finish = () => {
+      if (themeTimer.current) window.clearTimeout(themeTimer.current);
+      root.classList.remove('theme-view-transition');
+      root.style.removeProperty('--theme-transition-x');
+      root.style.removeProperty('--theme-transition-y');
+      root.style.removeProperty('--theme-transition-radius');
+      themeTransitioning.current = false;
+    };
+    themeTimer.current = window.setTimeout(finish, 1100);
+    transitionDocument.startViewTransition(applyTheme).finished.finally(finish);
   };
 
   return (

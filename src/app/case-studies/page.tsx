@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { SectionHeader } from '@/components/common/PremiumSections';
@@ -50,8 +51,7 @@ export default async function CaseStudiesPage() {
                 <article key={study.slug} className={`ui-card-interactive rounded-lg border ${service?.theme.border} bg-white p-5 shadow-sm dark:bg-night-900 sm:p-7 lg:p-8`}>
                   {study.image ? (
                     <div className="ui-media mb-5 aspect-[16/10] overflow-hidden rounded-lg bg-slate-100">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={study.image} alt={study.title} className="h-full w-full object-cover" />
+                      <Image src={study.image} alt={study.title} width={720} height={450} sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" className="h-full w-full object-cover" />
                     </div>
                   ) : null}
                   <p className={`text-xs font-semibold ${service?.theme.text}`}>{study.service}</p>
