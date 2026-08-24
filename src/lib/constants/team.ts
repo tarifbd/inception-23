@@ -17,6 +17,7 @@ export type TeamMember = {
   imageSrc: string;
   portfolioHref?: string;
   imageFit?: 'cover' | 'contain';
+  imagePosition?: string;
   isPending?: boolean;
 };
 
@@ -70,6 +71,7 @@ export const teamMembers: TeamMember[] = [
     githubHref: '#',
     imageSrc: '/team/km-khairul-hasan-arif.webp',
     imageFit: 'cover',
+    imagePosition: 'center top',
   },
   {
     id: 'md-humayon-kabir-porosh',
@@ -85,5 +87,6 @@ export const teamMembers: TeamMember[] = [
     githubHref: '#',
     imageSrc: '/team/md-humayon-kabir-porosh.webp',
     imageFit: 'cover',
+    imagePosition: 'center top',
   },
 ];

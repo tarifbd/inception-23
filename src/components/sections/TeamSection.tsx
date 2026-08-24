@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { teamCategories, teamMembers, type TeamCategory, type TeamMember } from '@/lib/constants/team';
 import { AnimatedSection } from './AnimatedSection';
 import { TeamCard } from './TeamCard';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import { defaultHomepageContent, type HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
 
@@ -74,7 +75,7 @@ export function TeamSection({
             {content.eyebrow}
           </p>
           <h2 data-motion-heading className="mt-6 max-w-4xl font-serif text-[clamp(2.8rem,5.4vw,5.4rem)] font-bold leading-[0.92] text-brand-950 dark:text-white">
-            {content.title}
+            <GradientTitle text={content.title} accentWords={2} tone="management" />
           </h2>
         </div>
         <div className="border-l border-slate-300 pl-5 dark:border-white/15 sm:pl-7">

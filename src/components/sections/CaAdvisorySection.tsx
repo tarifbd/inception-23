@@ -1,4 +1,5 @@
 import { ContextIcon } from '@/components/ui/ContextIcon';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import { caAdvisoryFocus } from '@/lib/constants/solutions';
 import { AnimatedSection } from './AnimatedSection';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
@@ -63,7 +64,7 @@ export function CaAdvisorySection({ content, focusItems }: { content: HomepageSe
             </p>
           </div>
           <h3 data-motion-heading className="mt-5 max-w-xl font-serif text-[clamp(2.35rem,4vw,4.35rem)] font-black leading-[1.02] text-brand-950 dark:text-white">
-            {content.title}
+            <GradientTitle text={content.title} accentWords={2} tone="management" />
           </h3>
           <p data-motion-description className="mt-6 max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300 md:text-lg">
             {content.description}

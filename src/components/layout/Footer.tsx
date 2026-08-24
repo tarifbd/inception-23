@@ -4,6 +4,7 @@ import {
   ArrowRight,
   Clock3,
   Facebook,
+  Github,
   Globe2,
   Instagram,
   Linkedin,
@@ -14,6 +15,7 @@ import {
   Youtube,
 } from 'lucide-react';
 import { NewsletterForm } from '@/components/layout/NewsletterForm.client';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { industriesMenu, insightsMenu, solutionMenu } from '@/lib/constants/navigation';
 import {
@@ -24,7 +26,16 @@ import {
 } from '@/lib/constants/site-content';
 import { getWebsiteCollections } from '@/lib/website-collections';
 
-const iconMap = { Clock3, Facebook, Globe2, Instagram, Linkedin, Mail, MapPin, MessageCircle, Youtube };
+const iconMap = { Clock3, Facebook, Github, Globe2, Instagram, Linkedin, Mail, MapPin, MessageCircle, Youtube };
+const socialPlatforms = [
+  { key: 'Linkedin', label: 'LinkedIn', icon: Linkedin },
+  { key: 'X', label: 'X', icon: null },
+  { key: 'Facebook', label: 'Facebook', icon: Facebook },
+  { key: 'Instagram', label: 'Instagram', icon: Instagram },
+  { key: 'Youtube', label: 'YouTube', icon: Youtube },
+  { key: 'Github', label: 'GitHub', icon: Github },
+  { key: 'Globe2', label: 'Website', icon: Globe2 },
+] as const;
 
 function isSpecificSocialUrl(href: string) {
   if (!href || href === '#') return false;
@@ -90,7 +101,7 @@ export async function Footer() {
               Start with the consequential question
             </p>
             <h2 className="mt-7 max-w-4xl text-balance font-serif text-[clamp(2.8rem,5.4vw,5.8rem)] font-bold leading-[0.94]">
-              Clear decisions.<br />Accountable delivery.
+              Clear decisions.<br /><span className="gradient-title gradient-title-brand">Accountable delivery.</span>
             </h2>
             <p className="mt-7 max-w-2xl text-base leading-8 sm:text-lg">
               Inception 23 connects technology, management, finance, legal support, compliance, and creative execution through one accountable working relationship.
@@ -100,7 +111,7 @@ export async function Footer() {
           <div data-footer-reveal className="border-t border-white/15 pt-8 lg:self-end lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
             <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em]">Confidential advisory intake</p>
             <h3 className="mt-5 max-w-lg font-serif text-3xl font-bold leading-[1.08] sm:text-4xl">
-              Bring us the decision, constraint, or opportunity.
+              <GradientTitle text="Bring us the decision, constraint, or opportunity." accentWords={2} tone="creative" />
             </h3>
             <p className="mt-5 max-w-md text-sm leading-7">
               We will help define the right advisory path and the practical next step.
@@ -137,13 +148,27 @@ export async function Footer() {
             </a>
             <p className="mt-3 flex items-center gap-2 text-sm font-semibold"><MapPin size={15} />Dhaka, Bangladesh</p>
 
-            <div className="mt-8 flex flex-wrap gap-2">
-              {visibleSocialLinks.map(({ label, href, icon }) => {
-                const Icon = iconMap[icon as keyof typeof iconMap] ?? Linkedin;
-                return (
-                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="ui-action flex h-11 w-11 items-center justify-center border border-white/20 bg-white/[0.04] hover:border-cyan-300/60 hover:bg-white/[0.08]">
-                    <Icon size={17} />
+            <div className="mt-8 flex flex-wrap gap-2" aria-label="Social media profiles">
+              {socialPlatforms.map((platform) => {
+                const configured = visibleSocialLinks.find(
+                  (item) => item.icon.toLowerCase() === platform.key.toLowerCase() || item.label.toLowerCase() === platform.label.toLowerCase(),
+                );
+                const Icon = platform.icon;
+                const icon = Icon ? <Icon size={17} aria-hidden="true" /> : <span className="text-sm font-black" aria-hidden="true">X</span>;
+                const className = `ui-action flex h-11 w-11 items-center justify-center border ${
+                  configured
+                    ? 'border-white/20 bg-white/[0.04] hover:-translate-y-0.5 hover:border-cyan-300/60 hover:bg-white/[0.08]'
+                    : 'cursor-not-allowed border-white/10 bg-white/[0.025] text-white/35'
+                }`;
+
+                return configured ? (
+                  <a key={platform.key} href={configured.href} target="_blank" rel="noreferrer" aria-label={platform.label} title={platform.label} className={className}>
+                    {icon}
                   </a>
+                ) : (
+                  <span key={platform.key} role="img" aria-label={`${platform.label} profile not configured`} title={`${platform.label} profile can be connected from CMS`} className={className}>
+                    {icon}
+                  </span>
                 );
               })}
               <a href="mailto:hello@inception23.com" aria-label="Email" className="ui-action flex h-11 w-11 items-center justify-center border border-white/20 bg-white/[0.04] hover:border-cyan-300/60 hover:bg-white/[0.08]">

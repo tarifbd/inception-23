@@ -31,6 +31,7 @@ export type CollectionId =
   | 'footerSocialLinks'
   | 'footerTrustPoints'
   | 'footerContactHighlights'
+  | 'contactChannels'
   | 'contactBudgets'
   | 'contactTrustPoints'
   | 'aboutValues'
@@ -189,7 +190,7 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
     fields: [
       { key: 'label', label: 'Label', type: 'text' },
       { key: 'href', label: 'URL', type: 'text' },
-      { key: 'icon', label: 'Icon', type: 'select', options: ['Linkedin', 'Facebook', 'Instagram', 'Youtube', 'Mail'] },
+      { key: 'icon', label: 'Icon', type: 'select', options: ['Linkedin', 'X', 'Facebook', 'Instagram', 'Youtube', 'Github', 'Globe2'] },
     ],
   },
   footerTrustPoints: {
@@ -208,6 +209,18 @@ export const collectionDefinitions: Record<CollectionId, CollectionDefinition> =
       { key: 'label', label: 'Label', type: 'text' },
       { key: 'value', label: 'Value', type: 'textarea' },
       { key: 'icon', label: 'Icon', type: 'select', options: ['Clock3', 'MessageCircle', 'Globe2', 'Mail', 'Phone', 'MapPin'] },
+    ],
+  },
+  contactChannels: {
+    id: 'contactChannels',
+    title: 'Contact Channels',
+    singular: 'Contact channel',
+    description: 'Manage up to three emails, three phone numbers, and one WhatsApp contact shown on the website.',
+    fields: [
+      { key: 'type', label: 'Channel type', type: 'select', options: ['email', 'phone', 'whatsapp'] },
+      { key: 'label', label: 'Label', type: 'text', placeholder: 'General enquiries' },
+      { key: 'value', label: 'Public value', type: 'text', placeholder: 'Verified email address or phone number' },
+      { key: 'href', label: 'Optional direct link', type: 'text', placeholder: 'mailto:, tel:, or https://wa.me/...' },
     ],
   },
   contactBudgets: {
@@ -461,6 +474,15 @@ const defaults: Record<CollectionId, CollectionRecord[]> = {
   footerSocialLinks: footerSocialLinks.map((item, index) => ({ id: `footer-social-${index + 1}`, ...item })),
   footerTrustPoints: footerTrustPoints.map((label, index) => ({ id: `footer-trust-${index + 1}`, label })),
   footerContactHighlights: contactHighlights.map((item, index) => ({ id: `footer-contact-${index + 1}`, ...item })),
+  contactChannels: [
+    {
+      id: 'contact-channel-email-general',
+      type: 'email',
+      label: 'General enquiries',
+      value: 'hello@inception23.com',
+      href: 'mailto:hello@inception23.com',
+    },
+  ],
   contactBudgets: [
     'Need guidance first',
     'Below BDT 50,000',

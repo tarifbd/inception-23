@@ -33,6 +33,8 @@ const sectionComponents: Record<HomepageSectionKey, (content: HomepageSectionCon
       trustItems={collections?.contactTrustPoints.map((item) => String(item.label || '')).filter(Boolean)}
       serviceCategoryItems={collections?.serviceCategories}
       serviceEcosystemItems={collections?.serviceEcosystem}
+      contactChannelItems={collections?.contactChannels}
+      socialLinkItems={collections?.footerSocialLinks}
     />
   ),
   mainServices: (content, collections) => <MainServicesAmbushSection content={content} services={collections?.mainServices} />,

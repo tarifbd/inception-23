@@ -6,6 +6,7 @@ import { serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
 import type { EcosystemCategory } from '@/lib/constants/service-ecosystem';
 import type { ServiceKey } from '@/lib/constants/theme';
 import { ServiceCategoryTabs } from './service-ecosystem/ServiceCategoryTabs';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import { ServiceEcosystemPanel } from './service-ecosystem/ServiceEcosystemPanel';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
@@ -109,7 +110,7 @@ export function ServiceEcosystemSection({
               {content.eyebrow}
             </p>
             <h2 data-motion-heading className="max-w-4xl font-serif text-[clamp(2.15rem,5vw,4.75rem)] font-semibold leading-[0.98] text-brand-950 dark:text-white">
-              {content.title}
+              <GradientTitle text={content.title} accentWords={2} tone="brand" />
             </h2>
           </div>
           <p data-motion-description className="max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300 md:text-lg md:leading-8">

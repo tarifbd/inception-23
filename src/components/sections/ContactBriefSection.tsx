@@ -2,7 +2,24 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AlertCircle, Check, CheckCircle2, ChevronDown, Clock3, LoaderCircle, Mail, MapPin, Send } from 'lucide-react';
+import {
+  AlertCircle,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  Facebook,
+  Github,
+  Globe2,
+  Instagram,
+  Linkedin,
+  LoaderCircle,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+  Youtube,
+} from 'lucide-react';
 import { serviceCategories } from '@/lib/constants/service-categories';
 import { subServices } from '@/lib/constants/sub-services';
 import type { ServiceKey } from '@/lib/constants/theme';
@@ -11,10 +28,39 @@ import { GradientBackground } from './GradientBackground';
 import { defaultHomepageContent, type HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
 import { pushSiteToast } from '@/components/ui/ToastProvider';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 type SelectKey = 'mainService' | 'subService' | 'budget';
 type SelectOption = { value: string; label: string };
+type ContactChannel = { id: string; type: 'email' | 'phone' | 'whatsapp'; label: string; value: string; href: string };
+
+const socialPlatforms = [
+  { key: 'Linkedin', label: 'LinkedIn', icon: Linkedin },
+  { key: 'X', label: 'X', icon: null },
+  { key: 'Facebook', label: 'Facebook', icon: Facebook },
+  { key: 'Instagram', label: 'Instagram', icon: Instagram },
+  { key: 'Youtube', label: 'YouTube', icon: Youtube },
+  { key: 'Github', label: 'GitHub', icon: Github },
+  { key: 'Globe2', label: 'Website', icon: Globe2 },
+] as const;
+
+function getChannelHref(channel: ContactChannel) {
+  if (channel.href && /^(mailto:|tel:|https:\/\/)/i.test(channel.href)) return channel.href;
+  if (channel.type === 'email' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(channel.value)) return `mailto:${channel.value}`;
+  if (channel.type === 'phone') return `tel:${channel.value.replace(/[^+\d]/g, '')}`;
+  if (channel.type === 'whatsapp') return `https://wa.me/${channel.value.replace(/\D/g, '')}`;
+  return '';
+}
+
+function isSpecificSocialUrl(href: string) {
+  try {
+    const url = new URL(href);
+    return url.protocol === 'https:' && url.pathname !== '/' && url.pathname !== '';
+  } catch {
+    return false;
+  }
+}
 
 const budgets = [
   'Need guidance first',
@@ -120,6 +166,8 @@ export function ContactBriefSection({
   trustItems: cmsTrustItems,
   serviceCategoryItems,
   serviceEcosystemItems,
+  contactChannelItems,
+  socialLinkItems,
 }: {
   content?: HomepageSectionContent;
   headingLevel?: 'h1' | 'h2';
@@ -127,6 +175,8 @@ export function ContactBriefSection({
   trustItems?: string[];
   serviceCategoryItems?: CollectionRecord[];
   serviceEcosystemItems?: CollectionRecord[];
+  contactChannelItems?: CollectionRecord[];
+  socialLinkItems?: CollectionRecord[];
 }) {
   const Heading = headingLevel;
   const [state, setState] = useState<FormState>('idle');
@@ -153,6 +203,23 @@ export function ContactBriefSection({
   const budgetItems = cmsBudgetItems?.length ? cmsBudgetItems : budgets;
   const trustItems = cmsTrustItems?.length ? cmsTrustItems : trustPoints;
   const budgetOptions = budgetItems.map((item) => ({ value: item, label: item }));
+  const contactChannels = (contactChannelItems ?? [])
+    .map((item) => ({
+      id: String(item.id || ''),
+      type: String(item.type || '') as ContactChannel['type'],
+      label: String(item.label || ''),
+      value: String(item.value || ''),
+      href: String(item.href || ''),
+    }))
+    .filter((item) => ['email', 'phone', 'whatsapp'].includes(item.type) && item.value);
+  const channelsByType = {
+    email: contactChannels.filter((item) => item.type === 'email').slice(0, 3),
+    phone: contactChannels.filter((item) => item.type === 'phone').slice(0, 3),
+    whatsapp: contactChannels.filter((item) => item.type === 'whatsapp').slice(0, 1),
+  };
+  const configuredSocials = (socialLinkItems ?? [])
+    .map((item) => ({ label: String(item.label || ''), href: String(item.href || ''), icon: String(item.icon || '') }))
+    .filter((item) => isSpecificSocialUrl(item.href));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -241,7 +308,7 @@ export function ContactBriefSection({
             {content.eyebrow}
           </div>
           <Heading className="break-words font-serif text-[clamp(2.05rem,4.8vw,5rem)] font-black leading-[1.06] text-brand-950 sm:leading-[1.02]">
-            {content.title}
+            <GradientTitle text={content.title} accentWords={2} tone="creative" />
           </Heading>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
             {content.description}
@@ -363,27 +430,47 @@ export function ContactBriefSection({
           </form>
 
           <div className="grid gap-5">
-            <div className="ui-panel rounded-lg border border-slate-200 bg-white/86 p-6 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-night-900/86 md:p-7">
-              <h3 className="text-2xl font-black text-brand-950">Contact Information</h3>
-              <div className="mt-7 grid gap-5">
-                {[
-                  { icon: Mail, label: 'Email', value: 'hello@inception23.com' },
-                  { icon: MapPin, label: 'Location', value: 'Dhaka, Bangladesh' },
-                  { icon: Clock3, label: 'Support hours', value: 'Mon - Fri, 09:00 - 18:00 BST (UTC+6)' },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.label} className="flex gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-brand-700 dark:border-white/10">
-                        <Icon size={19} />
-                      </div>
-                      <div>
-                        <p className={`text-[10px] font-black uppercase tracking-[0.18em] ${activeTheme.text}`}>{item.label}</p>
-                        <p className="mt-1 text-sm font-bold leading-6 text-slate-600">{item.value}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className="ui-panel overflow-hidden rounded-lg border border-slate-200 bg-white/86 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-night-900/86">
+              <div className="border-b border-slate-200 p-6 dark:border-white/10 md:p-7">
+                <p className={`text-[10px] font-black uppercase tracking-[0.18em] ${activeTheme.text}`}>Direct channels</p>
+                <h3 className="mt-2 text-2xl font-black text-brand-950">Contact Information</h3>
+              </div>
+
+              <div className="grid divide-y divide-slate-200 dark:divide-white/10">
+                <ContactChannelGroup icon={Mail} label="Email" items={channelsByType.email} emptySlots={3} />
+                <ContactChannelGroup icon={Phone} label="Phone" items={channelsByType.phone} emptySlots={3} />
+                <ContactChannelGroup icon={MessageCircle} label="WhatsApp" items={channelsByType.whatsapp} emptySlots={1} />
+              </div>
+
+              <div className="border-t border-slate-200 p-6 dark:border-white/10 md:p-7">
+                <div className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                  <MapPin size={17} className={activeTheme.text} />
+                  <span>Dhaka, Bangladesh</span>
+                </div>
+                <div className="mt-6 flex flex-wrap gap-2" aria-label="Social media profiles">
+                  {socialPlatforms.map((platform) => {
+                    const configured = configuredSocials.find(
+                      (item) => item.icon.toLowerCase() === platform.key.toLowerCase() || item.label.toLowerCase() === platform.label.toLowerCase(),
+                    );
+                    const Icon = platform.icon;
+                    const icon = Icon ? <Icon size={18} aria-hidden="true" /> : <span aria-hidden="true" className="text-sm font-black">X</span>;
+                    const className = `ui-action flex h-11 w-11 items-center justify-center rounded-md border transition ${
+                      configured
+                        ? 'border-slate-200 bg-slate-50 text-brand-950 hover:-translate-y-0.5 hover:border-cyan-400 hover:text-cyan-700 dark:border-white/15 dark:bg-white/[0.06] dark:text-white'
+                        : 'cursor-not-allowed border-slate-200/70 bg-slate-50/60 text-slate-400 opacity-55 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-500'
+                    }`;
+
+                    return configured ? (
+                      <a key={platform.key} href={configured.href} target="_blank" rel="noreferrer" aria-label={platform.label} title={platform.label} className={className}>
+                        {icon}
+                      </a>
+                    ) : (
+                      <span key={platform.key} role="img" aria-label={`${platform.label} profile not configured`} title={`${platform.label} profile can be connected from CMS`} className={className}>
+                        {icon}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
@@ -402,5 +489,48 @@ export function ContactBriefSection({
         </div>
       </div>
     </section>
+  );
+}
+
+function ContactChannelGroup({
+  icon: Icon,
+  label,
+  items,
+  emptySlots,
+}: {
+  icon: typeof Mail;
+  label: string;
+  items: ContactChannel[];
+  emptySlots: number;
+}) {
+  const slots = Array.from({ length: emptySlots }, (_, index) => items[index] ?? null);
+
+  return (
+    <div className="grid gap-4 p-6 md:grid-cols-[7.5rem_1fr] md:p-7">
+      <div className="flex items-center gap-3 self-start text-xs font-black uppercase tracking-[0.14em] text-brand-950">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-slate-50 text-cyan-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-cyan-300">
+          <Icon size={17} aria-hidden="true" />
+        </span>
+        {label}
+      </div>
+      <div className="grid gap-2">
+        {slots.map((item, index) => {
+          const href = item ? getChannelHref(item) : '';
+          return item && href ? (
+            <a key={item.id} href={href} className="group flex min-h-12 items-center justify-between gap-4 rounded-md border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-cyan-400 hover:bg-cyan-50/60 hover:text-cyan-800 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:border-cyan-400/60 dark:hover:bg-cyan-400/10">
+              <span className="min-w-0">
+                <span className="block text-[9px] font-black uppercase tracking-[0.13em] text-slate-400">{item.label || `${label} ${index + 1}`}</span>
+                <span className="mt-0.5 block break-all">{item.value}</span>
+              </span>
+              <Send size={14} className="shrink-0 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+            </a>
+          ) : (
+            <div key={`${label}-slot-${index}`} className="flex min-h-12 items-center rounded-md border border-dashed border-slate-200 px-4 text-xs font-semibold text-slate-400 dark:border-white/10 dark:text-slate-500">
+              Verified {label.toLowerCase()} {index + 1} can be published here
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

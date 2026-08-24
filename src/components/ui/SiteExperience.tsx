@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { MotionConfig } from 'framer-motion';
 import type { ReactNode } from 'react';
@@ -22,11 +22,11 @@ export function SiteExperience() {
     root.classList.toggle('dark', theme === 'dark');
     root.style.colorScheme = theme;
 
-    const timeout = window.setTimeout(() => root.classList.remove('theme-transition'), 620);
+    const timeout = window.setTimeout(() => root.classList.remove('theme-transition'), 600);
     return () => window.clearTimeout(timeout);
   }, [theme]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     root.lang = lang;
     root.dataset.language = lang;
@@ -88,20 +88,17 @@ export function SiteExperience() {
     }
 
     let observer: MutationObserver | null = null;
-    const startTimer = window.setTimeout(() => {
-      translateTree(document.body);
-      observer = new MutationObserver((mutations) => {
-        if (applying) return;
-        for (const mutation of mutations) {
-          mutation.addedNodes.forEach((node) => translateTree(node));
-          if (mutation.type === 'characterData') translateTree(mutation.target);
-        }
-      });
-      observer.observe(document.body, { subtree: true, childList: true, characterData: true });
-    }, 420);
+    translateTree(document.body);
+    observer = new MutationObserver((mutations) => {
+      if (applying) return;
+      for (const mutation of mutations) {
+        mutation.addedNodes.forEach((node) => translateTree(node));
+        if (mutation.type === 'characterData') translateTree(mutation.target);
+      }
+    });
+    observer.observe(document.body, { subtree: true, childList: true, characterData: true });
 
     return () => {
-      window.clearTimeout(startTimer);
       observer?.disconnect();
     };
   }, [isAdmin, lang]);

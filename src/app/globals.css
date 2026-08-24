@@ -905,24 +905,58 @@
 .theme-transition *::after {
   transition-duration: 520ms !important;
   transition-property: background-color, border-color, color, fill, stroke, box-shadow, filter !important;
-  transition-timing-function: var(--ease-entrance) !important;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 560ms;
-  animation-timing-function: var(--ease-entrance);
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 ::view-transition-old(root) { animation-name: theme-fade-out; }
 ::view-transition-new(root) { animation-name: theme-fade-in; }
 
 @keyframes theme-fade-out {
-  to { opacity: 0; filter: saturate(0.82) brightness(0.82); }
+  to { opacity: 0; }
 }
 
 @keyframes theme-fade-in {
-  from { opacity: 0; filter: saturate(0.88) brightness(0.78); }
+  from { opacity: 0; }
+}
+
+.language-transition :where([data-site-header], main, [data-site-footer], [aria-label='Quick contact']) {
+  transition:
+    opacity 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+[data-language-transition='out'] :where([data-site-header], main, [data-site-footer], [aria-label='Quick contact']) {
+  opacity: 0.94;
+  filter: blur(0.15px);
+  transform: translateY(0.25px);
+}
+
+[data-language-transition='in'] :where([data-site-header], main, [data-site-footer], [aria-label='Quick contact']) {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after,
+  .language-transition :where([data-site-header], main, [data-site-footer], [aria-label='Quick contact']) {
+    transition-duration: 0ms !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0ms;
+  }
 }
 
 .dark :where(section, article, div)[class*="bg-gradient-to-"][class*="via-white"]:not([class*="dark:via-"]) {
@@ -1790,10 +1824,20 @@ html[lang='bn'] [class*='tracking-'] {
 
 .gradient-title {
   -webkit-background-clip: text;
+  animation: gradient-title-flow 4.5s ease-in-out infinite;
   background-clip: text;
+  background-position: 0% 50%;
+  background-size: 300% 100%;
   color: transparent;
+  display: inline;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
+  will-change: background-position;
+}
+
+@keyframes gradient-title-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .gradient-title-brand { background-image: linear-gradient(105deg, #0f766e 0%, #0284c7 48%, #7c3aed 100%); }
@@ -1803,6 +1847,13 @@ html[lang='bn'] [class*='tracking-'] {
 .gradient-title-creative { background-image: linear-gradient(105deg, #6d28d9 0%, #c026d3 50%, #f43f5e 100%); }
 
 .dark .gradient-title { filter: saturate(0.9) brightness(1.22); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-title {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}
 
 @keyframes page-loading-track {
   0% { transform: translateX(-110%); }

@@ -43,6 +43,7 @@ export function TeamCard({ member, index = 0, slotNumber, categoryAccent }: Team
           fill
           sizes="(min-width: 640px) 352px, 100vw"
           className="object-cover object-center transition duration-1000 ease-out group-hover:scale-[1.035]"
+          style={{ objectPosition: member.imagePosition ?? 'center' }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#091018]/72 via-transparent to-transparent" aria-hidden="true" />
         <span className="absolute left-4 top-4 flex h-9 min-w-9 items-center justify-center border border-white/70 bg-white/92 px-2 font-mono text-[9px] font-bold text-brand-950 backdrop-blur-md dark:border-white/15 dark:bg-[#0b1016]/90 dark:text-white">

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, CalendarDays, Check, ClipboardCheck } from 'lucide-react';
 import { ContextIcon } from '@/components/ui/ContextIcon';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import { eventManagementMenu } from '@/lib/constants/navigation';
 import { AnimatedSection } from './AnimatedSection';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
@@ -42,7 +43,7 @@ export function EventManagementSection({ content, collections }: { content: Home
               {content.eyebrow}
             </p>
             <h2 data-motion-heading className="max-w-4xl break-words font-serif text-[clamp(2rem,4.1vw,4.65rem)] font-bold leading-[1.06] text-brand-950 dark:text-white sm:leading-[1.02]">
-              {content.title}
+              <GradientTitle text={content.title} accentWords={2} tone="creative" />
             </h2>
           </div>
 

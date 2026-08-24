@@ -1,6 +1,7 @@
 'use client';
 
 import { Languages, Moon, Sun } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { useAppStore } from '@/lib/store';
 
 type HeaderTogglesProps = {
@@ -10,6 +11,7 @@ type HeaderTogglesProps = {
 
 export function HeaderToggles({ className = '', compact = false }: HeaderTogglesProps) {
   const { lang, theme, toggleLang, toggleTheme } = useAppStore();
+  const languageTimers = useRef<number[]>([]);
   const isDark = theme === 'dark';
   const iconSize = compact ? 'h-9 w-9' : 'h-10 w-10';
   const toggleSize = compact ? 'h-9 w-[72px]' : 'h-10 w-[82px]';
@@ -17,18 +19,55 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
   const languageShift = compact ? 'translate-x-[33px]' : 'translate-x-[38px]';
   const themeThumbSize = compact ? 'h-7 w-7' : 'h-8 w-8';
   const themeShift = compact ? 'translate-x-[34px]' : 'translate-x-[40px]';
+
+  useEffect(() => () => {
+    languageTimers.current.forEach((timer) => window.clearTimeout(timer));
+  }, []);
+
+  const handleLanguageToggle = () => {
+    const root = document.documentElement;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    languageTimers.current.forEach((timer) => window.clearTimeout(timer));
+    languageTimers.current = [];
+
+    if (reduceMotion) {
+      toggleLang();
+      return;
+    }
+
+    root.classList.add('language-transition');
+    root.dataset.languageTransition = 'out';
+    languageTimers.current.push(window.setTimeout(() => {
+      toggleLang();
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        root.dataset.languageTransition = 'in';
+      }));
+    }, 70));
+    languageTimers.current.push(window.setTimeout(() => {
+      root.classList.remove('language-transition');
+      delete root.dataset.languageTransition;
+    }, 440));
+  };
+
   const handleThemeToggle = () => {
+    const root = document.documentElement;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const transitionDocument = document as Document & {
       startViewTransition?: (update: () => void) => { finished: Promise<void> };
     };
+    root.classList.add('theme-transition');
+
+    const finish = () => {
+      window.setTimeout(() => root.classList.remove('theme-transition'), 80);
+    };
 
     if (reduceMotion || !transitionDocument.startViewTransition) {
       toggleTheme();
+      window.setTimeout(finish, reduceMotion ? 0 : 520);
       return;
     }
 
-    transitionDocument.startViewTransition(toggleTheme);
+    transitionDocument.startViewTransition(toggleTheme).finished.finally(finish);
   };
 
   return (
@@ -45,7 +84,7 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
 
       <button
         type="button"
-        onClick={toggleLang}
+        onClick={handleLanguageToggle}
         aria-label={`Language: ${lang === 'en' ? 'English' : 'Bengali'}. Switch language`}
         aria-pressed={lang === 'bn'}
         className={`relative grid ${toggleSize} grid-cols-2 overflow-hidden rounded-full border border-cyan-200/80 bg-gradient-to-r from-cyan-50 via-white to-fuchsia-50 p-1 text-[10px] font-black uppercase tracking-[0.08em] text-slate-600 transition hover:border-cyan-400/70 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 dark:border-white/15 dark:from-cyan-400/10 dark:via-white/5 dark:to-fuchsia-400/10 dark:text-slate-300`}

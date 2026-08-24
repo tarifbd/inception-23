@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { techStackGroups } from '@/lib/constants/tech-stack';
 import { AnimatedSection } from './AnimatedSection';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
 
@@ -46,7 +47,7 @@ export function TechStackSection({ content, groups }: { content: HomepageSection
             </p>
           </div>
           <h2 data-motion-heading className="mt-5 max-w-4xl break-words font-serif text-[clamp(2.6rem,6vw,5.7rem)] font-bold leading-[0.96] text-brand-950 dark:text-white">
-            {content.title}
+            <GradientTitle text={content.title} accentWords={2} tone="technology" />
           </h2>
         </div>
 

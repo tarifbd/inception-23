@@ -103,6 +103,7 @@ const editableCollections = [
   ['footerSocialLinks', 'Footer Social Links', 'Social URLs and icons'],
   ['footerTrustPoints', 'Footer Trust Points', 'Footer trust cards'],
   ['footerContactHighlights', 'Footer Contact Highlights', 'Footer contact info rows'],
+  ['contactChannels', 'Contact Channels', 'Up to 3 emails, 3 phone numbers, and 1 WhatsApp contact'],
   ['contactBudgets', 'Contact Budget Options', 'Budget dropdown items'],
   ['contactTrustPoints', 'Contact Trust Points', 'Contact section trust bullets'],
   ['aboutValues', 'About Values', 'About page value cards'],

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { GradientTitle } from '@/components/ui/GradientTitle';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { mainServicesAmbush, type MainServicesAmbushItem } from '@/lib/constants/main-services-ambush';
@@ -333,7 +334,7 @@ export function MainServicesAmbushSection({ content, services }: { content: Home
             {content.eyebrow}
           </div>
           <h2 data-motion-heading className="mt-5 max-w-4xl font-serif text-[2.55rem] font-bold leading-[1.01] text-brand-950 sm:text-[3.75rem] lg:text-[5rem] dark:text-white">
-            {content.title}
+            <GradientTitle text={content.title} accentWords={2} tone="brand" />
           </h2>
           </div>
           <div>
