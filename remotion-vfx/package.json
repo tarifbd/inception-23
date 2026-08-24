@@ -1,0 +1,25 @@
+{
+  "name": "eid-vfx-remotion",
+  "version": "1.0.0",
+  "description": "Standalone Eid Ul Adha Cinematic VFX in Remotion",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "remotion preview src/index.ts",
+    "start": "remotion preview src/index.ts",
+    "build": "remotion render src/index.ts EidComposition out.mp4"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.222",
+    "@remotion/cli": "^4.0.222",
+    "@remotion/noise": "^4.0.222",
+    "@remotion/google-fonts": "^4.0.222",
+    "@remotion/player": "^4.0.222"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.2.2"
+  }
+}

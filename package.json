@@ -9,19 +9,31 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.19.4",
+    "@prisma/client": "^5.22.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@remotion/google-fonts": "^4.0.468",
+    "@remotion/noise": "^4.0.468",
+    "@remotion/player": "^4.0.468",
+    "@remotion/transitions": "^4.0.468",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.0",
+    "jose": "^6.2.10",
     "lucide-react": "^0.473.0",
     "next": "^15.5.9",
+    "prisma": "^5.22.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "remotion": "^4.0.468",
     "tailwind-merge": "^2.2.0",
     "three": "^0.183.2",
+    "zod": "^4.4.3",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -32,5 +44,8 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.0.0"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   }
 }

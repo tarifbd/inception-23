@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -29,9 +30,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
+
+# editor/notebook artifacts
+.ipynb_checkpoints/
 
 # env files (can opt-in for committing if needed)
 .env*
+
+# database
+*.db
+*.sqlite
+*.sqlite3
 
 # vercel
 .vercel
@@ -39,3 +49,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# remotion-vfx subproject build output
+remotion-vfx/out/
+remotion-vfx/out.mp4
+remotion-vfx/out_vertical.mp4
