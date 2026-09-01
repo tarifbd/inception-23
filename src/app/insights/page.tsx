@@ -5,12 +5,9 @@ import { SectionHeader } from '@/components/common/PremiumSections';
 import { insights } from '@/lib/constants/services';
 import { getWebsiteCollection, type CollectionRecord } from '@/lib/website-collections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Business Insights',
-  description: 'Practical thinking on management, legal readiness, technology, finance, operations, and market systems.',
-  path: '/insights',
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.insights);
 
 export const revalidate = 300;
 

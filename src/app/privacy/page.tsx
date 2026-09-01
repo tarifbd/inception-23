@@ -2,12 +2,9 @@ import type { Metadata } from 'next';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Privacy Policy',
-  description: 'How Inception 23 handles information submitted through this website.',
-  path: '/privacy',
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.privacy);
 
 const sections = [
   {

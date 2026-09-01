@@ -2,12 +2,9 @@ import type { Metadata } from 'next';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Website Terms',
-  description: 'Terms for using the Inception 23 website and its published materials.',
-  path: '/terms',
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.terms);
 
 const sections = [
   {

@@ -12,13 +12,9 @@ import { serviceThemes } from '@/lib/constants/theme';
 import { whyChooseItems } from '@/lib/constants/why-choose';
 import { getWebsiteCollections } from '@/lib/website-collections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'About Us',
-  description: 'Meet Inception 23, an integrated advisory and solutions company built for disciplined, practical business execution.',
-  path: '/about',
-  keywords: ['advisory company Bangladesh', 'consulting team Dhaka'],
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.about);
 
 const values = [
   'Clarity before complexity',

@@ -4,13 +4,35 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { useEffect, useState } from 'react';
 
 type Language = 'en' | 'bn';
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
+
+const STORAGE_KEY = 'inception-storage';
+
+export function readStoredThemePreference(): Theme | null {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const parsed = raw ? (JSON.parse(raw) as { state?: { theme?: unknown } }) : null;
+    const theme = parsed?.state?.theme;
+    return theme === 'dark' || theme === 'light' ? theme : null;
+  } catch {
+    return null;
+  }
+}
+
+export function applyThemeToDocument(theme: Theme) {
+  if (typeof document === 'undefined') return;
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+  document.documentElement.style.colorScheme = theme;
+}
 
 interface AppState {
   lang: Language;
   theme: Theme;
   activeSlide: number;
   toggleLang: () => void;
+  setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setSlide: (index: number) => void;
 }
@@ -22,17 +44,19 @@ const useStoreBase = create<AppState>()(
       theme: 'light',
       activeSlide: 0,
       toggleLang: () => set((state) => ({ lang: state.lang === 'en' ? 'bn' : 'en' })),
+      setTheme: (theme) => {
+        applyThemeToDocument(theme);
+        set({ theme });
+      },
       toggleTheme: () => set((state) => {
         const newTheme = state.theme === 'light' ? 'dark' : 'light';
-        if (typeof document !== 'undefined') {
-            document.documentElement.classList.toggle('dark', newTheme === 'dark');
-        }
+        applyThemeToDocument(newTheme);
         return { theme: newTheme };
       }),
       setSlide: (index) => set({ activeSlide: index }),
     }),
     { 
-      name: 'inception-storage',
+      name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ theme: state.theme }),
       merge: (persisted, current) => {
@@ -47,6 +71,13 @@ const useStoreBase = create<AppState>()(
   )
 );
 
+let storeHydration: Promise<void> | null = null;
+
+function ensureStoreHydrated(): Promise<void> {
+  storeHydration ??= Promise.resolve(useStoreBase.persist.rehydrate());
+  return storeHydration;
+}
+
 // Safe hook to prevent hydration mismatch
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useAppStore = ((selector: any) => {
@@ -54,9 +85,16 @@ export const useAppStore = ((selector: any) => {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    // Force re-hydration on mount to ensure client matches local storage
-    useStoreBase.persist.rehydrate();
-    setHydrated(true);
+    let mounted = true;
+
+    void ensureStoreHydrated().finally(() => {
+      applyThemeToDocument(readStoredThemePreference() ?? useStoreBase.getState().theme);
+      if (mounted) setHydrated(true);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Return default state during server render to match HTML, 

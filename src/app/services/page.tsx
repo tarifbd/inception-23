@@ -3,13 +3,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { FinalCTA, SectionHeader, ServicesGrid } from '@/components/common/PremiumSections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Business Advisory & Solution Services',
-  description: 'Explore technology, management consultancy, finance advisory, legal support, event management, and creative services.',
-  path: '/services',
-  keywords: ['business consultancy services', 'technology consulting', 'finance and legal support'],
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.services);
 
 export default function ServicesPage() {
   return (

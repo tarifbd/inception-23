@@ -2,6 +2,7 @@
 
 import { Languages, Moon, Sun } from 'lucide-react';
 import { useEffect, useRef, type MouseEvent } from 'react';
+import { flushSync } from 'react-dom';
 import { useAppStore } from '@/lib/store';
 
 type HeaderTogglesProps = {
@@ -9,10 +10,39 @@ type HeaderTogglesProps = {
   compact?: boolean;
 };
 
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => { finished: Promise<void> };
+};
+
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function setThemeTransitionOrigin(root: HTMLElement, trigger: HTMLElement) {
+  const rect = trigger.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+  root.style.setProperty('--theme-transition-x', `${x}px`);
+  root.style.setProperty('--theme-transition-y', `${y}px`);
+  root.style.setProperty('--theme-transition-radius', `${Math.ceil(radius)}px`);
+}
+
+function clearThemeTransition(root: HTMLElement) {
+  root.classList.remove('theme-view-transition', 'theme-transition');
+  root.style.removeProperty('--theme-transition-x');
+  root.style.removeProperty('--theme-transition-y');
+  root.style.removeProperty('--theme-transition-radius');
+  delete root.dataset.themeTransition;
+  delete root.dataset.uiTransition;
+}
+
 export function HeaderToggles({ className = '', compact = false }: HeaderTogglesProps) {
-  const { lang, theme, toggleLang, toggleTheme } = useAppStore();
+  const { lang, theme, toggleLang, setTheme } = useAppStore();
   const languageTimers = useRef<number[]>([]);
   const themeTimer = useRef<number | null>(null);
+  const languageTransitioning = useRef(false);
   const themeTransitioning = useRef(false);
   const isDark = theme === 'dark';
   const iconSize = compact ? 'h-9 w-9' : 'h-10 w-10';
@@ -29,77 +59,93 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
 
   const handleLanguageToggle = () => {
     const root = document.documentElement;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (languageTransitioning.current || root.dataset.uiTransition) return;
+    const reduceMotion = prefersReducedMotion();
+    const transitionDocument = document as ViewTransitionDocument;
     languageTimers.current.forEach((timer) => window.clearTimeout(timer));
     languageTimers.current = [];
 
     if (reduceMotion) {
-      toggleLang();
+      flushSync(toggleLang);
+      return;
+    }
+
+    languageTransitioning.current = true;
+    root.dataset.uiTransition = 'language';
+
+    const applyLanguage = () => flushSync(toggleLang);
+    const finish = () => {
+      languageTimers.current.forEach((timer) => window.clearTimeout(timer));
+      languageTimers.current = [];
+      root.classList.remove('language-view-transition', 'language-transition');
+      delete root.dataset.languageTransition;
+      delete root.dataset.uiTransition;
+      languageTransitioning.current = false;
+    };
+
+    if (transitionDocument.startViewTransition) {
+      root.classList.add('language-view-transition');
+      languageTimers.current.push(window.setTimeout(finish, 900));
+      transitionDocument.startViewTransition(applyLanguage).finished.finally(finish);
       return;
     }
 
     root.classList.add('language-transition');
     root.dataset.languageTransition = 'out';
     languageTimers.current.push(window.setTimeout(() => {
-      toggleLang();
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        root.dataset.languageTransition = 'in';
-      }));
-    }, 70));
+      applyLanguage();
+      root.dataset.languageTransition = 'in';
+    }, 120));
     languageTimers.current.push(window.setTimeout(() => {
       root.classList.remove('language-transition');
       delete root.dataset.languageTransition;
-    }, 440));
+      delete root.dataset.uiTransition;
+      languageTransitioning.current = false;
+    }, 560));
   };
 
   const handleThemeToggle = (event: MouseEvent<HTMLButtonElement>) => {
-    if (themeTransitioning.current) return;
     const root = document.documentElement;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (themeTransitioning.current || root.dataset.uiTransition) return;
+    const reduceMotion = prefersReducedMotion();
     const nextTheme = isDark ? 'light' : 'dark';
-    const transitionDocument = document as Document & {
-      startViewTransition?: (update: () => void) => { finished: Promise<void> };
-    };
-    const applyTheme = () => {
-      root.style.colorScheme = nextTheme;
-      toggleTheme();
-    };
+    const transitionDocument = document as ViewTransitionDocument;
+    const applyTheme = () => flushSync(() => setTheme(nextTheme));
 
     if (reduceMotion) {
       applyTheme();
       return;
     }
 
+    themeTransitioning.current = true;
+    root.dataset.uiTransition = 'theme';
+    root.dataset.themeTransition = nextTheme;
+
     if (!transitionDocument.startViewTransition) {
-      themeTransitioning.current = true;
       root.classList.add('theme-transition');
       applyTheme();
       themeTimer.current = window.setTimeout(() => {
-        root.classList.remove('theme-transition');
+        clearThemeTransition(root);
         themeTransitioning.current = false;
-      }, 580);
+      }, 760);
       return;
     }
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-    root.style.setProperty('--theme-transition-x', `${x}px`);
-    root.style.setProperty('--theme-transition-y', `${y}px`);
-    root.style.setProperty('--theme-transition-radius', `${radius}px`);
-    themeTransitioning.current = true;
+    setThemeTransitionOrigin(root, event.currentTarget);
     root.classList.add('theme-view-transition');
     const finish = () => {
       if (themeTimer.current) window.clearTimeout(themeTimer.current);
-      root.classList.remove('theme-view-transition');
-      root.style.removeProperty('--theme-transition-x');
-      root.style.removeProperty('--theme-transition-y');
-      root.style.removeProperty('--theme-transition-radius');
+      clearThemeTransition(root);
       themeTransitioning.current = false;
     };
-    themeTimer.current = window.setTimeout(finish, 1100);
-    transitionDocument.startViewTransition(applyTheme).finished.finally(finish);
+    themeTimer.current = window.setTimeout(finish, 980);
+
+    try {
+      transitionDocument.startViewTransition(applyTheme).finished.finally(finish);
+    } catch {
+      applyTheme();
+      finish();
+    }
   };
 
   return (
@@ -122,7 +168,7 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
         className={`relative grid ${toggleSize} grid-cols-2 overflow-hidden rounded-full border border-cyan-200/80 bg-gradient-to-r from-cyan-50 via-white to-fuchsia-50 p-1 text-[10px] font-black uppercase tracking-[0.08em] text-slate-600 transition hover:border-cyan-400/70 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 dark:border-white/15 dark:from-cyan-400/10 dark:via-white/5 dark:to-fuchsia-400/10 dark:text-slate-300`}
       >
         <span
-          className={`absolute left-1 top-1 ${thumbSize} rounded-full bg-gradient-to-br shadow-[0_8px_20px_rgba(14,116,144,0.3)] transition-[transform,background-color] duration-300 ${
+          className={`absolute left-1 top-1 ${thumbSize} rounded-full bg-gradient-to-br shadow-[0_8px_20px_rgba(14,116,144,0.3)] transition-[transform,background-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             lang === 'bn' ? languageShift : 'translate-x-0'
           } ${lang === 'bn' ? 'from-violet-600 to-fuchsia-500' : 'from-cyan-500 to-blue-600'}`}
         />
@@ -135,16 +181,18 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
         onClick={handleThemeToggle}
         aria-label={`Theme: ${isDark ? 'dark' : 'light'}. Switch to ${isDark ? 'light' : 'dark'} theme`}
         aria-pressed={isDark}
-        className={`relative flex ${toggleSize} items-center rounded-full border border-violet-200/80 bg-gradient-to-r from-amber-50 via-white to-violet-50 p-1 transition hover:border-violet-400/60 focus:outline-none focus:ring-4 focus:ring-violet-500/20 dark:border-violet-300/20 dark:from-amber-300/10 dark:via-white/5 dark:to-violet-400/15`}
+        data-theme-switch
+        data-state={isDark ? 'dark' : 'light'}
+        className={`relative flex ${toggleSize} items-center overflow-hidden rounded-full border border-violet-200/80 bg-gradient-to-r from-amber-50 via-white to-violet-50 p-1 transition-[background-color,border-color,box-shadow,filter] duration-500 ease-entrance hover:border-violet-400/60 hover:shadow-[0_10px_24px_rgba(124,58,237,0.12)] focus:outline-none focus:ring-4 focus:ring-violet-500/20 active:scale-[0.985] dark:border-violet-300/20 dark:from-amber-300/10 dark:via-white/5 dark:to-violet-400/15 dark:hover:border-cyan-300/45 dark:hover:shadow-[0_10px_28px_rgba(34,211,238,0.11)]`}
       >
         <span
-          className={`absolute ${themeThumbSize} rounded-full bg-gradient-to-br shadow-[0_10px_22px_rgba(76,29,149,0.28)] transition-transform duration-300 ${
+          className={`absolute ${themeThumbSize} rounded-full bg-gradient-to-br shadow-[0_10px_22px_rgba(76,29,149,0.28)] transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isDark ? `${themeShift} from-violet-600 via-indigo-600 to-cyan-500` : 'translate-x-0 from-orange-500 to-amber-300'
           }`}
         />
         <span className="relative z-10 grid w-full grid-cols-2 place-items-center">
-          <Sun size={15} className={isDark ? 'text-amber-300' : 'text-white'} />
-          <Moon size={15} className={isDark ? 'text-white' : 'text-violet-700'} />
+          <Sun size={15} className={`transition-[color,opacity,transform] duration-500 ease-entrance ${isDark ? 'scale-90 text-amber-300/75 opacity-75' : 'scale-100 text-white opacity-100'}`} />
+          <Moon size={15} className={`transition-[color,opacity,transform] duration-500 ease-entrance ${isDark ? 'scale-100 text-white opacity-100' : 'scale-90 text-violet-700 opacity-80'}`} />
         </span>
       </button>
     </div>

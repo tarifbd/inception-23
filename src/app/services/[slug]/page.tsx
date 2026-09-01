@@ -12,6 +12,7 @@ import { ServiceDetailExperience } from '@/components/services/ServiceDetailExpe
 import { getService, services, type ServiceDefinition } from '@/lib/constants/services';
 import { getWebsiteCollection, type CollectionRecord } from '@/lib/website-collections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { servicePageMetadata } from '@/lib/seo/page-metadata';
 import { breadcrumbSchema, serviceSchema } from '@/lib/seo/schema';
 import { absoluteUrl, siteConfig } from '@/lib/site';
 
@@ -48,11 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const service = await getCmsService(slug);
   if (!service) return {};
+  const seo = servicePageMetadata[service.slug];
   return createPageMetadata({
-    title: service.title,
-    description: service.summary,
+    title: seo.title,
+    description: seo.description,
     path: `/services/${service.slug}`,
-    keywords: [service.title, service.eyebrow],
+    keywords: [service.title, service.eyebrow, ...seo.keywords],
   });
 }
 

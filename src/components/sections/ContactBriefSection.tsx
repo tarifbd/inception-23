@@ -4,19 +4,25 @@ import { FormEvent, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertCircle,
+  BadgeCheck,
   Check,
   CheckCircle2,
   ChevronDown,
+  Clock3,
   Facebook,
+  FileCheck2,
+  Fingerprint,
   Github,
   Globe2,
   Instagram,
+  Network,
   Linkedin,
   LoaderCircle,
   Mail,
   MapPin,
   MessageCircle,
   Phone,
+  Route,
   Send,
   Youtube,
 } from 'lucide-react';
@@ -79,6 +85,8 @@ const trustPoints = [
   'Practical delivery with documentation and ownership clarity',
   'Response within 24 hours during business days',
 ];
+
+const trustIcons = [Fingerprint, Network, Route, BadgeCheck, FileCheck2, Clock3];
 
 function CustomSelect({
   label,
@@ -299,9 +307,10 @@ export function ContactBriefSection({
   }
 
   return (
-    <section id="inquiry" className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28">
-      <GradientBackground />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <>
+      <section id="inquiry" className="relative overflow-hidden bg-white pb-10 pt-16 sm:pb-12 sm:pt-20 lg:pb-16 lg:pt-28">
+        <GradientBackground />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-5 inline-flex items-center gap-2 border-l-2 border-brand-700/30 py-1 pl-3 text-xs font-semibold text-brand-700">
             <span className={`h-2 w-2 rounded-full ${activeTheme.dot}`} />
@@ -315,7 +324,7 @@ export function ContactBriefSection({
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-stretch">
           <form
             onSubmit={handleSubmit}
             onClick={(event) => {
@@ -429,8 +438,8 @@ export function ContactBriefSection({
             ) : null}
           </form>
 
-          <div className="grid gap-5">
-            <div className="ui-panel overflow-hidden rounded-lg border border-slate-200 bg-white/86 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-night-900/86">
+          <div className="grid gap-5 lg:contents">
+            <div className="ui-panel h-full overflow-hidden rounded-lg border border-slate-200 bg-white/86 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-night-900/86">
               <div className="border-b border-slate-200 p-6 dark:border-white/10 md:p-7">
                 <p className={`text-[10px] font-black uppercase tracking-[0.18em] ${activeTheme.text}`}>Direct channels</p>
                 <h3 className="mt-2 text-2xl font-black text-brand-950">Contact Information</h3>
@@ -474,16 +483,76 @@ export function ContactBriefSection({
               </div>
             </div>
 
-            <div className={`rounded-lg border bg-slate-50 p-6 shadow-sm dark:bg-night-900 md:p-7 ${activeTheme.border}`}>
-              <h3 className="text-2xl font-black text-brand-950">Why work with us?</h3>
-              <div className="mt-7 grid gap-4">
-                {trustItems.map((point) => (
-                  <div key={point} className="flex gap-3 text-sm font-bold leading-6 text-slate-700">
-                    <CheckCircle2 size={18} className={`mt-0.5 shrink-0 ${activeTheme.text}`} />
-                    <span>{point}</span>
+          </div>
+        </div>
+        </div>
+      </section>
+      <WhyWorkWithUsSection items={trustItems} />
+    </>
+  );
+}
+
+function WhyWorkWithUsSection({ items }: { items: string[] }) {
+  return (
+    <section
+      id="why-work-with-us"
+      aria-labelledby="engagement-standards-title"
+      className="relative overflow-hidden border-b border-slate-200 bg-[var(--color-canvas)] pb-16 pt-4 dark:border-white/10 sm:pb-20 sm:pt-6 lg:pb-28 lg:pt-8"
+    >
+      <GradientBackground />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md dark:border-white/10 dark:bg-night-900">
+          <div className="h-1 w-full bg-[linear-gradient(90deg,#0891b2_0%,#2563eb_30%,#7c3aed_62%,#ec4899_100%)] bg-[length:180%_100%] motion-safe:animate-[gradient-title-flow_8s_ease_infinite]" aria-hidden="true" />
+          <div className="grid lg:grid-cols-[minmax(17rem,0.72fr)_minmax(0,1.65fr)]">
+            <div className="relative overflow-hidden bg-brand-950 p-7 text-white sm:p-9 lg:p-10">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.16),transparent_38%),radial-gradient(circle_at_90%_90%,rgba(168,85,247,0.14),transparent_42%)]" aria-hidden="true" />
+              <div className="relative">
+                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300">
+                  <span className="h-px w-10 bg-cyan-300/70" aria-hidden="true" />
+                  Engagement standards
+                </div>
+                <h2 id="engagement-standards-title" className="mt-6 max-w-sm font-serif text-3xl font-black leading-tight text-white sm:text-4xl">
+                  Why businesses work with us.
+                </h2>
+                <p className="mt-5 max-w-sm text-sm font-medium leading-7 text-slate-300">
+                  Clear responsibility, senior oversight, and practical delivery from the first conversation onward.
+                </p>
+                <div className="mt-9 flex items-end justify-between gap-5 border-t border-white/15 pt-6">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Response standard</p>
+                    <p className="mt-2 text-3xl font-black text-white">24 hours</p>
                   </div>
-                ))}
+                  <Clock3 size={32} className="text-cyan-300" aria-hidden="true" />
+                </div>
               </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2">
+              {items.map((point, index) => {
+                const Icon = trustIcons[index] ?? CheckCircle2;
+                return (
+                  <motion.div
+                    key={point}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.35 }}
+                    transition={{ duration: 0.42, delay: index * 0.045 }}
+                    className="group relative flex min-h-40 gap-5 border-b border-slate-200 p-6 transition-colors duration-300 hover:bg-cyan-50/45 dark:border-white/10 dark:hover:bg-cyan-400/[0.06] sm:p-7 sm:odd:border-r"
+                  >
+                    <span className="font-utility text-[10px] font-black text-slate-400 transition-colors group-hover:text-cyan-700 dark:text-slate-500 dark:group-hover:text-cyan-300">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <div className="min-w-0">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 bg-slate-50 text-brand-950 transition duration-300 group-hover:border-cyan-300 group-hover:bg-cyan-600 group-hover:text-white dark:border-white/10 dark:bg-white/[0.05] dark:text-white dark:group-hover:border-cyan-400 dark:group-hover:bg-cyan-500 dark:group-hover:text-night-950">
+                        <Icon size={18} aria-hidden="true" />
+                      </span>
+                      <p className="mt-5 text-sm font-bold leading-6 text-slate-700 transition-colors group-hover:text-brand-950 dark:text-slate-200 dark:group-hover:text-white">
+                        {point}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>

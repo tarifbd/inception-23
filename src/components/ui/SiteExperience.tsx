@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { MotionConfig } from 'framer-motion';
 import type { ReactNode } from 'react';
-import { useAppStore } from '@/lib/store';
+import { applyThemeToDocument, readStoredThemePreference, useAppStore } from '@/lib/store';
 import { ScrollProgressBar } from './HyperEffects';
 import { translateToBengali } from '@/lib/i18n';
 
@@ -17,9 +17,7 @@ export function SiteExperience() {
   const originalAttributes = useRef(new Map<Element, Map<string, string>>());
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    root.style.colorScheme = theme;
+    applyThemeToDocument(readStoredThemePreference() ?? theme);
   }, [theme]);
 
   useLayoutEffect(() => {

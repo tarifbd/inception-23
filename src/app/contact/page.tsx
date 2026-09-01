@@ -3,12 +3,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { ContactBriefSection } from '@/components/sections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Contact',
-  description: 'Start a confidential inquiry for business advisory, technology, management, finance, legal, event, or creative support.',
-  path: '/contact',
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.contact);
 
 export default function ContactPage() {
   return (

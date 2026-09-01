@@ -6,12 +6,9 @@ import { Header } from '@/components/layout/Header';
 import { db } from '@/lib/db';
 import { parseResourceTags, resourceCategories, resourceTypes } from '@/lib/resources';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Business Resource Portal',
-  description: 'Practical guides, checklists, frameworks, templates, and reports for growing organizations and operating teams.',
-  path: '/resources',
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.resources);
 
 export const dynamic = 'force-dynamic';
 

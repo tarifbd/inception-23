@@ -8,6 +8,21 @@ import { SkipLink } from "@/components/ui/SkipLink";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
+const themeInitScript = `
+(() => {
+  try {
+    const raw = localStorage.getItem('inception-storage');
+    const savedTheme = raw ? JSON.parse(raw)?.state?.theme : null;
+    const theme = savedTheme === 'dark' ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.style.colorScheme = theme;
+  } catch {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
+  }
+})();
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -69,6 +84,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link
           rel="preload"
           href="/wasm/dotlottie-player.wasm"

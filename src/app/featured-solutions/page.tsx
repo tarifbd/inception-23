@@ -9,14 +9,11 @@ import { solutions } from '@/lib/constants/solutions';
 import { serviceThemes } from '@/lib/constants/theme';
 import { getWebsiteCollection } from '@/lib/website-collections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = createPageMetadata({
-  title: 'Featured Business Solutions',
-  description: 'Explore practical technology, management, legal, finance, and creative solution systems designed around real operating problems.',
-  path: '/featured-solutions',
-});
+export const metadata: Metadata = createPageMetadata(staticPageMetadata.featuredSolutions);
 
 export default async function FeaturedSolutionsPage() {
   const [cmsCategories, cmsSolutions] = await Promise.all([

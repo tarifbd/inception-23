@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { absoluteUrl, siteConfig } from '@/lib/site';
 
-type PageMetadataInput = {
+export type PageMetadataInput = {
   title: string;
   description: string;
   path: string;

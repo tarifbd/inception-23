@@ -7,17 +7,12 @@ import { OurServicesSection } from '@/components/sections/OurServicesSection';
 import { getHomepageContent } from '@/lib/homepage-content.server';
 import { getWebsiteCollections } from '@/lib/website-collections';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  ...createPageMetadata({
-    title: 'Advisory, Consulting & Business Solutions',
-    description:
-      'Technology solutions, management consultancy, finance advisory, legal support, event management, and creative services for practical business execution.',
-    path: '/',
-    keywords: ['business consulting Dhaka', 'business solutions Bangladesh'],
-  }),
+  ...createPageMetadata(staticPageMetadata.home),
 };
 
 export default async function Home() {
