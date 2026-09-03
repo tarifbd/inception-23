@@ -1,5 +1,6 @@
 import { ContextIcon } from '@/components/ui/ContextIcon';
 import { GradientTitle } from '@/components/ui/GradientTitle';
+import { StatBadge } from '@/components/ui/StatBadge';
 import { caAdvisoryFocus } from '@/lib/constants/solutions';
 import { AnimatedSection } from './AnimatedSection';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
@@ -85,10 +86,15 @@ export function CaAdvisorySection({ content, focusItems }: { content: HomepageSe
               <p className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-cyan-300">Advisory register</p>
               <h4 className="mt-2 font-serif text-2xl font-bold leading-tight !text-white sm:text-3xl">Coverage built around business decisions.</h4>
             </div>
-            <div className="border-l border-white/20 pl-4 text-right">
-              <span className="block font-mono text-2xl font-bold leading-none">{String(displayFocus.length).padStart(2, '0')}</span>
-              <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.15em] text-slate-300">capabilities</span>
-            </div>
+            <StatBadge
+              label="capabilities"
+              value={displayFocus.length}
+              size="sm"
+              align="right"
+              className="border-l border-white/20 pl-4"
+              valueClassName="!font-mono text-white"
+              labelClassName="text-slate-300"
+            />
           </div>
 
           <ol data-motion-grid className="grid sm:grid-cols-2">

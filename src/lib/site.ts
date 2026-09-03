@@ -19,10 +19,10 @@ export const siteConfig = {
   email: 'hello@inception23.com',
   title: 'Inception 23 | Advisory, Consulting & Business Solutions',
   description:
-    'Technology solutions, management consultancy, finance advisory, legal support, event management, and creative services for practical business execution.',
+    'Technology solutions, Business Advisory & Compliances, legal support, event management, and creative services for practical business execution.',
   keywords: [
     'business advisory Bangladesh',
-    'management consultancy',
+    'business advisory and compliances',
     'finance advisory',
     'technology solutions',
     'legal support',

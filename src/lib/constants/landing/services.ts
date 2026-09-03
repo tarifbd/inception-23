@@ -24,7 +24,7 @@ export const landingServices: LandingService[] = [
   },
   {
     id: 'consultancy',
-    title: 'Management Consultancy',
+    title: 'Business Advisory & Compliances',
     eyebrow: 'Emerald / teal system',
     description: 'Strategy, operating models, SOPs, KPI systems, finance structure, and growth advisory for leadership teams.',
     icon: 'BriefcaseBusiness',

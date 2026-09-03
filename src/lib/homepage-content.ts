@@ -62,8 +62,8 @@ export const defaultHomepageContent: HomepageContent = {
     enabled: true,
     primaryCtaLabel: 'Start a confidential brief',
     primaryCtaHref: '/contact',
-    secondaryCtaLabel: 'Explore services',
-    secondaryCtaHref: '/services',
+    secondaryCtaLabel: 'View service map',
+    secondaryCtaHref: '#services',
     footerLabel: 'Advisory / Consulting / Solutions',
     slides: [
       {
@@ -73,7 +73,7 @@ export const defaultHomepageContent: HomepageContent = {
         eyebrow: 'Software, systems, operations',
         title: 'Build the tools your team',
         highlight: 'actually needs to work better',
-        copy: 'Custom software, data dashboards, internal tools, and secure web systems shaped around how your business already works.',
+        copy: 'Custom software, dashboards, internal tools, and secure web systems for teams moving work out of spreadsheets and chat threads.',
         chips: ['Custom Software', 'Dashboards', 'Internal Tools', 'Cloud Setup'],
         visualType: 'lottie',
         visualUrl: '/animations/consultancy.lottie',
@@ -82,15 +82,15 @@ export const defaultHomepageContent: HomepageContent = {
       {
         id: 'consultancy',
         theme: 'consultancy',
-        label: 'Management Consultancy',
-        eyebrow: 'Practical management support',
+        label: BUSINESS_ADVISORY_SERVICE_NAME,
+        eyebrow: 'Business advisory and compliance support',
         title: 'Scale your company with',
         highlight: 'clearer control and finance discipline',
-        copy: 'Strategy, reporting rhythm, KPI systems, process improvement, finance controls, and practical support for teams that need clarity while growing.',
+        copy: 'Strategy, KPI reporting, process improvement, and finance controls for owner-led teams that need monthly decisions to become visible.',
         chips: ['Strategy', 'Finance Control', 'Process Design', 'Reporting'],
         visualType: 'lottie',
         visualUrl: '/animations/business-operations.json',
-        visualAlt: 'Management consultancy animated hero visual',
+        visualAlt: 'Business advisory and compliances animated hero visual',
       },
       {
         id: 'legal',
@@ -99,7 +99,7 @@ export const defaultHomepageContent: HomepageContent = {
         eyebrow: 'Documents, compliance, coordination',
         title: 'Keep your business ready with',
         highlight: 'careful legal support',
-        copy: 'Corporate documentation, compliance coordination, governance records, and practical risk review support for day-to-day business decisions.',
+        copy: 'Corporate documentation, compliance coordination, governance records, and risk review support for boards, founders, and finance teams.',
         chips: ['Compliance', 'Documents', 'Governance', 'Risk Review'],
         visualType: 'lottie',
         visualUrl: '/animations/legal.json',
@@ -112,7 +112,7 @@ export const defaultHomepageContent: HomepageContent = {
         eyebrow: 'Brand, content, presentation',
         title: 'Present your work with',
         highlight: 'clearer design and messaging',
-        copy: 'Brand direction, visual identity, campaign planning, interface design, and client-facing materials that make your offer easier to understand.',
+        copy: 'Brand direction, visual identity, campaign planning, interface design, and sales materials that make a buyer path easier to follow.',
         chips: ['Brand Strategy', 'Campaigns', 'Website UX', 'Content'],
         visualType: 'lottie',
         visualUrl: '/animations/creative.lottie',
@@ -121,17 +121,17 @@ export const defaultHomepageContent: HomepageContent = {
     ],
   },
   sections: [
-    { key: 'services', label: 'Our Services', enabled: true, order: 10, eyebrow: 'Our services', title: 'Four service areas, one practical team.', description: 'Inception 23 combines technology, management support, legal coordination, finance control, and creative work for companies that want clearer execution.', supportingText: 'Each service area has its own focus, but the work stays connected to the same business outcome.' },
-    { key: 'events', label: 'Event Management', enabled: true, order: 15, eyebrow: 'Event management', title: 'Corporate events planned with less confusion on the day.', description: 'We help with conferences, launches, workshops, brand activations, exhibitions, vendor coordination, creative material, and live event control.', supportingText: 'The work is practical: clear responsibilities, a working run sheet, supplier follow-up, guest flow, and proper closing documentation.' },
-    { key: 'ecosystem', label: 'Service Ecosystem', enabled: true, order: 20, eyebrow: 'Service ecosystem', title: 'Every capability grouped for fast strategic clarity.', description: 'Use the category system to see how advisory, systems, documentation, finance, compliance, and creative execution fit together.' },
-    { key: 'ai', label: 'Digital Systems', enabled: true, order: 30, eyebrow: 'Digital systems', title: 'Useful software before buzzwords.', description: 'We focus on workflows, knowledge systems, dashboards, internal tools, and software that employees can actually use.', supportingText: 'The goal is simple: faster work, cleaner data, clearer responsibility, and fewer manual handoffs.' },
-    { key: 'caAdvisory', label: 'CA Advisory', enabled: true, order: 40, eyebrow: 'CA, tax, VAT, customs & business advisory', title: 'Serious finance control for serious business decisions.', description: 'This pillar is designed for businesses that need accounting discipline, statutory readiness, internal control, performance reporting, and practical advisory support without losing momentum.' },
-    { key: 'why', label: 'Why Choose Us', enabled: true, order: 50, eyebrow: 'Why choose Inception 23', title: 'A practical partner for work that needs care.', description: 'We connect business thinking with hands-on implementation across technology, legal support, finance, operations, and creative work.' },
-    { key: 'industries', label: 'Industries', enabled: true, order: 60, eyebrow: 'Industries we serve', title: 'Built for operators, founders, and professional teams.', description: 'The same integrated model adapts to different sectors: business control, digital systems, compliance awareness, and market clarity.' },
-    { key: 'process', label: 'Process', enabled: true, order: 70, eyebrow: 'Our process', title: 'A clear path from problem to working solution.', description: 'Every engagement follows a simple rhythm: understand, diagnose, design, implement, improve, and support.' },
-    { key: 'solutions', label: 'Case Studies', enabled: true, order: 80, eyebrow: 'Case studies', title: 'Real work examples, grouped by service.', description: 'Select a service track to see one featured work brief, what we handled, and the kind of outcome clients can expect before opening the full case-study library.', supportingText: 'Built like a case-study section: filter first, proof second, full stories one click away.' },
-    { key: 'team', label: 'Team', enabled: true, order: 90, eyebrow: 'Team structure', title: 'A team model for advisory and execution.', description: 'Structured around leadership, specialist advisory, and delivery execution, with room for steady growth.' },
-    { key: 'technology', label: 'Technology Stack', enabled: true, order: 100, eyebrow: 'Tools and systems', title: 'Tools chosen for the work, not the trend.', description: 'The stack reflects practical delivery: software, reporting, finance control, compliance documentation, analytics, and market-facing work.' },
+    { key: 'services', label: 'Our Services', enabled: true, order: 10, eyebrow: 'Our services', title: 'Four service areas, one practical team.', description: 'For owner-led SMEs, professional firms, and growth teams, Inception 23 connects technology, finance control, legal coordination, and creative delivery in one working plan.', supportingText: 'Each service area has its own focus, but the work stays connected to the same business outcome.' },
+    { key: 'events', label: 'Event Management', enabled: true, order: 15, eyebrow: 'Event management', title: 'Corporate events planned with less confusion on the day.', description: 'We help with conferences, launches, workshops, brand activations, exhibitions, vendor coordination, creative material, and live event control.', supportingText: 'The handover is practical: one run sheet, named suppliers, guest-flow notes, creative checks, and closing documentation.' },
+    { key: 'ecosystem', label: 'Service Ecosystem', enabled: true, order: 20, eyebrow: 'Service ecosystem', title: 'Every capability grouped for fast strategic clarity.', description: 'Scan 113 service modules across technology, management, legal support, and creative execution to find the right starting point.' },
+    { key: 'ai', label: 'Digital Systems', enabled: true, order: 30, eyebrow: 'Digital systems', title: 'Useful software before buzzwords.', description: 'We build workflows, dashboards, knowledge search, internal tools, and software for teams replacing manual updates with assigned systems.', supportingText: 'For SMEs and professional teams, the outcome is fewer repeated handoffs, cleaner records, and owners who can see what changed this week.' },
+    { key: 'caAdvisory', label: 'CA Advisory', enabled: true, order: 40, eyebrow: 'CA, tax, VAT, customs & business advisory', title: 'Serious finance control for serious business decisions.', description: 'For founders, SMEs, and finance teams, this pillar covers accounting discipline, statutory readiness, internal control, performance reporting, and advisory support without losing momentum.' },
+    { key: 'why', label: 'Why Choose Us', enabled: true, order: 50, eyebrow: 'Why choose Inception 23', title: 'A practical partner for work that needs care.', description: 'From a 24-hour intake standard to documented ownership, we connect business thinking with implementation across systems, finance, legal support, and market work.' },
+    { key: 'industries', label: 'Industries', enabled: true, order: 60, eyebrow: 'Industries we serve', title: 'Built for operators, founders, and professional teams.', description: 'The model adapts to startups, SMEs, professional firms, real estate teams, clinics, retailers, manufacturers, and NGOs that need clearer controls.' },
+    { key: 'process', label: 'Process', enabled: true, order: 70, eyebrow: 'Our process', title: 'A clear path from problem to working solution.', description: 'Every engagement follows seven steps: discover, diagnose, strategize, design, build, optimize, and scale with accountable owners.' },
+    { key: 'solutions', label: 'Case Studies', enabled: true, order: 80, eyebrow: 'Case studies', title: 'Real work examples, grouped by service.', description: 'Preview the selected service track with one featured brief, related examples, handled modules, and the outcome pattern before opening the full archive.', supportingText: 'The homepage shows visible examples first; the full case-study library stays one click away.' },
+    { key: 'team', label: 'Team', enabled: true, order: 90, eyebrow: 'Team structure', title: 'A team model for advisory and execution.', description: 'The public roster starts with verified leadership, advisory, and delivery profiles, then grows through reviewed specialist appointments.' },
+    { key: 'technology', label: 'Technology Stack', enabled: true, order: 100, eyebrow: 'Tools and systems', title: 'Tools chosen for the work, not the trend.', description: 'Nine delivery groups cover 81 practical capabilities across software, reporting, finance control, compliance documentation, analytics, and market-facing work.' },
     { key: 'mainServices', label: 'Main Services Showcase', enabled: true, order: 105, eyebrow: 'Main services', title: 'What we help with, in plain language.', description: 'A scroll view of the four Inception 23 service areas: technology, management, legal support, and creative execution.' },
     { key: 'contact', label: 'Contact Brief', enabled: true, order: 110, eyebrow: 'Get in touch', title: 'Tell us what you are working on.', description: 'Share the problem, the timeline, and the kind of support you need. We will route the brief to the right service area.' },
   ],
@@ -163,7 +163,7 @@ export function normalizeHomepageContent(value: unknown): HomepageContent {
     };
   }) : structuredClone(defaultHomepageContent.hero.slides);
 
-  return {
+  return canonicalizeBusinessAdvisoryContent({
     version: 1,
     hero: {
       ...defaultHomepageContent.hero,
@@ -174,5 +174,6 @@ export function normalizeHomepageContent(value: unknown): HomepageContent {
       ...section,
       ...inputSections.find((item) => item?.key === section.key),
     })),
-  };
+  });
 }
+import { BUSINESS_ADVISORY_SERVICE_NAME, canonicalizeBusinessAdvisoryContent } from '@/lib/service-labels';

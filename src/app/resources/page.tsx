@@ -49,7 +49,7 @@ const fallbackResources: ResourceCard[] = [
     slug: 'management-control-kpi-framework',
     title: 'Management Control & KPI Framework',
     excerpt: 'A simple operating framework for leadership reporting, KPI ownership, review cadence, and management discipline.',
-    category: 'Management & Finance',
+    category: 'Business Advisory & Compliances',
     resourceType: 'Framework',
     audience: 'Founders, managers, and finance teams',
     tagsJson: JSON.stringify(['KPI', 'Reporting', 'Finance']),

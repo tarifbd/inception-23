@@ -5,16 +5,16 @@ export const staticPageMetadata = {
   home: {
     title: 'Inception 23 | Business Consulting & Execution Support',
     description:
-      'Inception 23 supports growing companies with technology systems, management consulting, finance advisory, legal readiness, event execution, and creative work.',
+      'Inception 23 supports growing companies with technology systems, Business Advisory & Compliances, legal readiness, event execution, and creative work.',
     path: '/',
     keywords: ['business consulting Bangladesh', 'business solutions Dhaka', 'business execution support'],
   },
   services: {
     title: 'Business Consulting Services in Bangladesh',
     description:
-      'Explore Inception 23 services across IT, AI, management consultancy, finance advisory, legal support, event operations, and creative execution.',
+      'Explore Inception 23 services across IT, AI, Business Advisory & Compliances, legal support, event operations, and creative execution.',
     path: '/services',
-    keywords: ['business consulting services', 'IT consulting Bangladesh', 'management consultancy Bangladesh'],
+    keywords: ['business consulting services', 'IT consulting Bangladesh', 'business advisory and compliances Bangladesh'],
   },
   about: {
     title: 'About the Advisory & Execution Team',
@@ -35,7 +35,7 @@ export const staticPageMetadata = {
     description:
       'Review selected Inception 23 project highlights across technology, management systems, compliance, legal support, finance, and creative execution.',
     path: '/case-studies',
-    keywords: ['business consulting case studies', 'technology project examples', 'management consulting results'],
+    keywords: ['business consulting case studies', 'technology project examples', 'business advisory results'],
   },
   featuredSolutions: {
     title: 'Featured Business Solution Systems',
@@ -82,10 +82,10 @@ export const servicePageMetadata = {
     keywords: ['IT solutions Bangladesh', 'AI software solutions', 'workflow automation', 'business dashboards'],
   },
   'management-consultancy': {
-    title: 'Management Consultancy for Growth Teams',
+    title: 'Business Advisory & Compliances',
     description:
-      'Improve strategy, operating models, KPI systems, process ownership, and leadership cadence with practical management consultancy support.',
-    keywords: ['management consultancy Bangladesh', 'operating model design', 'KPI framework', 'business strategy consulting'],
+      'Improve strategy, operating models, KPI systems, process ownership, and leadership cadence with practical business advisory and compliance support.',
+    keywords: ['business advisory and compliances Bangladesh', 'operating model design', 'KPI framework', 'business strategy consulting'],
   },
   'legal-support': {
     title: 'Legal Support & Compliance Readiness',

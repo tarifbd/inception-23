@@ -25,7 +25,7 @@ const values = [
 
 const expertiseAreas = [
   'Technology and software systems',
-  'Management consulting and process control',
+  'Business advisory, compliances, and process control',
   'Finance, tax, VAT, customs, and business advisory support',
   'Legal documentation and compliance coordination',
   'Brand, communication, and market experience',
@@ -67,8 +67,8 @@ export default async function AboutPage() {
               <Link href="/contact" className="ui-action inline-flex items-center justify-center gap-3 rounded-lg bg-brand-950 px-7 py-4 text-sm font-semibold text-white shadow-md hover:bg-brand-900">
                 Book a Consultation <ArrowRight size={18} />
               </Link>
-              <Link href="/services" className="ui-action inline-flex items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white/70 px-7 py-4 text-sm font-semibold text-brand-950 hover:border-brand-700/40 hover:bg-brand-50 dark:border-white/10 dark:bg-night-900">
-                Explore services
+              <Link href="/services" className="ui-nav-link inline-flex min-h-12 items-center justify-center gap-3 px-2 text-sm font-semibold text-brand-950 dark:text-white">
+                <span>Review service areas</span>
               </Link>
             </div>
           </div>

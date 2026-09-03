@@ -6,6 +6,7 @@ import { teamCategories, teamMembers, type TeamCategory, type TeamMember } from 
 import { AnimatedSection } from './AnimatedSection';
 import { TeamCard } from './TeamCard';
 import { GradientTitle } from '@/components/ui/GradientTitle';
+import { StatBadge } from '@/components/ui/StatBadge';
 import { defaultHomepageContent, type HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
 
@@ -83,14 +84,8 @@ export function TeamSection({
             {content.description}
           </p>
           <div className="mt-7 grid grid-cols-2 border-y border-slate-300 dark:border-white/15">
-            <div className="py-4 pr-4">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-slate-400">Verified profiles</p>
-              <p className="mt-2 font-serif text-3xl font-bold text-brand-950 dark:text-white">{String(confirmedCount).padStart(2, '0')}</p>
-            </div>
-            <div className="border-l border-slate-300 py-4 pl-4 dark:border-white/15">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-slate-400">Team capacity</p>
-              <p className="mt-2 font-serif text-3xl font-bold text-brand-950 dark:text-white">{String(totalCapacity).padStart(2, '0')}</p>
-            </div>
+            <StatBadge label="verified profiles" value={confirmedCount} className="py-4 pr-4" />
+            <StatBadge label="planned capacity" value={totalCapacity} className="border-l border-slate-300 py-4 pl-4 dark:border-white/15" />
           </div>
         </div>
       </header>
@@ -110,10 +105,7 @@ export function TeamSection({
                 <span className={`font-mono text-[9px] font-bold ${style.text}`}>{style.index}</span>
                 <p className="mt-2 text-sm font-bold text-brand-950 dark:text-white">{category.label}</p>
               </div>
-              <div className="text-right">
-                <p className="font-serif text-2xl font-bold text-brand-950 dark:text-white">{categoryConfirmed}/{rosterTargets[category.id]}</p>
-                <p className="mt-1 font-mono text-[8px] font-bold uppercase tracking-[0.1em] text-slate-400">confirmed</p>
-              </div>
+              <StatBadge label="confirmed" value={`${categoryConfirmed}/${rosterTargets[category.id]}`} size="sm" align="right" />
             </a>
           );
         })}
@@ -139,12 +131,10 @@ export function TeamSection({
                   <p className="mt-5 text-sm leading-7 text-slate-600 dark:text-slate-400">{category.summary}</p>
                   <div className="mt-7 grid grid-cols-2 border-y border-slate-300 dark:border-white/15">
                     <div className="py-3 pr-3">
-                      <p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-slate-400">Verified</p>
-                      <p className="mt-2 font-serif text-2xl font-bold text-brand-950 dark:text-white">{String(members.length).padStart(2, '0')}</p>
+                      <StatBadge label="verified" value={members.length} size="sm" />
                     </div>
                     <div className="border-l border-slate-300 py-3 pl-3 dark:border-white/15">
-                      <p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-slate-400">Open</p>
-                      <p className="mt-2 font-serif text-2xl font-bold text-brand-950 dark:text-white">{String(openCount).padStart(2, '0')}</p>
+                      <StatBadge label="growth roles" value={openCount} size="sm" />
                     </div>
                   </div>
                 </header>
@@ -159,17 +149,16 @@ export function TeamSection({
                         <aside className={`flex min-h-64 w-full max-w-[22rem] flex-col justify-between border border-t-[3px] p-7 lg:h-[42rem] ${style.border} ${style.surface}`} style={{ borderTopColor: style.accent }}>
                           <div className="flex items-center justify-between">
                             <ShieldCheck size={25} className={style.text} strokeWidth={1.5} aria-hidden="true" />
-                            <span className={`font-mono text-[9px] font-bold ${style.text}`}>ROSTER / OPEN</span>
+                            <span className={`font-mono text-[9px] font-bold ${style.text}`}>GROWTH / ROLES</span>
                           </div>
                           <div>
-                            <p className="font-serif text-6xl font-bold leading-none text-brand-950 dark:text-white">{String(openCount).padStart(2, '0')}</p>
-                            <p className="mt-4 font-serif text-2xl font-bold leading-tight text-brand-950 dark:text-white">Specialist appointments remain open.</p>
-                            <p className="mt-4 text-xs leading-6 text-slate-600 dark:text-slate-400">Profiles publish only after role, identity, and contact details are verified.</p>
+                            <StatBadge label="growth roles" value={openCount} size="lg" />
+                            <p className="mt-4 font-serif text-2xl font-bold leading-tight text-brand-950 dark:text-white">Specialist appointments are being reviewed.</p>
+                            <p className="mt-4 text-xs leading-6 text-slate-600 dark:text-slate-400">New advisors are added as client demand expands and each professional profile is verified.</p>
                           </div>
-                          <Link href="/contact?subject=team-appointment" className="group flex min-h-12 items-center justify-between border-t border-current/15 pt-4 text-xs font-bold text-brand-950 dark:text-white">
-                            Discuss an appointment
-                            <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                          </Link>
+                          <p className="border-t border-current/15 pt-4 text-xs font-bold leading-5 text-brand-950 dark:text-white">
+                            Appointments are handled through the confidential team review process.
+                          </p>
                         </aside>
                       ) : null}
                     </div>
@@ -178,28 +167,21 @@ export function TeamSection({
                       <div>
                         <CircleDashed size={25} className={style.text} aria-hidden="true" />
                         <p className="mt-10 max-w-xl font-serif text-3xl font-bold leading-tight text-brand-950 dark:text-white">The associate network is being appointed with verification first.</p>
-                        <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-400">No placeholder people are published. Confirmed profiles will appear here with direct professional contact details.</p>
+                        <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-400">Confirmed collaborators are added as active assignments expand and profile details are ready for publication.</p>
                       </div>
-                      <Link href="/contact?subject=team-appointment" className="group mt-8 inline-flex min-h-12 items-center gap-4 border-b border-brand-950 pb-2 text-xs font-bold text-brand-950 dark:border-white dark:text-white sm:mt-0">
-                        Discuss an appointment
-                        <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </Link>
+                      <StatBadge label="growth roles" value={rosterTargets[category.id]} size="lg" align="right" className="mt-8 sm:mt-0" />
                     </div>
                   )}
 
                   {openCount && members.length > 1 ? (
-                    <div className={`mt-5 grid border ${style.border} ${style.surface} sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center`}>
+                    <div className={`mt-5 grid border ${style.border} ${style.surface}`}>
                       <div className="flex items-start gap-4 p-5 sm:p-6">
                         <CircleDashed size={20} className={`mt-0.5 shrink-0 ${style.text}`} aria-hidden="true" />
                         <div>
-                          <p className="text-sm font-bold text-brand-950 dark:text-white">{String(openCount).padStart(2, '0')} open {openCount === 1 ? 'appointment' : 'appointments'}</p>
-                          <p className="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-400">Capacity is shown transparently without publishing fictional profiles.</p>
+                          <p className="text-sm font-bold text-brand-950 dark:text-white">{String(openCount).padStart(2, '0')} verified growth {openCount === 1 ? 'role' : 'roles'} in review</p>
+                          <p className="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-400">Additional specialist roles are reserved for active client demand and verified collaborators.</p>
                         </div>
                       </div>
-                      <Link href="/contact?subject=team-appointment" className="group flex min-h-14 items-center justify-between gap-5 border-t border-inherit px-5 text-xs font-bold text-brand-950 transition hover:bg-white/70 dark:text-white dark:hover:bg-white/[0.05] sm:min-h-full sm:border-l sm:border-t-0 sm:px-6">
-                        Discuss an appointment
-                        <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </Link>
                     </div>
                   ) : null}
                 </div>
@@ -214,8 +196,8 @@ export function TeamSection({
           <BriefcaseBusiness size={17} className="text-orange-600 dark:text-orange-300" aria-hidden="true" />
           <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Specialist collaboration and leadership appointments are reviewed confidentially.</p>
         </div>
-        <Link href="/contact?subject=team" className="inline-flex items-center gap-3 text-sm font-bold text-brand-950 dark:text-white">
-          Contact the management team <ArrowUpRight size={16} />
+        <Link href="/contact?subject=team" className="ui-action inline-flex min-h-12 items-center justify-center gap-3 rounded-lg bg-brand-950 px-5 text-sm font-bold text-white shadow-md dark:bg-white dark:text-brand-950">
+          Discuss team collaboration <ArrowUpRight size={16} />
         </Link>
       </div>
     </AnimatedSection>

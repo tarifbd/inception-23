@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertCircle,
@@ -59,6 +59,10 @@ function getChannelHref(channel: ContactChannel) {
   return '';
 }
 
+function isPlaceholderContactValue(value: string) {
+  return /published here/i.test(value) || /^verified\s+(email|phone|whatsapp)\s+\d+/i.test(value.trim());
+}
+
 function isSpecificSocialUrl(href: string) {
   try {
     const url = new URL(href);
@@ -96,6 +100,8 @@ function CustomSelect({
   options,
   required,
   disabled,
+  hint,
+  hintId,
   active,
   accentClass,
   onOpen,
@@ -108,6 +114,8 @@ function CustomSelect({
   options: SelectOption[];
   required?: boolean;
   disabled?: boolean;
+  hint?: string;
+  hintId?: string;
   active: boolean;
   accentClass: string;
   onOpen: () => void;
@@ -126,6 +134,7 @@ function CustomSelect({
         className={`ui-field relative flex min-h-[56px] w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left text-sm font-semibold disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 ${active ? 'border-brand-700/40 ring-4 ring-brand-700/10' : ''} ${disabled ? '' : 'hover:border-brand-700/30'}`}
         aria-expanded={active}
         aria-haspopup="listbox"
+        aria-describedby={hint && hintId ? hintId : undefined}
       >
         <span className={selected ? 'min-w-0 truncate text-slate-800' : 'min-w-0 truncate text-slate-400'}>
           {selected?.label ?? placeholder}
@@ -133,6 +142,11 @@ function CustomSelect({
         <ChevronDown size={18} className={`shrink-0 text-slate-500 transition ${active ? 'rotate-180' : ''}`} />
       </button>
       {required && !value ? <span className="sr-only">Required</span> : null}
+      {hint ? (
+        <span id={hintId} className="text-xs font-semibold leading-5 text-slate-500">
+          {hint}
+        </span>
+      ) : null}
       <AnimatePresence>
         {active ? (
         <motion.div
@@ -193,6 +207,8 @@ export function ContactBriefSection({
   const [subService, setSubService] = useState('');
   const [budget, setBudget] = useState('');
   const [openSelect, setOpenSelect] = useState<SelectKey | null>(null);
+  const subServiceSelectRef = useRef<HTMLDivElement>(null);
+  const wasSubServiceDisabledRef = useRef(true);
   const activeTheme = serviceKey ? serviceThemes[serviceKey] : serviceThemes.it;
   const activeSubServices = useMemo(() => {
     if (!serviceKey) return [];
@@ -219,7 +235,7 @@ export function ContactBriefSection({
       value: String(item.value || ''),
       href: String(item.href || ''),
     }))
-    .filter((item) => ['email', 'phone', 'whatsapp'].includes(item.type) && item.value);
+    .filter((item) => ['email', 'phone', 'whatsapp'].includes(item.type) && item.value && !isPlaceholderContactValue(item.value) && getChannelHref(item));
   const channelsByType = {
     email: contactChannels.filter((item) => item.type === 'email').slice(0, 3),
     phone: contactChannels.filter((item) => item.type === 'phone').slice(0, 3),
@@ -228,6 +244,26 @@ export function ContactBriefSection({
   const configuredSocials = (socialLinkItems ?? [])
     .map((item) => ({ label: String(item.label || ''), href: String(item.href || ''), icon: String(item.icon || '') }))
     .filter((item) => isSpecificSocialUrl(item.href));
+  const hasDirectContactInfo = contactChannels.length > 0 || configuredSocials.length > 0;
+
+  useEffect(() => {
+    if (!serviceKey) {
+      wasSubServiceDisabledRef.current = true;
+      return;
+    }
+
+    if (!wasSubServiceDisabledRef.current) return;
+    wasSubServiceDisabledRef.current = false;
+
+    const field = subServiceSelectRef.current;
+    if (!field) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.requestAnimationFrame(() => {
+      field.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+      field.querySelector<HTMLButtonElement>('button')?.focus({ preventScroll: true });
+    });
+  }, [serviceKey]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -370,7 +406,7 @@ export function ContactBriefSection({
                   }}
                 />
               </div>
-              <div data-custom-select="true">
+              <div ref={subServiceSelectRef} data-custom-select="true">
                 <CustomSelect
                   label="Sub-service *"
                   name="subService"
@@ -379,6 +415,8 @@ export function ContactBriefSection({
                   options={subServiceOptions}
                   required
                   disabled={!serviceKey}
+                  hint={!serviceKey ? 'Select a main service first.' : undefined}
+                  hintId="sub-service-hint"
                   active={openSelect === 'subService'}
                   accentClass={activeTheme.text}
                   onOpen={() => {
@@ -439,16 +477,17 @@ export function ContactBriefSection({
           </form>
 
           <div className="grid gap-5 lg:contents">
-            <div className="ui-panel h-full overflow-hidden rounded-lg border border-slate-200 bg-white/86 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-night-900/86">
+            {hasDirectContactInfo ? (
+            <div id="contact" className="ui-panel h-full scroll-mt-36 overflow-hidden rounded-lg border border-slate-200 bg-white/86 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-night-900/86">
               <div className="border-b border-slate-200 p-6 dark:border-white/10 md:p-7">
                 <p className={`text-[10px] font-black uppercase tracking-[0.18em] ${activeTheme.text}`}>Direct channels</p>
                 <h3 className="mt-2 text-2xl font-black text-brand-950">Contact Information</h3>
               </div>
 
               <div className="grid divide-y divide-slate-200 dark:divide-white/10">
-                <ContactChannelGroup icon={Mail} label="Email" items={channelsByType.email} emptySlots={3} />
-                <ContactChannelGroup icon={Phone} label="Phone" items={channelsByType.phone} emptySlots={3} />
-                <ContactChannelGroup icon={MessageCircle} label="WhatsApp" items={channelsByType.whatsapp} emptySlots={1} />
+                <ContactChannelGroup icon={Mail} label="Email" items={channelsByType.email} />
+                <ContactChannelGroup icon={Phone} label="Phone" items={channelsByType.phone} />
+                <ContactChannelGroup icon={MessageCircle} label="WhatsApp" items={channelsByType.whatsapp} />
               </div>
 
               <div className="border-t border-slate-200 p-6 dark:border-white/10 md:p-7">
@@ -482,6 +521,7 @@ export function ContactBriefSection({
                 </div>
               </div>
             </div>
+            ) : null}
 
           </div>
         </div>
@@ -565,14 +605,12 @@ function ContactChannelGroup({
   icon: Icon,
   label,
   items,
-  emptySlots,
 }: {
   icon: typeof Mail;
   label: string;
   items: ContactChannel[];
-  emptySlots: number;
 }) {
-  const slots = Array.from({ length: emptySlots }, (_, index) => items[index] ?? null);
+  if (!items.length) return null;
 
   return (
     <div className="grid gap-4 p-6 md:grid-cols-[7.5rem_1fr] md:p-7">
@@ -583,9 +621,9 @@ function ContactChannelGroup({
         {label}
       </div>
       <div className="grid gap-2">
-        {slots.map((item, index) => {
-          const href = item ? getChannelHref(item) : '';
-          return item && href ? (
+        {items.map((item, index) => {
+          const href = getChannelHref(item);
+          return href ? (
             <a key={item.id} href={href} className="group flex min-h-12 items-center justify-between gap-4 rounded-md border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-cyan-400 hover:bg-cyan-50/60 hover:text-cyan-800 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:border-cyan-400/60 dark:hover:bg-cyan-400/10">
               <span className="min-w-0">
                 <span className="block text-[9px] font-black uppercase tracking-[0.13em] text-slate-400">{item.label || `${label} ${index + 1}`}</span>
@@ -593,11 +631,7 @@ function ContactChannelGroup({
               </span>
               <Send size={14} className="shrink-0 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
             </a>
-          ) : (
-            <div key={`${label}-slot-${index}`} className="flex min-h-12 items-center rounded-md border border-dashed border-slate-200 px-4 text-xs font-semibold text-slate-400 dark:border-white/10 dark:text-slate-500">
-              Verified {label.toLowerCase()} {index + 1} can be published here
-            </div>
-          );
+          ) : null;
         })}
       </div>
     </div>

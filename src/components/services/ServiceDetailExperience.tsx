@@ -209,7 +209,7 @@ const teams = [
   {
     title: 'Advisor & Consultant',
     count: '10 seats',
-    members: ['K M Khairul Hasan Arif', 'Advisor Seat 02', 'Advisor Seat 03', 'Advisor Seat 04', 'Advisor Seat 05', 'Consultant Seat 06', 'Consultant Seat 07', 'Consultant Seat 08', 'Consultant Seat 09', 'Consultant Seat 10'],
+    members: ['K M Khairul Hasan Arif', 'Mohammad Sirajus Salekin FCA', 'Advisor Seat 03', 'Advisor Seat 04', 'Advisor Seat 05', 'Consultant Seat 06', 'Consultant Seat 07', 'Consultant Seat 08', 'Consultant Seat 09', 'Consultant Seat 10'],
   },
   {
     title: 'Executive',

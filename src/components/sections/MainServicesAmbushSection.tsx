@@ -2,11 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { GradientTitle } from '@/components/ui/GradientTitle';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { mainServicesAmbush, type MainServicesAmbushItem } from '@/lib/constants/main-services-ambush';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
@@ -40,14 +38,24 @@ export function MainServicesAmbushSection({ content, services }: { content: Home
   const stageRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<HTMLDivElement | null>(null);
 
-  useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
+  useEffect(() => {
     const section = sectionRef.current;
     const stage = stageRef.current;
     if (!section || !stage || serviceItems.length < 2) return;
 
-    const context = gsap.context(() => {
+    let disposed = false;
+    let disposeGsap: (() => void) | undefined;
+    let observer: IntersectionObserver | undefined;
+
+    const initialize = async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ]);
+      if (disposed) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const context = gsap.context(() => {
       const slides = gsap.utils.toArray<HTMLElement>('[data-service-slide]', stage);
       const copies = slides.map((slide) => slide.querySelector<HTMLElement>('[data-service-copy]'));
       const copyParts = slides.map((slide) => gsap.utils.toArray<HTMLElement>('[data-service-copy-part]', slide));
@@ -313,9 +321,32 @@ export function MainServicesAmbushSection({ content, services }: { content: Home
         delayedRefreshes.forEach((timeout) => window.clearTimeout(timeout));
         mediaQuery.revert();
       };
-    }, section);
+      }, section);
+      disposeGsap = () => context.revert();
+    };
 
-    return () => context.revert();
+    const load = () => {
+      observer?.disconnect();
+      void initialize();
+    };
+
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) load();
+        },
+        { rootMargin: '600px 0px' },
+      );
+      observer.observe(section);
+    } else {
+      load();
+    }
+
+    return () => {
+      disposed = true;
+      observer?.disconnect();
+      disposeGsap?.();
+    };
   }, [serviceItems]);
 
   return (
@@ -482,9 +513,7 @@ function ServiceStory({
               src={imageSrc}
               alt={service.imageAlt}
               fill
-              priority={index === 0}
-              loading={index === 0 ? undefined : 'eager'}
-              unoptimized
+              loading="lazy"
               sizes="(min-width: 1024px) 52vw, 92vw"
               className="object-cover saturate-[0.9] contrast-[1.04]"
               style={{ objectPosition: service.imagePosition ?? 'center' }}

@@ -5,6 +5,7 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 import type { EcosystemCategory } from '@/lib/constants/service-ecosystem';
 import { serviceThemes } from '@/lib/constants/theme';
 import { SubServiceCard } from './SubServiceCard';
+import { StatBadge } from '@/components/ui/StatBadge';
 
 type ServiceEcosystemPanelProps = {
   category: EcosystemCategory;
@@ -49,9 +50,14 @@ export function ServiceEcosystemPanel({
         <p className="mt-4 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-300">
           {category.description}
         </p>
-        <p className={`mt-6 inline-flex rounded-md border px-3 py-1.5 text-xs font-semibold ${theme.border} ${theme.bg} ${theme.text}`}>
-          {category.services.length} areas of support
-        </p>
+        <StatBadge
+          label="areas of support"
+          value={category.services.length}
+          size="sm"
+          className={`mt-6 inline-flex rounded-md border px-3 py-2 ${theme.border} ${theme.bg}`}
+          valueClassName={theme.text}
+          labelClassName={theme.text}
+        />
       </header>
 
       <div data-motion-grid className="grid content-start gap-3 sm:grid-cols-2 xl:grid-cols-3">

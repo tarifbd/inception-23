@@ -42,8 +42,8 @@ export const serviceThemes: Record<ServiceKey, ServiceTheme> = {
   },
   consultancy: {
     key: 'consultancy',
-    label: 'Management Consultancy & Finance Advisory',
-    shortLabel: 'Management',
+    label: 'Business Advisory & Compliances',
+    shortLabel: 'Business Advisory & Compliances',
     text: 'text-teal-800',
     textSoft: 'text-teal-700',
     border: 'border-teal-200/80',

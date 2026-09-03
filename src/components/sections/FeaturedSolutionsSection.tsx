@@ -12,6 +12,7 @@ import { solutions, type Solution } from '@/lib/constants/solutions';
 import { serviceThemes, type ServiceKey } from '@/lib/constants/theme';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionHeader } from './SectionHeader';
+import { StatBadge } from '@/components/ui/StatBadge';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
 
@@ -35,8 +36,8 @@ const sectionCopy = {
   eyebrow: 'Case studies',
   title: 'Real work examples, grouped by service.',
   description:
-    'Select a service track to see one featured work brief, what we handled, and the kind of outcome clients can expect before opening the full case-study library.',
-  supportingText: 'Built like a case-study section: filter first, proof second, full stories one click away.',
+    'Select a service track to preview the featured brief, related examples, the work handled, and the outcome pattern before opening the full library.',
+  supportingText: 'This section previews the selected track inline; the full archive stays on the dedicated case-study page.',
 };
 
 const previewFallbacks: Record<ServiceKey, string> = {
@@ -46,6 +47,20 @@ const previewFallbacks: Record<ServiceKey, string> = {
   creative: '/main-services/creative-execution-photo.webp',
 };
 
+const libraryGradients: Record<ServiceKey, string> = {
+  it: 'linear-gradient(135deg, #06b6d4 0%, #2563eb 54%, #020617 100%)',
+  consultancy: 'linear-gradient(135deg, #0f172a 0%, #0f766e 54%, #14b8a6 100%)',
+  legal: 'linear-gradient(135deg, #4c0519 0%, #9f1239 56%, #f59e0b 100%)',
+  creative: 'linear-gradient(135deg, #6b21a8 0%, #c026d3 56%, #fb7185 100%)',
+};
+
+const relatedGridColumns = {
+  0: 'md:grid-cols-1',
+  1: 'md:grid-cols-[minmax(0,1fr)_minmax(12rem,0.72fr)]',
+  2: 'md:grid-cols-[repeat(2,minmax(0,1fr))_minmax(12rem,0.72fr)]',
+  3: 'md:grid-cols-[repeat(3,minmax(0,1fr))_minmax(12rem,0.72fr)]',
+} as const;
+
 const serviceNarratives: Record<ServiceKey, ServiceNarrative> = {
   it: {
     challenge: 'Teams were relying on scattered spreadsheets, manual follow-ups, and reports that arrived too late.',
@@ -53,34 +68,34 @@ const serviceNarratives: Record<ServiceKey, ServiceNarrative> = {
     result: 'A clearer operating system for tracking work, clients, documents, and decisions in one place.',
     metrics: [
       { value: '1 system', label: 'operational source' },
-      { value: 'Live', label: 'dashboard visibility' },
+      { value: 'Daily', label: 'team visibility' },
     ],
   },
   consultancy: {
     challenge: 'Leadership needed stronger management rhythm, finance control, and clear ownership across recurring work.',
     approach: 'We mapped the operating cadence, clarified owners, shaped KPI reporting, and installed review workflows.',
-    result: 'Management decisions became easier to track, assign, and review without adding unnecessary complexity.',
+    result: 'Monthly review packs made priorities, owners, and follow-up decisions easier to track.',
     metrics: [
-      { value: 'Clear', label: 'ownership model' },
+      { value: 'Named', label: 'owner model' },
       { value: 'Monthly', label: 'reporting rhythm' },
     ],
   },
   legal: {
     challenge: 'Documents, compliance obligations, deadlines, and risk notes were difficult to monitor consistently.',
     approach: 'We structured the document library, compliance tracker, risk register, and review notes for repeatable use.',
-    result: 'A more dependable readiness layer for governance, documentation, and management review.',
+    result: 'A versioned register gave managers one place to review obligations, gaps, and next actions.',
     metrics: [
-      { value: 'Tracked', label: 'priority gaps' },
+      { value: '1 register', label: 'priority gaps' },
       { value: 'Versioned', label: 'document control' },
     ],
   },
   creative: {
     challenge: 'The offer, visuals, website, pitch assets, and campaign message did not feel connected enough.',
     approach: 'We clarified positioning, built the visual language, shaped content hierarchy, and prepared market assets.',
-    result: 'A sharper first impression with clearer buyer flow across website, proposal, and campaign touchpoints.',
+    result: 'Website, proposal, and campaign touchpoints used one offer narrative from first visit to inquiry.',
     metrics: [
-      { value: 'Unified', label: 'brand signal' },
-      { value: 'Sharper', label: 'conversion path' },
+      { value: '1 story', label: 'brand signal' },
+      { value: 'Clear', label: 'inquiry path' },
     ],
   },
 };
@@ -111,6 +126,12 @@ export function FeaturedSolutionsSection({
   const displaySolutions = (cmsSolutions?.length ? cmsSolutions : solutions) as Solution[];
   const displayCategories = (categories?.length ? categories : serviceCategories) as ServiceCategory[];
   const activeTheme = serviceThemes[activeService];
+  const copy = {
+    eyebrow: content.eyebrow || sectionCopy.eyebrow,
+    title: content.title || sectionCopy.title,
+    description: content.description || sectionCopy.description,
+    supportingText: content.supportingText || sectionCopy.supportingText,
+  };
   const activeCategory = displayCategories.find((category) => category.key === activeService) ?? serviceCategories[0];
   const activeStories = useMemo(
     () => displaySolutions.filter((solution) => solution.serviceKey === activeService),
@@ -118,6 +139,10 @@ export function FeaturedSolutionsSection({
   );
   const featuredStory = activeStories.find(hasImage) ?? activeStories[0];
   const relatedStories = activeStories.filter((story) => story.id !== featuredStory?.id).slice(0, 3);
+  const teaserStories = relatedStories.length
+    ? relatedStories
+    : activeStories.filter((story) => story.id !== featuredStory?.id).slice(0, 3);
+  const visiblePreviewCount = (featuredStory ? 1 : 0) + teaserStories.length;
   const previewImage = featuredStory?.image ?? previewFallbacks[activeService];
   const narrative = serviceNarratives[activeService];
   const metrics = resolveMetrics(featuredStory, narrative.metrics);
@@ -210,23 +235,27 @@ export function FeaturedSolutionsSection({
 
         <div className="relative flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
           <SectionHeader
-            eyebrow={sectionCopy.eyebrow}
-            title={sectionCopy.title}
-            description={sectionCopy.description}
+            eyebrow={copy.eyebrow}
+            title={copy.title}
+            description={copy.description}
           />
-          <div className="grid max-w-lg grid-cols-3 border border-slate-200 bg-white/78 text-center shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.045]">
-            <div className="p-4">
-              <p className={`text-2xl font-black ${activeTheme.text}`}>{displaySolutions.length}</p>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">briefs</p>
-            </div>
-            <div className="border-x border-slate-200 p-4 dark:border-white/10">
-              <p className={`text-2xl font-black ${activeTheme.text}`}>4</p>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">tracks</p>
-            </div>
-            <div className="p-4">
-              <p className={`text-2xl font-black ${activeTheme.text}`}>1</p>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">library</p>
-            </div>
+          <div className="grid max-w-md grid-cols-2 border border-slate-200 bg-white/78 text-center shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.045]">
+            <StatBadge
+              label="visible briefs"
+              value={visiblePreviewCount}
+              size="sm"
+              align="center"
+              className="p-4"
+              valueClassName={activeTheme.text}
+            />
+            <StatBadge
+              label="service tracks"
+              value={displayCategories.length}
+              size="sm"
+              align="center"
+              className="border-l border-slate-200 p-4 dark:border-white/10"
+              valueClassName={activeTheme.text}
+            />
           </div>
         </div>
 
@@ -275,9 +304,14 @@ export function FeaturedSolutionsSection({
                 <span className="mt-5 block text-sm font-black leading-snug text-brand-950 dark:text-white">
                   {category.shortTitle}
                 </span>
-                <span className="mt-2 block text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">
-                  {String(solutionCounts[category.key]).padStart(2, '0')} stories
-                </span>
+                <StatBadge
+                  label="stories"
+                  value={solutionCounts[category.key]}
+                  size="sm"
+                  className="mt-2"
+                  valueClassName={`!text-sm ${selected ? theme.text : 'text-slate-500 dark:text-slate-400'}`}
+                  labelClassName="!text-[10px] text-slate-500 dark:text-slate-400"
+                />
               </motion.button>
             );
           })}
@@ -307,7 +341,7 @@ export function FeaturedSolutionsSection({
                   fill
                   sizes="(min-width: 1024px) 58vw, 100vw"
                   quality={82}
-                  className="relative z-10 object-cover object-top transition duration-700 ease-entrance group-hover:scale-[1.025]"
+                  className="relative z-10 object-contain object-center transition duration-700 ease-entrance group-hover:scale-[1.012]"
                 />
                 <div className="absolute left-4 top-4 z-20 flex items-center gap-2 bg-white/90 px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-brand-950 shadow-sm backdrop-blur-md dark:bg-night-950/82 dark:text-white">
                   <LandingIcon name={activeCategory.icon} size={14} className={activeTheme.text} />
@@ -382,8 +416,8 @@ export function FeaturedSolutionsSection({
             </div>
 
             <div className="lg:col-span-2">
-              <div className="grid gap-4 md:grid-cols-[1fr_1fr_1fr_0.72fr]">
-                {(relatedStories.length ? relatedStories : activeStories.slice(0, 3)).map((story) => (
+              <div className={`grid gap-4 ${relatedGridColumns[Math.min(teaserStories.length, 3) as keyof typeof relatedGridColumns]}`}>
+                {teaserStories.map((story) => (
                   <Link
                     key={story.id}
                     href="/case-studies#case-study-library"
@@ -398,8 +432,8 @@ export function FeaturedSolutionsSection({
                 <Link
                   href="/case-studies#case-study-library"
                   className={`group relative flex min-h-[150px] items-end overflow-hidden p-5 text-white shadow-xl transition duration-300 hover:-translate-y-1 ${activeTheme.shadow}`}
+                  style={{ background: libraryGradients[activeService] }}
                 >
-                  <span className={`absolute inset-0 bg-gradient-to-br ${activeTheme.gradient}`} />
                   <span className="absolute inset-0 translate-x-[-140%] bg-[linear-gradient(100deg,transparent,rgba(255,255,255,0.42),transparent)] transition duration-700 group-hover:translate-x-[140%]" />
                   <span className="relative z-10">
                     <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-white/78">Open library</span>
@@ -415,7 +449,7 @@ export function FeaturedSolutionsSection({
         </AnimatePresence>
 
         <p className="relative mt-6 max-w-2xl text-sm font-semibold leading-7 text-slate-500 dark:text-slate-400">
-          {sectionCopy.supportingText}
+          {copy.supportingText}
         </p>
       </div>
     </AnimatedSection>

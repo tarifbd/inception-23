@@ -1,16 +1,18 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AnimatePresence } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import { DesktopNav } from './DesktopNav';
 import { HeaderCTA } from './HeaderCTA';
 import { HeaderToggles } from './HeaderToggles';
-import { MegaMenu, type CmsMenuItem, type MenuKind } from './MegaMenu';
-import { MobileNav } from './MobileNav';
+import type { CmsMenuItem, MenuKind } from './MegaMenu';
 import type { CollectionRecord } from '@/lib/website-collections';
+
+const MegaMenu = dynamic(() => import('./MegaMenu').then((module) => module.MegaMenu), { ssr: false });
+const MobileNav = dynamic(() => import('./MobileNav').then((module) => module.MobileNav), { ssr: false });
 
 type HeaderNavItem = { label: string; href: string; menu?: string };
 
@@ -30,6 +32,7 @@ export function Header({ navigation, menuItems }: { navigation?: CollectionRecor
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<MenuKind | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileMounted, setMobileMounted] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -125,7 +128,10 @@ export function Header({ navigation, menuItems }: { navigation?: CollectionRecor
               <HeaderCTA className="hidden 2xl:inline-flex" />
               <button
                 type="button"
-                onClick={() => setMobileOpen(true)}
+                onClick={() => {
+                  setMobileMounted(true);
+                  setMobileOpen(true);
+                }}
                 aria-label="Open navigation"
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-950 shadow-sm transition hover:border-cyan-500/40 hover:bg-cyan-50 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:border-cyan-300/50 dark:hover:bg-cyan-300/10 sm:h-11 sm:w-11 2xl:hidden"
               >
@@ -133,14 +139,12 @@ export function Header({ navigation, menuItems }: { navigation?: CollectionRecor
               </button>
             </div>
 
-            <AnimatePresence>
-              {activeMenu ? <MegaMenu activeMenu={activeMenu} menuItems={menuItems} onNavigate={() => setActiveMenu(null)} /> : null}
-            </AnimatePresence>
+            {activeMenu ? <MegaMenu activeMenu={activeMenu} menuItems={menuItems} onNavigate={() => setActiveMenu(null)} /> : null}
           </div>
         </div>
       </header>
 
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} navItems={navItems} menuItems={menuItems} />
+      {mobileMounted ? <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} navItems={navItems} menuItems={menuItems} /> : null}
     </>
   );
 }

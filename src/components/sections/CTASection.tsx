@@ -21,8 +21,8 @@ export function CTASection() {
             <Link href="/contact" className="inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-950 px-7 py-4 text-sm font-black text-white shadow-xl shadow-brand-950/15 transition hover:-translate-y-0.5 hover:bg-brand-900">
               Book a Consultation <ArrowRight size={18} />
             </Link>
-            <Link href="/services" className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-300 bg-white/70 px-7 py-4 text-sm font-black text-brand-950 transition hover:-translate-y-0.5 hover:border-brand-700/40 hover:bg-brand-50">
-              Explore services
+            <Link href="/services" className="ui-nav-link inline-flex min-h-12 items-center justify-center gap-3 px-2 text-sm font-black text-brand-950">
+              <span>Review service areas</span>
             </Link>
           </div>
         </div>

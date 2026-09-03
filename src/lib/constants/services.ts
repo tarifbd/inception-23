@@ -94,7 +94,7 @@ export const services: ServiceDefinition[] = [
   {
     slug: 'management-consultancy',
     shortId: 'consultancy',
-    title: 'Management Consultancy',
+    title: 'Business Advisory & Compliances',
     eyebrow: 'Strategy with operating discipline',
     summary: 'Corporate strategy, operational redesign, governance, and growth systems for leadership teams.',
     description:
@@ -156,7 +156,7 @@ export const caseStudies = [
   {
     slug: 'growth-operating-model',
     title: 'Growth Operating Model',
-    service: 'Management Consultancy',
+    service: 'Business Advisory & Compliances',
     serviceSlug: 'management-consultancy' as ServiceSlug,
     summary: 'Rebuilt management cadence, ownership model, and KPI review system for a scaling service company.',
     metric: 'Clearer accountability',

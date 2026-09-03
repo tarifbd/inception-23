@@ -6,6 +6,7 @@ import { aboutMenu, eventManagementMenu, industriesMenu, insightsMenu, mainNav, 
 import { footerCompanyLinks, footerSocialLinks, contactHighlights, footerTrustPoints } from '@/lib/constants/site-content';
 import { processSteps } from '@/lib/constants/process';
 import { serviceCategories } from '@/lib/constants/service-categories';
+import { canonicalizeBusinessAdvisoryContent } from '@/lib/service-labels';
 import { serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
 import { caseStudies, insights, services, testimonials } from '@/lib/constants/services';
 import { solutions } from '@/lib/constants/solutions';
@@ -482,6 +483,20 @@ const defaults: Record<CollectionId, CollectionRecord[]> = {
       value: 'hello@inception23.com',
       href: 'mailto:hello@inception23.com',
     },
+    {
+      id: 'contact-channel-phone-main',
+      type: 'phone',
+      label: 'Main contact',
+      value: '01911369683',
+      href: 'tel:+8801911369683',
+    },
+    {
+      id: 'contact-channel-whatsapp-main',
+      type: 'whatsapp',
+      label: 'WhatsApp',
+      value: '01911369683',
+      href: 'https://wa.me/8801911369683',
+    },
   ],
   contactBudgets: [
     'Need guidance first',
@@ -507,7 +522,7 @@ const defaults: Record<CollectionId, CollectionRecord[]> = {
   ].map((label, index) => ({ id: `about-value-${index + 1}`, label })),
   aboutExpertise: [
     'Technology and software systems',
-    'Management consulting and process control',
+    'Business advisory, compliances, and process control',
     'Finance, tax, VAT, customs, and business advisory support',
     'Legal documentation and compliance coordination',
     'Brand, communication, and market experience',
@@ -556,7 +571,7 @@ export function isCollectionId(value: string): value is CollectionId {
 }
 
 export function getDefaultCollection(id: CollectionId) {
-  return structuredClone(defaults[id]);
+  return canonicalizeBusinessAdvisoryContent(structuredClone(defaults[id]));
 }
 
 const collectionIds = Object.keys(collectionDefinitions) as CollectionId[];
@@ -586,7 +601,7 @@ export async function getWebsiteCollections(): Promise<WebsiteCollections> {
 
     try {
       const parsed = JSON.parse(stored);
-      return [id, Array.isArray(parsed) ? parsed : getDefaultCollection(id)] as const;
+      return [id, Array.isArray(parsed) ? canonicalizeBusinessAdvisoryContent(parsed) : getDefaultCollection(id)] as const;
     } catch {
       return [id, getDefaultCollection(id)] as const;
     }
@@ -604,11 +619,11 @@ export async function getWebsiteCollection<T extends CollectionRecord = Collecti
 }
 
 export async function saveWebsiteCollection(id: CollectionId, records: CollectionRecord[]) {
-  const cleanRecords = records.map((record, index) => ({
+  const cleanRecords = canonicalizeBusinessAdvisoryContent(records.map((record, index) => ({
     ...record,
     id: String(record.id || `${id}-${crypto.randomUUID()}`),
     order: index,
-  }));
+  })));
   await db.siteSetting.upsert({
     where: { key: `website.collection.${id}.v1` },
     update: { value: JSON.stringify(cleanRecords), group: 'website-content' },

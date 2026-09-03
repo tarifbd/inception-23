@@ -12,15 +12,17 @@ export function OurServicesSection({ content, categories }: { content: HomepageS
     <AnimatedSection id="services" aria-label={content.label} motionVariant="editorial" className="bg-white">
       <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
         <SectionHeader
-          eyebrow="Our services"
-          title="Four advisory pillars, one operating intelligence."
-          description="Inception 23 combines technology, business control, legal support, and market experience into one integrated transformation partner."
+          eyebrow={content.eyebrow}
+          title={content.title}
+          description={content.description}
         />
-        <p className="max-w-sm text-sm font-bold leading-7 text-slate-500">
-          Each pillar has its own color system and delivery discipline, but every engagement stays connected to the same business outcome.
-        </p>
+        {content.supportingText ? (
+          <p className="max-w-sm text-sm font-bold leading-7 text-slate-500">
+            {content.supportingText}
+          </p>
+        ) : null}
       </div>
-      <div data-motion-grid className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div data-motion-grid className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4 xl:gap-y-0">
         {displayCategories.map((category, index) => (
           <ServiceCategoryCard key={category.key} category={category} index={index} />
         ))}

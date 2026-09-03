@@ -5,7 +5,7 @@ Scope: Website redesign after hero section
 
 1. Product Summary
 
-Inception 23 is an advisory, consulting, and solution company. The website must present the company as a premium multidisciplinary consulting brand that combines technology, AI, management consultancy, legal support, and creative solutions.
+Inception 23 is an advisory, consulting, and solution company. The website must present the company as a premium multidisciplinary consulting brand that combines technology, AI, Business Advisory & Compliances, legal support, and creative solutions.
 
 The current website is visually weak, slow, and not structured properly. The goal is to redesign the landing page after the hero section into a high-end, light-mode, conversion-focused experience.
 
@@ -66,7 +66,7 @@ Example offerings:
 Color identity:
 Blue / cyan
 
-4.2 Management Consultancy
+4.2 Business Advisory & Compliances
 Purpose:
 Help businesses improve strategy, operations, structure, team, finance, process, and growth.
 
@@ -139,7 +139,7 @@ Show the four service pillars clearly.
 
 Content:
 - IT & AI Solutions
-- Management Consultancy
+- Business Advisory & Compliances
 - Legal Support
 - Creative & Others
 

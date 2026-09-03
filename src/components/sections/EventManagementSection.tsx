@@ -56,7 +56,7 @@ export function EventManagementSection({ content, collections }: { content: Home
               href="/contact?service=event-management"
               className="ui-action mt-7 inline-flex items-center gap-3 rounded-lg bg-[#26310b] px-6 py-3 text-xs font-semibold text-white hover:bg-[#536512] dark:bg-lime-200 dark:text-[#182005] dark:hover:bg-lime-100"
             >
-              Discuss an event
+              Plan an event brief
               <ArrowRight size={16} />
             </Link>
           </div>

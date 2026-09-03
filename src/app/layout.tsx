@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TrackingScripts } from "@/components/tracking/TrackingScripts";
-import { MotionPreferences, SiteExperience } from "@/components/ui/SiteExperience";
+import { SiteExperience } from "@/components/ui/SiteExperience";
 import { FloatingContactBar } from "@/components/ui/FloatingContactBar";
 import { ToastProvider } from "@/components/ui/ToastProvider";
 import { SkipLink } from "@/components/ui/SkipLink";
@@ -39,8 +39,8 @@ export const metadata: Metadata = {
   alternates: { canonical: siteConfig.url },
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: [{ url: '/favicon.ico' }, { url: '/inception23-mark.png', type: 'image/png' }],
-    apple: [{ url: '/inception23-mark.png' }],
+    icon: [{ url: '/favicon.ico' }],
+    apple: [{ url: '/favicon.ico' }],
   },
   openGraph: {
     type: 'website',
@@ -85,20 +85,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <link
-          rel="preload"
-          href="/wasm/dotlottie-player.wasm"
-          as="fetch"
-          type="application/wasm"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/hind-siliguri-400-bengali.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
       </head>
       <body className="font-sans relative" suppressHydrationWarning>
         <JsonLd
@@ -126,13 +112,11 @@ export default function RootLayout({
           ]}
         />
         <SiteExperience />
-        <MotionPreferences>
-          <SkipLink />
-          <TrackingScripts />
-          {children}
-          <FloatingContactBar />
-          <ToastProvider />
-        </MotionPreferences>
+        <SkipLink />
+        <TrackingScripts />
+        {children}
+        <FloatingContactBar />
+        <ToastProvider />
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
+import { resolveEcosystemServiceDescription, serviceEcosystemCategories } from '@/lib/constants/service-ecosystem';
 import type { EcosystemCategory } from '@/lib/constants/service-ecosystem';
 import type { ServiceKey } from '@/lib/constants/theme';
 import { ServiceCategoryTabs } from './service-ecosystem/ServiceCategoryTabs';
@@ -16,15 +16,18 @@ function normalizeEcosystemCategories(records?: CollectionRecord[]) {
 
   return records.map((record) => {
     const servicesText = Array.isArray(record.servicesText) ? record.servicesText : [];
+    const key = String(record.key || 'it') as ServiceKey;
 
     return {
       ...record,
+      key,
       services: servicesText
         .map((item) => {
           const [title, ...description] = String(item).split('::');
+          const serviceTitle = title.trim();
           return {
-            title: title.trim(),
-            description: description.join('::').trim(),
+            title: serviceTitle,
+            description: resolveEcosystemServiceDescription(serviceTitle, key, description.join('::')),
           };
         })
         .filter((item) => item.title),
@@ -46,10 +49,26 @@ export function ServiceEcosystemSection({
   const [activeKey, setActiveKey] = useState<ServiceKey>(
     ecosystemCategories[0]?.key ?? 'it',
   );
+  const [viewMode, setViewMode] = useState<'mobile' | 'desktop'>('mobile');
   const mobileSectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const activeCategory =
     ecosystemCategories.find((category) => category.key === activeKey) ??
     ecosystemCategories[0];
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia('(min-width: 1024px)');
+    const updateViewMode = () => setViewMode(desktopQuery.matches ? 'desktop' : 'mobile');
+
+    updateViewMode();
+    desktopQuery.addEventListener('change', updateViewMode);
+    return () => desktopQuery.removeEventListener('change', updateViewMode);
+  }, []);
+
+  useEffect(() => {
+    if (!ecosystemCategories.some((category) => category.key === activeKey)) {
+      setActiveKey(ecosystemCategories[0]?.key ?? 'it');
+    }
+  }, [activeKey, ecosystemCategories]);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 1023px)');
@@ -118,7 +137,8 @@ export function ServiceEcosystemSection({
           </p>
         </header>
 
-        <div className="lg:hidden">
+        {viewMode === 'mobile' ? (
+        <div>
           <div className="sticky top-16 z-30 -mx-5 mt-8 border-y border-slate-200 bg-slate-50/92 px-5 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#111018]/92 sm:-mx-6 sm:px-6">
             <ServiceCategoryTabs
               categories={ecosystemCategories}
@@ -146,8 +166,8 @@ export function ServiceEcosystemSection({
             ))}
           </div>
         </div>
-
-        <div className="hidden lg:block">
+        ) : (
+        <div>
           <div className="mt-10">
             <ServiceCategoryTabs
               categories={ecosystemCategories}
@@ -177,6 +197,7 @@ export function ServiceEcosystemSection({
             </AnimatePresence>
           </div>
         </div>
+        )}
       </div>
     </section>
   );

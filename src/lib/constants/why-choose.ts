@@ -9,12 +9,12 @@ export type WhyChooseItem = {
 export const whyChooseItems: WhyChooseItem[] = [
   {
     title: 'Multidisciplinary expertise',
-    description: 'Technology, management, finance, legal support, and creative thinking under one operating lens.',
+    description: 'One team can connect software, finance control, legal documentation, and creative delivery in the same workstream.',
     icon: 'BrainCircuit',
   },
   {
     title: 'Strategy to execution',
-    description: 'The work moves from diagnosis to roadmap, system, documentation, interface, and measurable implementation.',
+    description: 'A brief can move from diagnosis to roadmap, system, document pack, interface, and implementation checkpoint.',
     icon: 'Network',
   },
   {
@@ -23,13 +23,13 @@ export const whyChooseItems: WhyChooseItem[] = [
     icon: 'Globe2',
   },
   {
-    title: 'Data-informed decisions',
-    description: 'Dashboards, KPIs, reporting frameworks, and decision logs that make leadership conversations sharper.',
+    title: 'KPI control for managers',
+    description: 'Dashboards, KPI definitions, owners, and decision logs make monthly leadership reviews easier to run.',
     icon: 'ChartNoAxesCombined',
   },
   {
-    title: 'Scalable systems',
-    description: 'Each solution is designed to survive growth, delegation, compliance pressure, and operational complexity.',
+    title: 'Systems ready for delegation',
+    description: 'Each solution documents roles, permissions, evidence, and review points before a process is handed to a team.',
     icon: 'CloudCog',
   },
   {

@@ -73,7 +73,7 @@ export const landingThemes: Record<LandingServiceKey, LandingTheme> = {
   },
   consultancy: {
     key: 'consultancy',
-    label: 'Management Consultancy',
+    label: 'Business Advisory & Compliances',
     text: 'text-emerald-700',
     textSoft: 'text-emerald-600',
     border: 'border-emerald-200/80',

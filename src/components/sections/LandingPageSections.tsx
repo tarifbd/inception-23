@@ -44,5 +44,9 @@ export function LandingPageSections({ sections, collections }: { sections: Homep
   return sections
     .filter((section) => section.enabled && section.key !== 'services')
     .sort((a, b) => a.order - b.order)
-    .map((section) => <div key={section.key}>{sectionComponents[section.key](section, collections)}</div>);
+    .map((section) => (
+      <div key={section.key} className={section.key === 'mainServices' ? undefined : 'homepage-deferred-section'}>
+        {sectionComponents[section.key](section, collections)}
+      </div>
+    ));
 }

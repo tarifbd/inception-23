@@ -23,8 +23,8 @@ async function main() {
   await prisma.serviceCategory.create({
     data: {
       id: 'consultancy',
-      labelEn: 'Management Consultancy',
-      labelBn: 'ম্যানেজমেন্ট কনসালটেন্সি',
+      labelEn: 'Business Advisory & Compliances',
+      labelBn: 'ব্যবসায়িক পরামর্শ ও কমপ্লায়েন্স',
       order: 1,
     },
   });
@@ -95,7 +95,7 @@ async function main() {
     ],
   });
 
-  // Management Consultancy Services
+  // Business Advisory & Compliances Services
   await prisma.serviceItem.createMany({
     data: [
       {

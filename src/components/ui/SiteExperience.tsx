@@ -1,12 +1,43 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { MotionConfig } from 'framer-motion';
-import type { ReactNode } from 'react';
 import { applyThemeToDocument, readStoredThemePreference, useAppStore } from '@/lib/store';
-import { ScrollProgressBar } from './HyperEffects';
 import { translateToBengali } from '@/lib/i18n';
+
+function ScrollProgressBar() {
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+        if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`;
+      });
+    };
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={progressRef}
+      aria-hidden="true"
+      className="fixed inset-x-0 top-0 z-[100] h-0.5 origin-left scale-x-0 bg-gradient-to-r from-support-600 via-brand-600 to-accent-500 motion-reduce:hidden"
+    />
+  );
+}
 
 export function SiteExperience() {
   const pathname = usePathname();
@@ -20,7 +51,7 @@ export function SiteExperience() {
     applyThemeToDocument(readStoredThemePreference() ?? theme);
   }, [theme]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const root = document.documentElement;
     root.lang = lang;
     root.dataset.language = lang;
@@ -103,13 +134,5 @@ export function SiteExperience() {
     <>
       <ScrollProgressBar />
     </>
-  );
-}
-
-export function MotionPreferences({ children }: { children: ReactNode }) {
-  return (
-    <MotionConfig reducedMotion="user" transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-      {children}
-    </MotionConfig>
   );
 }

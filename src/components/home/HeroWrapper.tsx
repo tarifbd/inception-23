@@ -13,6 +13,10 @@ const slideDesign: Record<HomepageHeroSlideTheme, Omit<HeroCarouselSlide, 'label
 const iconMap = { Cpu, BriefcaseBusiness, Scale, Palette };
 
 export function HeroWrapper({ content }: { content: HomepageContent['hero'] }) {
+  const secondaryCtaLabel = content.secondaryCtaLabel.trim().toLowerCase() === 'explore services'
+    ? 'View service map'
+    : content.secondaryCtaLabel;
+  const secondaryCtaHref = content.secondaryCtaHref === '/services' ? '#services' : content.secondaryCtaHref;
   const slides: HeroCarouselSlide[] = content.slides.map((slide) => {
     const theme = slide.theme ?? (slide.id in slideDesign ? slide.id as HomepageHeroSlideTheme : 'it');
     const visualUrl = theme === 'legal' && (!slide.visualUrl || slide.visualUrl === '/animations/legal.lottie')
@@ -35,20 +39,20 @@ export function HeroWrapper({ content }: { content: HomepageContent['hero'] }) {
 
     return (
       <div key={slide.id} className="max-w-4xl">
-        <div className="mb-6 flex max-w-full items-center gap-3 border-l-2 pl-3 font-utility text-xs font-bold uppercase" style={{ color: design.accentHex, borderColor: design.accentHex }}>
+        <div className="mb-3 flex max-w-full items-center gap-3 border-l-2 pl-3 font-utility text-xs font-bold uppercase sm:mb-5 lg:mb-6" style={{ color: design.accentHex, borderColor: design.accentHex }}>
           <span className={`h-2 w-2 rounded-full ${design.dot}`} aria-hidden="true" />
           <Icon size={15} aria-hidden="true" />
           <span className="truncate">{slide.eyebrow}</span>
         </div>
 
-        <h1 className="max-w-[720px] break-words font-serif text-[clamp(2.15rem,4.7vw,4.9rem)] font-black leading-[1.08] text-brand-950 dark:text-white sm:leading-[1.05]">
+        <h1 className="max-w-[720px] break-words font-serif text-[2.05rem] font-black leading-[1.08] text-brand-950 dark:text-white sm:text-[2.8rem] sm:leading-[1.05] lg:text-[4rem] xl:text-[4.75rem]">
           <span className="block">{slide.title}</span>
           <span className="block" style={{ color: design.accentHex }}>{slide.highlight}</span>
         </h1>
 
-        <p className="mt-5 max-w-[680px] text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg sm:leading-8">{slide.copy}</p>
+        <p className="mt-4 max-w-[680px] text-[0.95rem] leading-6 text-slate-600 dark:text-slate-300 sm:mt-5 sm:text-lg sm:leading-8">{slide.copy}</p>
 
-        <div className="mt-7 grid max-w-[680px] grid-cols-2 border-y border-slate-200 py-2 dark:border-white/15 sm:grid-cols-4">
+        <div className="mt-5 grid max-w-[680px] grid-cols-2 border-y border-slate-200 py-1.5 dark:border-white/15 sm:mt-7 sm:grid-cols-4 sm:py-2">
           {slide.chips.map((chip) => (
             <span key={chip} className="inline-flex min-w-0 items-center gap-2 px-2 py-2 text-xs font-bold text-slate-700 first:pl-0 dark:text-slate-200 sm:border-l sm:border-slate-200 sm:first:border-l-0 sm:dark:border-white/15">
               <CheckCircle2 size={14} className="shrink-0" aria-hidden="true" style={{ color: design.accentHex }} />
@@ -57,12 +61,13 @@ export function HeroWrapper({ content }: { content: HomepageContent['hero'] }) {
           ))}
         </div>
 
-        <div className="mt-7 flex max-w-[680px] flex-col gap-3 sm:flex-row">
+        <div className="mt-5 flex max-w-[680px] flex-col gap-2 sm:mt-7 sm:flex-row sm:gap-3">
           <Link href={content.primaryCtaHref} className="ui-action inline-flex min-h-12 items-center justify-center gap-3 rounded-lg bg-brand-950 px-7 py-4 text-sm font-black text-white">
             {content.primaryCtaLabel}<ArrowRight size={18} aria-hidden="true" />
           </Link>
-          <Link href={content.secondaryCtaHref} className="ui-action inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white/70 px-7 py-4 text-sm font-black text-brand-950 dark:border-white/20 dark:bg-white/[0.07] dark:text-white">
-            {content.secondaryCtaLabel}
+          <Link href={secondaryCtaHref} className="ui-nav-link inline-flex min-h-12 items-center justify-center gap-2 px-2 text-sm font-black text-brand-950 dark:text-white">
+            <span>{secondaryCtaLabel}</span>
+            <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -73,6 +78,7 @@ export function HeroWrapper({ content }: { content: HomepageContent['hero'] }) {
 
   return (
     <>
+      <link rel="preload" href="/wasm/dotlottie-player.wasm" as="fetch" type="application/wasm" crossOrigin="anonymous" />
       {firstAnimation ? <link rel="preload" href={firstAnimation.visualUrl || firstAnimation.lottie} as="fetch" crossOrigin="anonymous" /> : null}
       <HeroCarousel slides={slides} copyPanels={copyPanels} footerLabel={content.footerLabel} />
     </>

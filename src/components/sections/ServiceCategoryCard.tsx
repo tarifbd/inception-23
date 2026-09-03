@@ -70,7 +70,7 @@ export function ServiceCategoryCard({ category, index = 0 }: ServiceCategoryCard
       viewport={{ once: true, margin: '-70px' }}
       transition={{ duration: 0.42, delay: index * 0.045 }}
       whileHover={{ y: -8 }}
-      className={`group relative flex min-h-full flex-col overflow-hidden rounded-lg border bg-white/95 p-6 shadow-sm transition hover:shadow-xl hover:ring-4 ${theme.border} ${theme.shadow} ${theme.ring}`}
+      className={`group relative flex min-h-full flex-col overflow-hidden rounded-lg border bg-white/95 p-6 shadow-sm transition hover:shadow-xl hover:ring-4 xl:row-span-6 xl:grid xl:grid-rows-subgrid ${theme.border} ${theme.shadow} ${theme.ring}`}
     >
       <div className="relative flex items-start justify-between gap-4">
         <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-gradient-to-br ${theme.gradient} text-white shadow-md`}>

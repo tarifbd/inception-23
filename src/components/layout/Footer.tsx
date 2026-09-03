@@ -116,13 +116,13 @@ export async function Footer() {
             <p className="mt-5 max-w-md text-sm leading-7">
               We will help define the right advisory path and the practical next step.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row xl:items-center">
               <Link href="/contact" className="ui-action group inline-flex min-h-[3.25rem] flex-1 items-center justify-between border border-cyan-300/30 bg-gradient-to-r from-cyan-700 to-teal-600 px-5 text-sm font-bold text-white shadow-[0_16px_40px_rgba(8,145,178,0.2)] hover:from-cyan-600 hover:to-teal-500">
-                Start a confidential brief
+                Start a brief
                 <ArrowRight size={16} className="transition group-hover:translate-x-1" />
               </Link>
-              <Link href="/services" className="ui-action inline-flex min-h-[3.25rem] flex-1 items-center justify-between border border-white/20 bg-white/[0.04] px-5 text-sm font-bold hover:border-cyan-300/60 hover:bg-white/[0.08]">
-                Explore services
+              <Link href="/services" className="ui-nav-link inline-flex min-h-[3.25rem] flex-1 items-center justify-between px-1 text-sm font-bold text-white/85 hover:text-cyan-200">
+                <span>Review service areas</span>
                 <ArrowRight size={15} />
               </Link>
             </div>

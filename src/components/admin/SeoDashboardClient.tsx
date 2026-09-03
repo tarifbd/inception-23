@@ -53,7 +53,7 @@ export function SeoDashboardClient() {
           entityType: 'HOME',
           entityId: 'home',
           seoTitle: quickTitle || 'Inception 23 | Premium Advisory & Solutions',
-          metaDescription: 'Strategic advisory, AI systems, management consultancy, legal support, and creative solutions for modern business growth.',
+          metaDescription: 'Strategic advisory, AI systems, Business Advisory & Compliances, legal support, and creative solutions for modern business growth.',
           slug: quickSlug || '',
           focusKeyword: 'advisory solutions',
           schemaType: 'Organization',

@@ -13,6 +13,7 @@ import {
 import { techStackGroups } from '@/lib/constants/tech-stack';
 import { AnimatedSection } from './AnimatedSection';
 import { GradientTitle } from '@/components/ui/GradientTitle';
+import { StatBadge } from '@/components/ui/StatBadge';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
 import type { CollectionRecord } from '@/lib/website-collections';
 
@@ -55,24 +56,10 @@ export function TechStackSection({ content, groups }: { content: HomepageSection
           <p data-motion-description className="max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300 md:text-lg">
             {content.description}
           </p>
-          <dl className="mt-7 grid grid-cols-2 border-y border-slate-300 py-4 dark:border-white/15">
-            <div>
-              <dt className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-500">
-                Disciplines
-              </dt>
-              <dd className="mt-1 font-serif text-2xl font-bold text-brand-950 dark:text-white">
-                {String(displayGroups.length).padStart(2, '0')}
-              </dd>
-            </div>
-            <div className="border-l border-slate-300 pl-5 dark:border-white/15">
-              <dt className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-500">
-                Capabilities
-              </dt>
-              <dd className="mt-1 font-serif text-2xl font-bold text-brand-950 dark:text-white">
-                {String(capabilityCount).padStart(2, '0')}
-              </dd>
-            </div>
-          </dl>
+          <div className="mt-7 grid grid-cols-2 border-y border-slate-300 py-4 dark:border-white/15">
+            <StatBadge label="disciplines" value={displayGroups.length} size="sm" />
+            <StatBadge label="capabilities" value={capabilityCount} size="sm" className="border-l border-slate-300 pl-5 dark:border-white/15" />
+          </div>
         </div>
       </header>
 
@@ -101,9 +88,7 @@ export function TechStackSection({ content, groups }: { content: HomepageSection
                 <span className="font-mono text-[10px] font-bold text-slate-400 dark:text-slate-600">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 md:hidden">
-                  {String(group.tools.length).padStart(2, '0')} capabilities
-                </span>
+                <StatBadge label="capabilities" value={group.tools.length} size="sm" align="right" className="md:hidden" />
               </div>
 
               <div className="flex min-w-0 items-start gap-4 md:pr-8">
@@ -117,9 +102,7 @@ export function TechStackSection({ content, groups }: { content: HomepageSection
                   <h3 className="text-base font-black leading-6 text-brand-950 dark:text-white md:text-lg">
                     {group.title}
                   </h3>
-                  <p className="mt-1 hidden font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 md:block dark:text-slate-600">
-                    {String(group.tools.length).padStart(2, '0')} capabilities
-                  </p>
+                  <StatBadge label="capabilities" value={group.tools.length} size="sm" className="mt-1 hidden md:flex" />
                 </div>
               </div>
 

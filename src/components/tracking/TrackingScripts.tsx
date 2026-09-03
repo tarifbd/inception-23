@@ -192,14 +192,23 @@ export function TrackingScripts() {
 
   useEffect(() => {
     let mounted = true;
-    fetch('/api/tracking/config', { cache: 'no-store' })
-      .then((response) => response.json())
-      .then((payload) => {
-        if (mounted) setSettings(payload.data);
-      })
-      .catch(() => undefined);
+    let timer = 0;
+    const loadSettings = () => {
+      timer = window.setTimeout(() => {
+        fetch('/api/tracking/config', { cache: 'no-store' })
+          .then((response) => response.json())
+          .then((payload) => {
+            if (mounted) setSettings(payload.data);
+          })
+          .catch(() => undefined);
+      }, 1200);
+    };
+    if (document.readyState === 'complete') loadSettings();
+    else window.addEventListener('load', loadSettings, { once: true });
     return () => {
       mounted = false;
+      window.removeEventListener('load', loadSettings);
+      window.clearTimeout(timer);
     };
   }, []);
 

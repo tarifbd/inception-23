@@ -1,6 +1,9 @@
 import { db } from '@/lib/db';
 import { AdminModuleShell, adminCardClass } from '@/components/admin/AdminModuleShell';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const nav = [
   { href: '/admin/ai-studio', label: 'Studio' },
   { href: '/admin/ai-studio/agents', label: 'Agents' },

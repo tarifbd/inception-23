@@ -1,7 +1,7 @@
 'use client';
 
 import { Languages, Moon, Sun } from 'lucide-react';
-import { useEffect, useRef, type MouseEvent } from 'react';
+import { useEffect, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import { useAppStore } from '@/lib/store';
 
@@ -18,22 +18,8 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function setThemeTransitionOrigin(root: HTMLElement, trigger: HTMLElement) {
-  const rect = trigger.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
-  const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-
-  root.style.setProperty('--theme-transition-x', `${x}px`);
-  root.style.setProperty('--theme-transition-y', `${y}px`);
-  root.style.setProperty('--theme-transition-radius', `${Math.ceil(radius)}px`);
-}
-
 function clearThemeTransition(root: HTMLElement) {
   root.classList.remove('theme-view-transition', 'theme-transition');
-  root.style.removeProperty('--theme-transition-x');
-  root.style.removeProperty('--theme-transition-y');
-  root.style.removeProperty('--theme-transition-radius');
   delete root.dataset.themeTransition;
   delete root.dataset.uiTransition;
 }
@@ -95,16 +81,16 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
     languageTimers.current.push(window.setTimeout(() => {
       applyLanguage();
       root.dataset.languageTransition = 'in';
-    }, 120));
+    }, 160));
     languageTimers.current.push(window.setTimeout(() => {
       root.classList.remove('language-transition');
       delete root.dataset.languageTransition;
       delete root.dataset.uiTransition;
       languageTransitioning.current = false;
-    }, 560));
+    }, 500));
   };
 
-  const handleThemeToggle = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleThemeToggle = () => {
     const root = document.documentElement;
     if (themeTransitioning.current || root.dataset.uiTransition) return;
     const reduceMotion = prefersReducedMotion();
@@ -131,7 +117,6 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
       return;
     }
 
-    setThemeTransitionOrigin(root, event.currentTarget);
     root.classList.add('theme-view-transition');
     const finish = () => {
       if (themeTimer.current) window.clearTimeout(themeTimer.current);
@@ -168,7 +153,7 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
         className={`relative grid ${toggleSize} grid-cols-2 overflow-hidden rounded-full border border-cyan-200/80 bg-gradient-to-r from-cyan-50 via-white to-fuchsia-50 p-1 text-[10px] font-black uppercase tracking-[0.08em] text-slate-600 transition hover:border-cyan-400/70 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 dark:border-white/15 dark:from-cyan-400/10 dark:via-white/5 dark:to-fuchsia-400/10 dark:text-slate-300`}
       >
         <span
-          className={`absolute left-1 top-1 ${thumbSize} rounded-full bg-gradient-to-br shadow-[0_8px_20px_rgba(14,116,144,0.3)] transition-[transform,background-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`absolute left-1 top-1 ${thumbSize} rounded-full bg-gradient-to-br shadow-[0_8px_20px_rgba(14,116,144,0.3)] transition-[transform,background-color] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             lang === 'bn' ? languageShift : 'translate-x-0'
           } ${lang === 'bn' ? 'from-violet-600 to-fuchsia-500' : 'from-cyan-500 to-blue-600'}`}
         />
@@ -186,7 +171,7 @@ export function HeaderToggles({ className = '', compact = false }: HeaderToggles
         className={`relative flex ${toggleSize} items-center overflow-hidden rounded-full border border-violet-200/80 bg-gradient-to-r from-amber-50 via-white to-violet-50 p-1 transition-[background-color,border-color,box-shadow,filter] duration-500 ease-entrance hover:border-violet-400/60 hover:shadow-[0_10px_24px_rgba(124,58,237,0.12)] focus:outline-none focus:ring-4 focus:ring-violet-500/20 active:scale-[0.985] dark:border-violet-300/20 dark:from-amber-300/10 dark:via-white/5 dark:to-violet-400/15 dark:hover:border-cyan-300/45 dark:hover:shadow-[0_10px_28px_rgba(34,211,238,0.11)]`}
       >
         <span
-          className={`absolute ${themeThumbSize} rounded-full bg-gradient-to-br shadow-[0_10px_22px_rgba(76,29,149,0.28)] transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`absolute ${themeThumbSize} rounded-full bg-gradient-to-br shadow-[0_10px_22px_rgba(76,29,149,0.28)] transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isDark ? `${themeShift} from-violet-600 via-indigo-600 to-cyan-500` : 'translate-x-0 from-orange-500 to-amber-300'
           }`}
         />
