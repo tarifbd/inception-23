@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Compass } from 'lucide-react';
+import { prepareHomepageJump, scrollToHomepageTargetWhenReady } from '@/lib/homepage-jump';
 
 export type HomepageSectionNavItem = {
   id: string;
@@ -9,21 +10,22 @@ export type HomepageSectionNavItem = {
 };
 
 export function HomepageSectionNav({ items }: { items: HomepageSectionNavItem[] }) {
+  const cancelJumpRef = useRef<null | (() => void)>(null);
   const sectionItems = useMemo(
     () => items.filter((item) => item.id && item.label),
     [items],
   );
 
+  useEffect(() => () => cancelJumpRef.current?.(), []);
+
   if (!sectionItems.length) return null;
 
   const handleJump = (id: string) => {
     if (!id) return;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cancelJumpRef.current?.();
     window.history.replaceState(null, '', `#${id}`);
-    window.dispatchEvent(new Event('homepage:jump-request'));
-
-    const target = document.getElementById(id);
-    target?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    prepareHomepageJump();
+    cancelJumpRef.current = scrollToHomepageTargetWhenReady(id);
   };
 
   return (

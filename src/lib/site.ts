@@ -17,6 +17,8 @@ export const siteConfig = {
   locale: 'en_BD',
   language: 'en',
   email: 'hello@inception23.com',
+  whatsappHref: 'https://wa.me/8801911369683',
+  appointmentHref: '/contact?subject=appointment#inquiry',
   title: 'Inception 23 | Advisory, Consulting & Business Solutions',
   description:
     'Technology solutions, Business Advisory & Compliances, legal support, event management, and creative services for practical business execution.',

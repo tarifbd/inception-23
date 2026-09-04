@@ -7,6 +7,11 @@
   contain-intrinsic-size: auto 900px;
 }
 
+html.homepage-jump-layout .homepage-deferred-section {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
 @font-face {
   font-family: "Hind Siliguri";
   src: url("/fonts/hind-siliguri-400-bengali.woff2") format("woff2");

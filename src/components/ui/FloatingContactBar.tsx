@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -10,21 +9,24 @@ import { siteConfig } from '@/lib/site';
 const actions = [
   {
     label: 'Chat on WhatsApp',
-    href: '/contact?channel=whatsapp',
+    href: siteConfig.whatsappHref,
     icon: '/brands/whatsapp.svg',
     className: 'hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800',
+    newTab: true,
   },
   {
     label: 'Send Email',
     href: `mailto:${siteConfig.email}`,
     icon: '/brands/gmail.svg',
     className: 'hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-800',
+    newTab: false,
   },
   {
     label: 'Book Appointment',
-    href: '/contact',
+    href: siteConfig.appointmentHref,
     icon: '/brands/google-calendar.svg',
     className: 'hover:border-purple-300 hover:bg-purple-50 hover:text-purple-800',
+    newTab: false,
   },
 ] as const;
 
@@ -145,16 +147,18 @@ export function FloatingContactBar() {
           </div>
           <div className="mt-1 grid gap-1">
             {actions.map((action) => (
-              <Link
+              <a
                 key={action.label}
                 href={action.href}
+                target={action.newTab ? '_blank' : undefined}
+                rel={action.newTab ? 'noreferrer' : undefined}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex min-h-12 items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm font-bold text-slate-700 transition focus:outline-none focus:ring-4 focus:ring-support-500/20 dark:text-slate-100 ${action.className}`}
               >
                 <Image src={action.icon} alt="" width={24} height={24} aria-hidden="true" className="h-6 w-6 shrink-0 object-contain" />
                 <span className="min-w-0 flex-1">{action.label}</span>
                 <ChevronRight size={17} aria-hidden="true" className="shrink-0 text-slate-400" />
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -200,16 +204,18 @@ export function FloatingContactBar() {
         ) : null}
 
         {actions.map((action) => (
-          <Link
+          <a
             key={action.label}
             href={action.href}
+            target={action.newTab ? '_blank' : undefined}
+            rel={action.newTab ? 'noreferrer' : undefined}
             aria-label={action.label}
             title={action.label}
             className={`group relative flex h-11 w-11 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-support-500/20 dark:border-white/10 dark:bg-night-800 dark:text-slate-200 ${action.className}`}
           >
             <Image src={action.icon} alt="" width={25} height={25} aria-hidden="true" className="h-[25px] w-[25px] object-contain" />
             <span className={tooltipClass}>{action.label}</span>
-          </Link>
+          </a>
         ))}
 
         {scrollControlVisible && edgeVisibility.bottom ? (

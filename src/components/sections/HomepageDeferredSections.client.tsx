@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import type { HomepageSectionContent } from '@/lib/homepage-content';
+import { prepareHomepageJump, scrollToHomepageTargetWhenReady } from '@/lib/homepage-jump';
 import type { WebsiteCollections } from '@/lib/website-collections';
 
 const DeferredLandingPageSections = dynamic(
@@ -29,7 +30,10 @@ export function HomepageDeferredSections({
     const reveal = () => setReady(true);
     const revealForJump = () => reveal();
     const revealForHash = () => {
-      if (window.location.hash) reveal();
+      if (window.location.hash) {
+        document.documentElement.classList.add('homepage-jump-layout');
+        reveal();
+      }
     };
     const scheduleIdleReveal = () => {
       timer = window.setTimeout(() => {
@@ -71,24 +75,8 @@ export function HomepageDeferredSections({
     if (!ready || !window.location.hash) return;
 
     const id = decodeURIComponent(window.location.hash.slice(1));
-    let attempts = 0;
-    let timer = 0;
-    const alignTarget = () => {
-      const target = document.getElementById(id);
-      if (target) {
-        const root = document.documentElement;
-        const previousScrollBehavior = root.style.scrollBehavior;
-        root.style.scrollBehavior = 'auto';
-        target.scrollIntoView({ behavior: 'auto', block: 'start' });
-        root.style.scrollBehavior = previousScrollBehavior;
-      }
-
-      attempts += 1;
-      if (attempts < 32) timer = window.setTimeout(alignTarget, 120);
-    };
-
-    alignTarget();
-    return () => window.clearTimeout(timer);
+    prepareHomepageJump();
+    return scrollToHomepageTargetWhenReady(id, false);
   }, [ready]);
 
   return (
