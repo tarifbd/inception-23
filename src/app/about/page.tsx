@@ -11,10 +11,12 @@ import { teamCategories } from '@/lib/constants/team';
 import { serviceThemes } from '@/lib/constants/theme';
 import { whyChooseItems } from '@/lib/constants/why-choose';
 import { getWebsiteCollections } from '@/lib/website-collections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.about);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.about);
+}
 
 const values = [
   'Clarity before complexity',

@@ -9,9 +9,10 @@ import { Header } from '@/components/layout/Header';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { FinalCTA } from '@/components/common/PremiumSections';
 import { ServiceDetailExperience } from '@/components/services/ServiceDetailExperience';
+import { ServiceQuestions } from '@/components/services/ServiceQuestions';
 import { getService, services, type ServiceDefinition } from '@/lib/constants/services';
 import { getWebsiteCollection, type CollectionRecord } from '@/lib/website-collections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { servicePageMetadata } from '@/lib/seo/page-metadata';
 import { breadcrumbSchema, serviceSchema } from '@/lib/seo/schema';
 import { absoluteUrl, siteConfig } from '@/lib/site';
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = await getCmsService(slug);
   if (!service) return {};
   const seo = servicePageMetadata[service.slug];
-  return createPageMetadata({
+  return createManagedMetadata({
     title: seo.title,
     description: seo.description,
     path: `/services/${service.slug}`,
@@ -98,7 +99,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           </div>
           <div className="relative mx-auto aspect-square w-full max-w-[560px]">
             {service.heroImage ? (
-              <Image src={service.heroImage} alt="" fill priority className="object-contain" sizes="(min-width: 1024px) 50vw, 100vw" />
+              <Image src={service.heroImage} alt={`${service.title} at Inception 23`} fill priority className="object-contain" sizes="(min-width: 1024px) 50vw, 100vw" />
             ) : <LottieStage src={service.lottie} />}
           </div>
         </div>
@@ -112,6 +113,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         deliverables: service.deliverables,
         useCases: service.useCases,
       }} />
+      <ServiceQuestions service={service} />
       <FinalCTA />
       <Footer />
     </main>

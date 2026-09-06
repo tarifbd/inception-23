@@ -4,10 +4,12 @@ import { Header } from '@/components/layout/Header';
 import { SectionHeader } from '@/components/common/PremiumSections';
 import { insights } from '@/lib/constants/services';
 import { getWebsiteCollection, type CollectionRecord } from '@/lib/website-collections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.insights);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.insights);
+}
 
 export const revalidate = 300;
 

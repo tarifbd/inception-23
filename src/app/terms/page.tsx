@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.terms);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.terms);
+}
 
 const sections = [
   {

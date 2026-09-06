@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { FinalCTA, SectionHeader, ServicesGrid } from '@/components/common/PremiumSections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.services);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.services);
+}
 
 export default function ServicesPage() {
   return (

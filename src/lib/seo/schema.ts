@@ -73,12 +73,14 @@ export function serviceSchema(input: {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
+    '@id': `${input.url}#service`,
     name: input.name,
     description: input.description,
     url: input.url,
     areaServed: input.areaServed,
     provider: {
       '@type': 'Organization',
+      '@id': `${input.providerUrl.replace(/\/$/, '')}/#organization`,
       name: input.providerName,
       url: input.providerUrl,
     },

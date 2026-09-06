@@ -5,10 +5,12 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { db } from '@/lib/db';
 import { parseResourceTags, resourceCategories, resourceTypes } from '@/lib/resources';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.resources);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.resources);
+}
 
 export const dynamic = 'force-dynamic';
 

@@ -7,10 +7,12 @@ import { caseStudies, services } from '@/lib/constants/services';
 import { solutions as solutionBriefs } from '@/lib/constants/solutions';
 import type { ServiceKey } from '@/lib/constants/theme';
 import { getWebsiteCollection, type CollectionRecord } from '@/lib/website-collections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.caseStudies);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.caseStudies);
+}
 
 export const revalidate = 300;
 

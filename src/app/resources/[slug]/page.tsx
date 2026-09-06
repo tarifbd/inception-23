@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { db } from '@/lib/db';
 import { parseResourceTags, resourceDestination } from '@/lib/resources';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata as createPageMetadata } from '@/lib/seo/metadata.server';
 import { articleSchema, breadcrumbSchema } from '@/lib/seo/schema';
 import { absoluteUrl, siteConfig } from '@/lib/site';
 

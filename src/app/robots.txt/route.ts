@@ -1,26 +1,12 @@
 import { db } from '@/lib/db';
-import { absoluteUrl, siteConfig } from '@/lib/site';
+import { siteConfig } from '@/lib/site';
+import { buildRobots } from '@/lib/seo/indexing';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const settings = await db.seoSetting.findUnique({ where: { id: 'default' } }).catch(() => null);
-  const configured = settings?.robotsTxt?.trim();
-  const normalizedConfigured = configured
-    ?.split(/\r?\n/)
-    .filter((line) => !/^\s*(sitemap|host)\s*:/i.test(line))
-    .join('\n')
-    .trim();
-  const requiredDirectives = [
-    'Disallow: /admin/',
-    'Disallow: /api/',
-    `Sitemap: ${absoluteUrl('/sitemap.xml')}`,
-    `Host: ${siteConfig.url}`,
-  ];
-  const body = [
-    normalizedConfigured || 'User-agent: *\nAllow: /',
-    ...requiredDirectives.filter((directive) => !normalizedConfigured?.includes(directive)),
-  ].join('\n');
+  const body = buildRobots(settings?.robotsTxt?.trim(), siteConfig.url);
 
   return new Response(`${body}\n`, {
     headers: {

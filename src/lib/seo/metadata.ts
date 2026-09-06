@@ -24,7 +24,7 @@ export function createPageMetadata({
   const socialImage = absoluteUrl(image || '/opengraph-image');
 
   return {
-    title,
+    title: title.includes(siteConfig.name) ? { absolute: title } : title,
     description,
     keywords: [...siteConfig.keywords, ...keywords],
     alternates: { canonical },

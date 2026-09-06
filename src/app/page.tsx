@@ -3,19 +3,20 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { HeroWrapper } from '@/components/home/HeroWrapper';
 import { HomepageDeferredSections } from '@/components/sections/HomepageDeferredSections.client';
+import { LandingPageSections } from '@/components/sections/LandingPageSections';
 import { HomepageSectionNav, type HomepageSectionNavItem } from '@/components/sections/HomepageSectionNav';
 import { OurServicesSection } from '@/components/sections/OurServicesSection';
 import type { HomepageSectionKey } from '@/lib/homepage-content';
 import { getHomepageContent } from '@/lib/homepage-content.server';
 import { getWebsiteCollections } from '@/lib/website-collections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  ...createPageMetadata(staticPageMetadata.home),
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.home);
+}
 
 const sectionIdByKey: Record<HomepageSectionKey, string> = {
   services: 'services',
@@ -57,7 +58,9 @@ export default async function Home() {
           <OurServicesSection content={servicesSection} categories={collections.serviceCategories} />
         </div>
       ) : null}
-      <HomepageDeferredSections sections={homepageSections} collections={collections} />
+      <HomepageDeferredSections>
+        <LandingPageSections sections={homepageSections} collections={collections} />
+      </HomepageDeferredSections>
       <Footer />
     </main>
   );

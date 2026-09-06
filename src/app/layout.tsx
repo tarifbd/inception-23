@@ -85,6 +85,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <noscript>
+          <style>{`[data-native-reveal], [data-native-reveal] * { opacity: 1 !important; transform: none !important; clip-path: none !important; animation: none !important; } .homepage-deferred-section { content-visibility: visible !important; }`}</style>
+        </noscript>
       </head>
       <body className="font-sans relative" suppressHydrationWarning>
         <JsonLd
@@ -97,6 +100,15 @@ export default function RootLayout({
               url: siteConfig.url,
               logo: absoluteUrl('/inception23-mark.png'),
               email: siteConfig.email,
+              telephone: siteConfig.telephone,
+              address: { '@type': 'PostalAddress', addressLocality: 'Dhaka', addressCountry: 'BD' },
+              contactPoint: {
+                '@type': 'ContactPoint',
+                telephone: siteConfig.telephone,
+                email: siteConfig.email,
+                contactType: 'customer enquiries',
+                availableLanguage: ['English', 'Bengali'],
+              },
               description: siteConfig.description,
               areaServed: 'Bangladesh',
             },

@@ -8,12 +8,14 @@ import { serviceCategories } from '@/lib/constants/service-categories';
 import { solutions } from '@/lib/constants/solutions';
 import { serviceThemes } from '@/lib/constants/theme';
 import { getWebsiteCollection } from '@/lib/website-collections';
-import { createPageMetadata } from '@/lib/seo/metadata';
+import { createManagedMetadata } from '@/lib/seo/metadata.server';
 import { staticPageMetadata } from '@/lib/seo/page-metadata';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = createPageMetadata(staticPageMetadata.featuredSolutions);
+export async function generateMetadata(): Promise<Metadata> {
+  return createManagedMetadata(staticPageMetadata.featuredSolutions);
+}
 
 export default async function FeaturedSolutionsPage() {
   const [cmsCategories, cmsSolutions] = await Promise.all([

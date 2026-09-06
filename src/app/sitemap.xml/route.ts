@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { services } from '@/lib/constants/services';
-import { absoluteUrl } from '@/lib/site';
+import { siteConfig } from '@/lib/site';
+import { canonicalPageUrl } from '@/lib/seo/indexing';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,16 +24,7 @@ function escapeXml(value: string) {
 }
 
 function normalizeSitemapUrl(value: string) {
-  try {
-    const canonicalOrigin = new URL(absoluteUrl('/')).origin;
-    const url = new URL(value, canonicalOrigin);
-    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
-    if (url.origin !== canonicalOrigin) return null;
-    url.hash = '';
-    return url.toString();
-  } catch {
-    return null;
-  }
+  return canonicalPageUrl(value, siteConfig.url);
 }
 
 export async function GET() {
@@ -53,8 +45,9 @@ export async function GET() {
   ];
 
   let databaseItems: SitemapItem[] = [];
+  const excluded = new Set<string>();
   try {
-    const [settings, resources, pages, entries] = await Promise.all([
+    const [settings, resources, pages, entries, metadata, redirects] = await Promise.all([
       db.seoSetting.findUnique({ where: { id: 'default' } }),
       db.resource.findMany({
         where: { isPublished: true },
@@ -65,9 +58,33 @@ export async function GET() {
         select: { slug: true, updatedAt: true },
       }),
       db.seoSitemapEntry.findMany({
-        where: { includeInSitemap: true },
         orderBy: { url: 'asc' },
       }),
+      db.seoMetadata.findMany({ orderBy: { updatedAt: 'desc' }, select: { slug: true, robotsIndex: true, canonicalUrl: true } }),
+      db.seoRedirect.findMany({ where: { isActive: true }, select: { sourcePath: true } }),
+    ]);
+
+    for (const entry of entries.filter((entry) => !entry.includeInSitemap)) {
+      const url = normalizeSitemapUrl(entry.url);
+      if (url) excluded.add(url);
+    }
+    const seenMetadata = new Set<string>();
+    for (const entry of metadata) {
+      if (!entry.slug.trim()) continue;
+      const url = normalizeSitemapUrl(entry.slug);
+      if (!url || seenMetadata.has(url)) continue;
+      seenMetadata.add(url);
+      const canonical = entry.canonicalUrl && normalizeSitemapUrl(entry.canonicalUrl);
+      if (!entry.robotsIndex || (canonical && canonical !== url)) excluded.add(url);
+    }
+    for (const entry of redirects) {
+      const url = normalizeSitemapUrl(entry.sourcePath);
+      if (url) excluded.add(url);
+    }
+    const knownUrls = new Set([
+      ...corePaths.map((item) => normalizeSitemapUrl(item.url)),
+      ...resources.map((item) => normalizeSitemapUrl(`/resources/${item.slug}`)),
+      ...pages.map((item) => normalizeSitemapUrl(`/${item.slug}`)),
     ]);
 
     if (settings?.enableAutoSitemap !== false) {
@@ -84,7 +101,7 @@ export async function GET() {
           changeFrequency: 'monthly',
           lastModified: page.updatedAt,
         })),
-        ...entries.map((entry) => ({
+        ...entries.filter((entry) => entry.includeInSitemap && knownUrls.has(normalizeSitemapUrl(entry.url))).map((entry) => ({
           url: entry.url,
           priority: Math.min(1, Math.max(0, entry.priority)),
           changeFrequency: allowedFrequencies.has(entry.changeFrequency) ? entry.changeFrequency : 'weekly',
@@ -99,7 +116,7 @@ export async function GET() {
   const deduplicated = new Map<string, SitemapItem>();
   [...corePaths, ...databaseItems].forEach((item) => {
     const url = normalizeSitemapUrl(item.url);
-    if (!url) return;
+    if (!url || excluded.has(url)) return;
     const previous = deduplicated.get(url);
     if (!previous || item.priority >= previous.priority) deduplicated.set(url, { ...item, url });
   });

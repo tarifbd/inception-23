@@ -76,25 +76,25 @@ export const staticPageMetadata = {
 
 export const servicePageMetadata = {
   'it-ai-solutions': {
-    title: 'IT & AI Software Solutions for Business',
+    title: 'Custom Software, IT & AI Solutions in Bangladesh',
     description:
       'Build custom software, automation, dashboards, AI-ready workflows, and secure digital platforms that help teams operate with clearer data.',
     keywords: ['IT solutions Bangladesh', 'AI software solutions', 'workflow automation', 'business dashboards'],
   },
   'management-consultancy': {
-    title: 'Business Advisory & Compliances',
+    title: 'Business Advisory & Compliances in Bangladesh',
     description:
-      'Improve strategy, operating models, KPI systems, process ownership, and leadership cadence with practical business advisory and compliance support.',
+      'Discuss tax, VAT, accounting systems, internal controls, KPI reporting and business planning with Inception 23 in Dhaka, Bangladesh.',
     keywords: ['business advisory and compliances Bangladesh', 'operating model design', 'KPI framework', 'business strategy consulting'],
   },
   'legal-support': {
-    title: 'Legal Support & Compliance Readiness',
+    title: 'Legal Support & Compliance in Bangladesh',
     description:
       'Prepare governance documents, compliance workflows, contract review notes, risk trackers, and practical legal support for business continuity.',
     keywords: ['legal support Bangladesh', 'compliance readiness', 'governance documents', 'contract review support'],
   },
   'creative-others': {
-    title: 'Creative Strategy & Campaign Systems',
+    title: 'Branding, Creative Design & Campaigns in Bangladesh',
     description:
       'Create brand positioning, campaign assets, content systems, pitch materials, and digital experiences that make complex offers easier to trust.',
     keywords: ['creative strategy Bangladesh', 'brand positioning', 'campaign assets', 'digital experience design'],
