@@ -2,10 +2,8 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import type { ElementType } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
-  Copy,
   ExternalLink,
   FilePenLine,
   FilePlus2,
@@ -36,6 +34,8 @@ import {
   adminSecondaryButtonClass,
 } from './AdminModuleShell';
 import { RichTextEditor } from './RichTextEditor';
+import { SiteAssetLibrary } from './SiteAssetLibrary';
+import type { SiteAsset, SiteAssetKind } from '@/lib/site-asset-types';
 
 type CmsPage = {
   id: string;
@@ -60,7 +60,7 @@ type PageDraft = Omit<CmsPage, 'id' | 'videoEmbedUrl' | 'publishedAt' | 'created
   id?: string;
 };
 
-type MediaAsset = {
+type UploadedMediaAsset = {
   id: string;
   name: string;
   fileName: string;
@@ -70,6 +70,24 @@ type MediaAsset = {
   altText: string;
   createdAt: string;
 };
+
+function getUploadedAssetKind(mimeType: string): SiteAssetKind {
+  if (mimeType.startsWith('image/')) return 'image';
+  if (mimeType.startsWith('video/')) return 'video';
+  return 'other';
+}
+
+function normalizeUploadedAsset(asset: UploadedMediaAsset, usage: string[] = []): SiteAsset {
+  const extension = asset.fileName.includes('.') ? asset.fileName.split('.').pop()?.toLowerCase() || 'file' : 'file';
+  return {
+    ...asset,
+    extension,
+    kind: getUploadedAssetKind(asset.mimeType),
+    source: 'uploaded',
+    readOnly: false,
+    usage,
+  };
+}
 
 type View = 'dashboard' | 'pages' | 'media' | 'structure';
 
@@ -132,7 +150,8 @@ const emptyPage: PageDraft = {
 
 export function WebsiteCmsClient() {
   const [pages, setPages] = useState<CmsPage[]>([]);
-  const [assets, setAssets] = useState<MediaAsset[]>([]);
+  const [assets, setAssets] = useState<SiteAsset[]>([]);
+  const [builtInAssets, setBuiltInAssets] = useState<SiteAsset[]>([]);
   const [collectionSummaries, setCollectionSummaries] = useState<CollectionSummary[]>([]);
   const [draft, setDraft] = useState<PageDraft | null>(null);
   const [view, setView] = useState<View>('dashboard');
@@ -145,20 +164,24 @@ export function WebsiteCmsClient() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [pagesResponse, mediaResponse, ...collectionResponses] = await Promise.all([
+      const [pagesResponse, mediaResponse, siteAssetsResponse, ...collectionResponses] = await Promise.all([
         fetch('/api/v1/admin/cms/pages'),
         fetch('/api/v1/admin/cms/media'),
+        fetch('/api/v1/admin/cms/site-assets'),
         ...editableCollections.map(([id]) => fetch(`/api/v1/admin/website-content/${id}`)),
       ]);
-      const [pagesPayload, mediaPayload, ...collectionPayloads] = await Promise.all([
+      const [pagesPayload, mediaPayload, siteAssetsPayload, ...collectionPayloads] = await Promise.all([
         pagesResponse.json(),
         mediaResponse.json(),
+        siteAssetsResponse.json(),
         ...collectionResponses.map((response) => response.json()),
       ]);
       if (!pagesResponse.ok) throw new Error(pagesPayload.error || 'Could not load pages');
       if (!mediaResponse.ok) throw new Error(mediaPayload.error || 'Could not load media');
+      if (!siteAssetsResponse.ok) throw new Error(siteAssetsPayload.error || 'Could not load built-in assets');
       setPages(pagesPayload.data);
-      setAssets(mediaPayload.data);
+      setAssets((mediaPayload.data as UploadedMediaAsset[]).map((asset) => normalizeUploadedAsset(asset, siteAssetsPayload.usage?.[asset.url] || [])));
+      setBuiltInAssets(siteAssetsPayload.data);
       setCollectionSummaries(
         editableCollections.map(([id], index) => ({
           id,
@@ -171,6 +194,13 @@ export function WebsiteCmsClient() {
       setLoading(false);
     }
   }, []);
+
+  const allAssets = useMemo(() => {
+    const byUrl = new Map<string, SiteAsset>();
+    builtInAssets.forEach((asset) => byUrl.set(asset.url, asset));
+    assets.forEach((asset) => byUrl.set(asset.url, asset));
+    return [...byUrl.values()].sort((left, right) => left.fileName.localeCompare(right.fileName));
+  }, [assets, builtInAssets]);
 
   useEffect(() => {
     load();
@@ -238,7 +268,8 @@ export function WebsiteCmsClient() {
     setMessage(`Copied ${url}`);
   };
 
-  const deleteMedia = async (asset: MediaAsset) => {
+  const deleteMedia = async (asset: SiteAsset) => {
+    if (asset.readOnly) return;
     if (!window.confirm(`Delete "${asset.name}" from the media library?`)) return;
     const response = await fetch(`/api/v1/admin/cms/media/${asset.id}`, { method: 'DELETE' });
     const payload = await response.json();
@@ -260,7 +291,7 @@ export function WebsiteCmsClient() {
         <AdminStatCard label="Custom Pages" value={pages.length} />
         <AdminStatCard label="Published" value={pages.filter((page) => page.isPublished).length} tone="emerald" />
         <AdminStatCard label="Drafts" value={pages.filter((page) => !page.isPublished).length} tone="rose" />
-        <AdminStatCard label="Media Assets" value={assets.length} tone="cyan" />
+        <AdminStatCard label="Media Assets" value={allAssets.length} tone="cyan" />
       </div>
 
       <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
@@ -343,7 +374,7 @@ export function WebsiteCmsClient() {
         <div className="mt-5 grid gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
           <form onSubmit={uploadMedia} className={`${adminCardClass} h-fit space-y-4 p-5`}>
             <div>
-              <p className="text-xs font-black uppercase tracking-wider text-brand-700">Upload image</p>
+              <p className="text-xs font-black uppercase tracking-wider text-brand-700">Upload media</p>
               <h2 className="mt-1 font-serif text-2xl font-black">Add to media library</h2>
             </div>
             <AdminField label="Media file">
@@ -356,44 +387,10 @@ export function WebsiteCmsClient() {
               <Upload size={15} />
               {uploading ? 'Uploading...' : 'Upload image'}
             </button>
-            <p className="text-xs leading-5 text-gray-500">JPG, PNG, WebP, GIF, MP4, WebM, or MOV. Maximum 50 MB.</p>
+            <p className="text-xs leading-5 text-gray-500">JPG, PNG, WebP, GIF, MP4, WebM, or MOV. Maximum 4 MB.</p>
           </form>
 
-          <section className={`${adminCardClass} p-5`}>
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="font-serif text-2xl font-black">Media library</h2>
-              <span className="text-xs font-black uppercase tracking-wider text-gray-400">{assets.length} files</span>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {assets.map((asset) => (
-                <article key={asset.id} className="overflow-hidden rounded-xl border border-gray-200">
-                  <div className="aspect-[4/3] bg-gray-100">
-                    {asset.mimeType.startsWith('video/') ? (
-                      <video src={asset.url} className="h-full w-full object-cover" muted playsInline controls />
-                    ) : (
-                      <Image
-                        src={asset.url}
-                        alt={asset.altText || asset.name}
-                        width={480}
-                        height={360}
-                        unoptimized
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <p className="truncate text-sm font-black text-gray-900">{asset.name}</p>
-                    <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">{Math.ceil(asset.size / 1024)} KB</p>
-                    <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
-                      <button onClick={() => copyUrl(asset.url)} className={adminSecondaryButtonClass}><Copy size={14} /> Copy URL</button>
-                      <button onClick={() => deleteMedia(asset)} title="Delete media" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50"><Trash2 size={15} /></button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-            {!assets.length ? <div className="py-12 text-center text-sm font-bold text-gray-400">Uploaded images will appear here.</div> : null}
-          </section>
+          <SiteAssetLibrary assets={allAssets} onCopy={copyUrl} onDelete={deleteMedia} />
         </div>
       ) : null}
 
@@ -402,7 +399,7 @@ export function WebsiteCmsClient() {
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <AdminStatCard label="Pages" value={pages.length} />
             <AdminStatCard label="Posts" value={collectionSummaries.find((item) => item.id === 'insights')?.count ?? 0} tone="cyan" />
-            <AdminStatCard label="Media" value={assets.length} tone="emerald" />
+            <AdminStatCard label="Media" value={allAssets.length} tone="emerald" />
             <AdminStatCard label="Editable blocks" value={collectionSummaries.reduce((sum, item) => sum + item.count, 0)} tone="rose" />
           </div>
 
@@ -417,7 +414,7 @@ export function WebsiteCmsClient() {
             <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
               <CmsModuleCard icon={FilePenLine} title="Pages" meta={`${pages.length} pages`} copy="Create rich pages with hero media, video, SEO, drafts, and publishing." onClick={() => setView('pages')} action="Manage pages" />
               <CmsModuleCard icon={Newspaper} title="Posts / Insights" meta={`${collectionSummaries.find((item) => item.id === 'insights')?.count ?? 0} posts`} copy="Manage blog-style insight cards shown on the Insights page." href="/admin/content/insights" action="Manage posts" />
-              <CmsModuleCard icon={ImageIcon} title="Media Library" meta={`${assets.length} files`} copy="Upload, preview, copy, and delete image/video assets for the whole website." onClick={() => setView('media')} action="Open media" />
+              <CmsModuleCard icon={ImageIcon} title="Media Library" meta={`${allAssets.length} files`} copy="Search every built-in and uploaded website asset, see where it is used, preview it, or copy its URL." onClick={() => setView('media')} action="Open media" />
               <CmsModuleCard icon={ListTree} title="Menus" meta="Header navigation" copy="Edit top navigation labels, URLs, order, and dropdown behavior." href="/admin/content/navigation" action="Edit menus" />
               <CmsModuleCard icon={Home} title="Homepage Layout" meta="Hero + sections" copy="Edit hero slides, CTA labels, section order, visibility, headings, and hero visuals." href="/admin/homepage" action="Edit layout" />
               <CmsModuleCard icon={LayoutDashboard} title="Section Builder" meta={`${editableCollections.length - 2} sections`} copy="Edit every live homepage section item: cards, services, team, solutions, and visuals." onClick={() => setView('structure')} action="Open sections" />
@@ -460,7 +457,7 @@ export function WebsiteCmsClient() {
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <AdminStatCard label="Editable sections" value={editableCollections.length + 1} />
             <AdminStatCard label="Section items" value={collectionSummaries.reduce((sum, item) => sum + item.count, 0)} tone="cyan" />
-            <AdminStatCard label="Media files" value={assets.length} tone="emerald" />
+            <AdminStatCard label="Media files" value={allAssets.length} tone="emerald" />
             <AdminStatCard label="Custom pages" value={pages.length} tone="rose" />
           </div>
 

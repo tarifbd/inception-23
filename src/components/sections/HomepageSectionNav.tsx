@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
-import { Compass } from 'lucide-react';
 import { prepareHomepageJump, scrollToHomepageTargetWhenReady } from '@/lib/homepage-jump';
 
 export type HomepageSectionNavItem = {
@@ -31,15 +30,10 @@ export function HomepageSectionNav({ items }: { items: HomepageSectionNavItem[] 
   return (
     <nav
       aria-label="Homepage sections"
-      className="sticky top-[5.25rem] z-[55] border-y border-slate-200 bg-white/90 shadow-sm backdrop-blur-2xl dark:border-white/10 dark:bg-night-950/88 sm:top-[5.75rem]"
+      className="sticky top-[5.25rem] z-[55] border-y border-slate-200 bg-white/90 shadow-sm backdrop-blur-2xl dark:border-white/10 dark:bg-night-950/88 sm:hidden"
     >
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
-        <div data-homepage-jump-label className="hidden shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-brand-700 dark:text-cyan-300 sm:flex">
-          <Compass size={15} aria-hidden="true" />
-          Jump to
-        </div>
-
-        <label className="relative flex min-w-0 flex-1 sm:hidden">
+      <div className="mx-auto flex w-full max-w-7xl items-center px-4 py-2.5">
+        <label className="relative flex min-w-0 flex-1">
           <span className="sr-only">Jump to section</span>
           <select
             data-homepage-jump-select
@@ -55,23 +49,6 @@ export function HomepageSectionNav({ items }: { items: HomepageSectionNavItem[] 
             ))}
           </select>
         </label>
-
-        <div className="hidden min-w-0 flex-1 gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex">
-          {sectionItems.map((item) => (
-            <a
-              data-homepage-jump-link
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={(event) => {
-                event.preventDefault();
-                handleJump(item.id);
-              }}
-              className="ui-nav-link inline-flex min-h-10 shrink-0 items-center rounded-full border border-slate-200 bg-slate-50 px-4 text-xs font-bold text-slate-700 transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-brand-950 focus:outline-none focus:ring-4 focus:ring-cyan-500/15 dark:border-white/10 dark:bg-white/[0.045] dark:text-slate-200 dark:hover:border-cyan-300/40 dark:hover:bg-cyan-300/10"
-            >
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </div>
       </div>
     </nav>
   );

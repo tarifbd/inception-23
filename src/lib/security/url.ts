@@ -40,11 +40,12 @@ export function safeExternalHttpsUrl(value: string) {
 
 export function safePublicDestination(value: string | null | undefined) {
   if (!value) return null;
+  if (/[\\\u0000-\u0020\u007f]/.test(value)) return null;
   if (value.startsWith('/') && !value.startsWith('//')) return value;
 
   try {
     const url = new URL(value);
-    return url.protocol === 'https:' ? url.toString() : null;
+    return url.protocol === 'https:' && !url.username && !url.password ? url.toString() : null;
   } catch {
     return null;
   }
