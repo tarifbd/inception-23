@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import { prepareHomepageJump, scrollToHomepageTargetWhenReady } from '@/lib/homepage-jump';
+import { SectionContents } from './SectionContents';
 
 export type HomepageSectionNavItem = {
   id: string;
@@ -28,6 +29,8 @@ export function HomepageSectionNav({ items }: { items: HomepageSectionNavItem[] 
   };
 
   return (
+    <>
+    <SectionContents items={sectionItems} onJump={handleJump} />
     <nav
       aria-label="Homepage sections"
       className="sticky top-[5.25rem] z-[55] border-y border-slate-200 bg-white/90 shadow-sm backdrop-blur-2xl dark:border-white/10 dark:bg-night-950/88 sm:hidden"
@@ -51,5 +54,6 @@ export function HomepageSectionNav({ items }: { items: HomepageSectionNavItem[] 
         </label>
       </div>
     </nav>
+    </>
   );
 }

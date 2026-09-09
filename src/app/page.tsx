@@ -49,7 +49,7 @@ export default async function Home() {
       : [{ id: sectionIdByKey[section.key], label: section.label }]);
 
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--color-canvas)] text-brand-950">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--color-canvas)] text-brand-950 sm:pr-12">
       <Header navigation={collections.navigation} />
       {content.hero.enabled ? <HeroWrapper content={content.hero} /> : null}
       <HomepageSectionNav items={sectionNavItems} />

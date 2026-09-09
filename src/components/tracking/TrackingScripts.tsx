@@ -53,14 +53,29 @@ function makeQueuedTracker(queueKey: string) {
 function initGoogle(provider: PublicTrackingProvider) {
   injectScript(`tracking-google-${provider.publicId}`, `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(provider.publicId)}`);
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function gtag(...args: unknown[]) { window.dataLayer?.push(args); };
+  window.gtag = window.gtag || function gtag() {
+    // Google expects an Arguments object, not an array of command parameters.
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer?.push(arguments);
+  };
   window.gtag('js', new Date());
   window.gtag('config', provider.publicId, { send_page_view: false });
 }
 
 function initFacebook(provider: PublicTrackingProvider) {
   if (!window.fbq) {
-    const fbq = makeQueuedTracker('queue') as QueuedTracker & { loaded?: boolean; version?: string; queue?: unknown[] };
+    const fbq = ((...args: unknown[]) => {
+      if (fbq.callMethod) fbq.callMethod(...args);
+      else fbq.queue.push(args);
+    }) as QueuedTracker & {
+      callMethod?: (...args: unknown[]) => void;
+      loaded?: boolean;
+      version?: string;
+      queue: unknown[][];
+      push?: unknown;
+    };
+    fbq.queue = [];
+    fbq.push = fbq;
     fbq.loaded = true;
     fbq.version = '2.0';
     window.fbq = fbq;

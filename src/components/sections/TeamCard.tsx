@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Github, Globe2, Linkedin, Mail } from 'lucide-react';
 import type { TeamMember } from '@/lib/constants/team';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { absoluteUrl, siteConfig } from '@/lib/site';
 
 type TeamCardProps = {
   member: TeamMember;
@@ -18,6 +20,10 @@ function hasProfileLink(href?: string) {
 
 export function TeamCard({ member, index = 0, slotNumber, categoryAccent }: TeamCardProps) {
   const reduceMotion = useReducedMotion();
+  const profileId = `team-member-${encodeURIComponent(member.id)}`;
+  const profileUrl = absoluteUrl(`/#${profileId}`);
+  const sameAs = [member.linkedinHref, member.githubHref, member.portfolioHref]
+    .filter((href): href is string => Boolean(href && /^https:\/\//i.test(href)));
   const actions = [
     { label: 'Email', href: member.emailHref, icon: Mail, required: true },
     { label: 'LinkedIn', href: member.linkedinHref, icon: Linkedin, required: true },
@@ -27,6 +33,7 @@ export function TeamCard({ member, index = 0, slotNumber, categoryAccent }: Team
 
   return (
     <motion.article
+      id={profileId}
       data-interactive-surface
       initial={reduceMotion ? false : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -36,6 +43,18 @@ export function TeamCard({ member, index = 0, slotNumber, categoryAccent }: Team
       className="group relative grid h-[42rem] w-full max-w-[22rem] min-w-0 grid-rows-[22rem_minmax(0,1fr)] overflow-hidden border border-t-[3px] border-slate-300 bg-white shadow-[0_18px_52px_-40px_rgba(15,23,42,0.5)] transition-[border-color,box-shadow] duration-500 hover:border-slate-400 hover:shadow-[0_28px_70px_-38px_rgba(15,23,42,0.4)] dark:border-white/12 dark:bg-[#10151b] dark:hover:border-white/25"
       style={{ borderTopColor: categoryAccent }}
     >
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        '@id': profileUrl,
+        url: profileUrl,
+        name: member.name,
+        jobTitle: member.role,
+        description: member.bio,
+        image: member.imageSrc ? absoluteUrl(member.imageSrc) : undefined,
+        affiliation: { '@id': `${siteConfig.url}/#organization` },
+        ...(sameAs.length ? { sameAs } : {}),
+      }} />
       <div data-motion-media className="relative h-full min-h-0 overflow-hidden bg-slate-200 dark:bg-[#0b1016]">
         <Image
           src={member.imageSrc}
@@ -57,7 +76,7 @@ export function TeamCard({ member, index = 0, slotNumber, categoryAccent }: Team
 
       <div className="flex min-h-0 min-w-0 flex-col overflow-hidden p-5">
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em]" style={{ color: categoryAccent }}>{member.role}</p>
-        <h4 className="mt-3 break-words font-serif text-[1.85rem] font-bold leading-[1.02] text-brand-950 transition-colors dark:text-white">{member.name}</h4>
+        <h4 className="mt-3 break-words font-serif text-[1.85rem] font-bold leading-[1.02] text-brand-950 transition-colors dark:text-white"><a href={`/#${profileId}`} className="rounded outline-none hover:underline focus-visible:ring-2 focus-visible:ring-cyan-600">{member.name}</a></h4>
         <p className="mt-4 text-[13px] leading-6 text-slate-600 dark:text-slate-400">{member.bio}</p>
 
         {member.expertise.length ? (

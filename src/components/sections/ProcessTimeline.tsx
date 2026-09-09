@@ -63,7 +63,7 @@ export function ProcessTimeline({ steps }: { steps?: CollectionRecord[] }) {
               </article>
               <div className="absolute left-0 top-5 inline-flex rounded-[1.15rem] border border-white/70 bg-white/65 p-1.5 shadow-inner shadow-white/80 backdrop-blur md:static md:col-start-2 md:place-self-start">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-[1rem] bg-gradient-to-br text-white shadow-xl md:h-12 md:w-12 ${accent.icon}`}>
-                  <ContextIcon context={`${step.title} ${step.description} ${step.icon}`} size={20} strokeWidth={1.8} />
+                  <ContextIcon title={step.title} context={`${step.description} ${step.icon}`} size={20} strokeWidth={1.8} />
                 </div>
                 <span className={`absolute -right-1 -top-1 h-3 w-3 rounded-full ring-4 ring-white ${accent.dot}`} />
               </div>

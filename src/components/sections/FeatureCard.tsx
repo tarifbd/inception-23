@@ -49,12 +49,12 @@ export function FeatureCard({ title, description, benefit, icon, serviceKey = 'i
           <span className={`absolute inset-2 rotate-6 rounded-2xl bg-gradient-to-br opacity-35 blur-[1px] ${fabricTones[index % fabricTones.length]}`} />
           <span className={`absolute inset-1 -rotate-3 rounded-2xl bg-gradient-to-br opacity-55 ${fabricTones[(index + 1) % fabricTones.length]}`} />
           <span className={`absolute inset-0 flex items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-xl ring-1 ring-white/50 ${fabricTones[index % fabricTones.length]}`}>
-            <ContextIcon context={`${title} ${description}`} size={29} strokeWidth={1.65} />
+            <ContextIcon title={title} context={description} size={29} strokeWidth={1.65} />
           </span>
         </motion.div>
       ) : (
         <div className={`mb-6 flex h-11 w-11 items-center justify-center rounded-lg shadow-sm ${theme.icon}`}>
-          <ContextIcon context={`${title} ${description} ${icon}`} size={20} />
+          <ContextIcon title={title} context={`${description} ${icon}`} size={20} />
         </div>
       )}
       <h3 className="text-lg font-bold leading-tight text-brand-950">{title}</h3>

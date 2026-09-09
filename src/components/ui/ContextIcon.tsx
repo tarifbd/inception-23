@@ -1,5 +1,21 @@
 import {
   BadgeCheck,
+  Calculator,
+  CirclePercent,
+  Container,
+  UserRound,
+  BookOpenCheck,
+  Wallet,
+  Coins,
+  PackageSearch,
+  Gavel,
+  HeartHandshake,
+  House,
+  Ruler,
+  Armchair,
+  Monitor,
+  ListChecks,
+  GitBranch,
   BarChart3,
   Bot,
   BrainCircuit,
@@ -61,6 +77,34 @@ type IconRule = {
 };
 
 const iconRules: IconRule[] = [
+  { terms: ['corporate tax'], icon: Building2 },
+  { terms: ['individual tax'], icon: UserRound },
+  { terms: ['taxation', 'tax planning'], icon: Calculator },
+  { terms: ['vat'], icon: CirclePercent },
+  { terms: ['customs', 'bond advisory', 'import', 'export'], icon: Container },
+  { terms: ['bookkeeping', 'ifrs', 'ias reporting'], icon: BookOpenCheck },
+  { terms: ['cash flow', 'payroll'], icon: Wallet },
+  { terms: ['costing', 'pricing'], icon: Coins },
+  { terms: ['inventory'], icon: PackageSearch },
+  { terms: ['financial modeling', 'budgeting'], icon: ChartNoAxesCombined },
+  { terms: ['financial reporting', 'management accounts'], icon: BarChart3 },
+  { terms: ['accounting system'], icon: Database },
+  { terms: ['internal audit'], icon: ClipboardCheck },
+  { terms: ['external audit'], icon: BadgeCheck },
+  { terms: ['due diligence'], icon: FileSearch },
+  { terms: ['sop development'], icon: ListChecks },
+  { terms: ['restructuring', 'process improvement'], icon: GitBranch },
+  { terms: ['criminal law'], icon: Gavel },
+  { terms: ['family law'], icon: HeartHandshake },
+  { terms: ['property law'], icon: House },
+  { terms: ['contract'], icon: PenTool },
+  { terms: ['company formation'], icon: Building2 },
+  { terms: ['architectural', 'space planning'], icon: Ruler },
+  { terms: ['interior'], icon: Armchair },
+  { terms: ['exterior'], icon: House },
+  { terms: ['logo', 'visual identity'], icon: PenTool },
+  { terms: ['ui/ux', 'interface'], icon: Monitor },
+  { terms: ['pitch deck', 'corporate profile'], icon: Presentation },
   { terms: ['conference', 'seminar', 'presentation', 'speaker'], icon: Presentation },
   { terms: ['product launch', 'startup', 'mvp', 'scale up'], icon: Rocket },
   { terms: ['brand activation', 'campaign', 'marketing', 'promotion'], icon: Megaphone },
@@ -122,10 +166,11 @@ export function getContextIcon(context: string, fallback: LucideIcon = Sparkles)
 
 type ContextIconProps = Omit<LucideProps, 'ref'> & {
   context: string;
+  title?: string;
   fallback?: LucideIcon;
 };
 
-export function ContextIcon({ context, fallback, strokeWidth = 1.85, ...props }: ContextIconProps) {
-  const Icon = getContextIcon(context, fallback);
+export function ContextIcon({ context, title, fallback, strokeWidth = 1.85, ...props }: ContextIconProps) {
+  const Icon = title ? getContextIcon(title, getContextIcon(context, fallback)) : getContextIcon(context, fallback);
   return <Icon strokeWidth={strokeWidth} aria-hidden="true" {...props} />;
 }
