@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { PwaSupport } from '@/components/ui/PwaSupport';
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TrackingScripts } from "@/components/tracking/TrackingScripts";
 import { SiteExperience } from "@/components/ui/SiteExperience";
@@ -23,6 +24,8 @@ const themeInitScript = `
 })();
 `;
 
+export const viewport: Viewport = { themeColor: '#321a40' };
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -38,9 +41,10 @@ export const metadata: Metadata = {
   keywords: [...siteConfig.keywords],
   alternates: { canonical: siteConfig.url },
   manifest: '/manifest.webmanifest',
+  appleWebApp: { capable: true, title: 'Inception 23', statusBarStyle: 'default' },
   icons: {
     icon: [{ url: '/favicon.ico' }],
-    apple: [{ url: '/favicon.ico' }],
+    apple: [{ url: '/app-icon/180', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
     type: 'website',
@@ -124,6 +128,7 @@ export default function RootLayout({
           ]}
         />
         <SiteExperience />
+        <PwaSupport />
         <SkipLink />
         <TrackingScripts />
         {children}
