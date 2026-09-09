@@ -178,7 +178,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Discuss this"
-                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
+                icon={<ContextIcon title={item.title} context={item.description || ''} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -216,7 +216,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="View industry"
-                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
+                icon={<ContextIcon title={item.title} context={item.description || ''} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -233,7 +233,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Read more"
-                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
+                icon={<ContextIcon title={item.title} context={item.description || ''} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -250,7 +250,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Open resource"
-                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
+                icon={<ContextIcon title={item.title} context={item.description || ''} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />
@@ -267,7 +267,7 @@ export function MegaMenu({ activeMenu, onNavigate, menuItems }: MegaMenuProps) {
                 title={item.title}
                 description={item.description}
                 action="Explore"
-                icon={<ContextIcon context={`${item.title} ${item.description || ''}`} size={19} />}
+                icon={<ContextIcon title={item.title} context={item.description || ''} size={19} />}
                 iconTone={iconTones[index % iconTones.length]}
                 onNavigate={onNavigate}
               />

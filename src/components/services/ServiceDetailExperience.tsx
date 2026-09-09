@@ -264,7 +264,7 @@ function buildSubServiceItems(service: Pick<ServiceDefinition, 'shortId'>, limit
   return subServices[service.shortId].slice(0, limit).map((entry, index) => ({
     title: entry.title,
     body: entry.summary ?? fallbackBodies[service.shortId],
-    icon: getContextIcon(`${entry.title} ${entry.summary ?? ''}`, icons[index % icons.length]),
+    icon: getContextIcon(entry.title, icons[index % icons.length]),
   }));
 }
 
@@ -276,7 +276,7 @@ function buildFeaturedItems(service: Pick<ServiceDefinition, 'shortId'>): Item[]
     return related.map((solution, index) => ({
       title: solution.title,
       body: solution.description,
-      icon: getContextIcon(`${solution.title} ${solution.description}`, icons[index % icons.length]),
+      icon: getContextIcon(solution.title, icons[index % icons.length]),
       meta: solution.badge,
       bullets: solution.modules,
     }));
