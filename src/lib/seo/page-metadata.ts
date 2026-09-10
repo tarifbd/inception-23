@@ -3,9 +3,9 @@ import type { PageMetadataInput } from './metadata';
 
 export const staticPageMetadata = {
   home: {
-    title: 'Inception 23 | Business Consulting & Execution Support',
+    title: 'Inception 23 | Tax, VAT, IT & Legal Support in Bangladesh',
     description:
-      'Inception 23 supports growing companies with technology systems, Business Advisory & Compliances, legal readiness, event execution, and creative work.',
+      'Dhaka-based Inception 23 provides tax and VAT advisory, business compliance, custom software, automation and legal documentation support in Bangladesh.',
     path: '/',
     keywords: ['business consulting Bangladesh', 'business solutions Dhaka', 'business execution support'],
   },
@@ -76,13 +76,13 @@ export const staticPageMetadata = {
 
 export const servicePageMetadata = {
   'it-ai-solutions': {
-    title: 'Custom Software, IT & AI Solutions in Bangladesh',
+    title: 'IT & Software Development in Bangladesh',
     description:
       'Build custom software, automation, dashboards, AI-ready workflows, and secure digital platforms that help teams operate with clearer data.',
     keywords: ['IT solutions Bangladesh', 'AI software solutions', 'workflow automation', 'business dashboards'],
   },
   'management-consultancy': {
-    title: 'Business Advisory & Compliances in Bangladesh',
+    title: 'Tax, VAT & Business Compliance in Bangladesh',
     description:
       'Discuss tax, VAT, accounting systems, internal controls, KPI reporting and business planning with Inception 23 in Dhaka, Bangladesh.',
     keywords: ['business advisory and compliances Bangladesh', 'operating model design', 'KPI framework', 'business strategy consulting'],
