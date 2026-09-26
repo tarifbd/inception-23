@@ -27,7 +27,7 @@ const serviceMeta: Record<ServiceKey, Pick<MainServicesAmbushItem, 'image' | 'im
     image: '/main-services/it-ai-solutions-photo.webp',
     imageAlt: 'Software developers collaborating at workstations in a modern technology office',
     imagePosition: 'center 58%',
-    accent: '#087EA4',
+    accent: '#066580',
     softAccent: 'rgba(8,145,178,0.12)',
     textClass: 'text-cyan-700',
     borderClass: 'border-cyan-200',

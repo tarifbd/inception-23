@@ -18,13 +18,13 @@ export function ServiceEcosystemPanel({
   index,
   idPrefix = 'ecosystem',
 }: ServiceEcosystemPanelProps) {
-  const panelRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const isInView = useInView(panelRef, { once: true, margin: '-72px' });
   const theme = serviceThemes[category.key];
 
   return (
-    <motion.article
+    <motion.div
       ref={panelRef}
       data-native-reveal
       data-motion-state={reduceMotion || isInView ? 'visible' : 'hidden'}
@@ -69,6 +69,6 @@ export function ServiceEcosystemPanel({
           />
         ))}
       </div>
-    </motion.article>
+    </motion.div>
   );
 }

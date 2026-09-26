@@ -30,6 +30,9 @@ const emptyProvider = (id: TrackingProviderId, label: string): TrackingProviderC
   id,
   label,
   enabled: false,
+  browserEnabled: true,
+  capiEnabled: true,
+  debugMode: false,
   publicId: '',
   accessToken: '',
   apiSecret: '',
@@ -67,6 +70,22 @@ export function TrackingAdminClient() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [diagnostics, setDiagnostics] = useState<{ events: { id: string; eventName: string; status: string; summary: string; updatedAt: string; test: boolean }[]; lastTest?: { message: string; timestamp: string } } | null>(null);
+  const [testing, setTesting] = useState(false);
+  const loadDiagnostics = useCallback(async () => {
+    const response = await fetch('/api/v1/admin/tracking/meta', { cache: 'no-store' });
+    if (response.ok) setDiagnostics(await response.json());
+  }, []);
+  const metaAction = async (action: 'test' | 'drain') => {
+    setTesting(true);
+    try {
+      const response = await fetch('/api/v1/admin/tracking/meta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action }) });
+      const result = await response.json();
+      setMessage(result.message || result.error);
+      await loadDiagnostics();
+    } catch { setMessage('Could not reach tracking diagnostics.'); }
+    finally { setTesting(false); }
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -77,12 +96,13 @@ export function TrackingAdminClient() {
       if (!response.ok) throw new Error(payload.error || 'Could not load tracking settings');
       setSettings(payload.data);
       setProviders(payload.providers);
+      await loadDiagnostics();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not load tracking settings');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadDiagnostics]);
 
   useEffect(() => {
     load();
@@ -143,7 +163,7 @@ export function TrackingAdminClient() {
         <AdminStatCard label="Configured providers" value={enabledCount} tone="emerald" />
         <AdminStatCard label="Available channels" value={providers.length || 11} tone="cyan" />
         <AdminStatCard label="Client pixels" value={settings?.enabled ? 'On' : 'Off'} />
-        <AdminStatCard label="Server events" value={settings?.serverSideEnabled ? 'On' : 'Off'} tone="rose" />
+        <AdminStatCard label="Server events" value={settings?.enabled && settings.serverSideEnabled ? 'On' : 'Off'} tone="rose" />
       </div>
 
       <section className={`${adminCardClass} mt-5 p-5`}>
@@ -177,7 +197,7 @@ export function TrackingAdminClient() {
             <AdminField label="Consent mode">
               <select className={adminInputClass} value={settings.consentMode} onChange={(event) => setSettings({ ...settings, consentMode: event.target.value as TrackingSettings['consentMode'] })}>
                 <option value="granted">Fire when enabled</option>
-                <option value="manual">Manual consent layer later</option>
+                <option value="manual">Ask visitor permission</option>
                 <option value="denied">Block all tracking</option>
               </select>
             </AdminField>
@@ -185,6 +205,20 @@ export function TrackingAdminClient() {
         ) : null}
 
         {message ? <div className="mt-4 rounded-lg border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm font-bold text-cyan-900">{message}</div> : null}
+      </section>
+
+      <section className={`${adminCardClass} mt-5 space-y-3 p-5`} aria-label="Meta delivery diagnostics">
+        <h2 className="font-serif text-xl font-black">Meta delivery diagnostics</h2>
+        <p className="text-sm">Browser Pixel: {settings?.enabled && settings.providers.facebook.enabled && settings.providers.facebook.browserEnabled ? 'Configured · not verified' : 'Inactive'}. Server CAPI: {settings?.enabled && settings.serverSideEnabled && settings.providers.facebook.enabled && settings.providers.facebook.capiEnabled ? diagnostics?.events[0]?.status || 'Not verified' : 'Inactive'}.</p>
+        <p className="text-sm">Acceptance confirms a server response, not browser/server deduplication. Verify paired events in Meta Events Manager.</p>
+        <div className="flex flex-wrap gap-2">
+          <button className={adminSecondaryButtonClass} disabled={testing} onClick={() => metaAction('test')}>Test dataset connection</button>
+          <button className={adminSecondaryButtonClass} disabled={testing} onClick={() => metaAction('drain')}>Process pending events</button>
+        </div>
+        {diagnostics?.lastTest && <p className="text-sm">Last test: {diagnostics.lastTest.timestamp} — {diagnostics.lastTest.message}</p>}
+        {diagnostics?.events.length ? diagnostics.events.map(event => <div key={event.id} className="rounded border p-3 text-sm break-words">
+          <strong>{event.eventName} · {event.status}{event.test ? ' · test' : ''}</strong><p>{event.updatedAt} · {event.id}</p><p>{event.summary || 'Queued for delivery'}</p>
+        </div>) : <p className="text-sm">No server events recorded.</p>}
       </section>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-2">
@@ -199,19 +233,25 @@ export function TrackingAdminClient() {
                     <h2 className="truncate font-serif text-xl font-black text-gray-950">{meta.label}</h2>
                     {provider.enabled ? <CheckCircle2 className="shrink-0 text-emerald-600" size={18} /> : null}
                   </div>
-                  <p className="mt-1 text-xs font-bold uppercase tracking-wider text-gray-400">{hasServerSetup ? 'Pixel + backend event ready' : 'Pixel setup'}</p>
+                  <p className="mt-1 text-xs font-bold uppercase tracking-wider text-gray-400">{hasServerSetup ? 'Credentials configured · delivery not verified' : 'Pixel setup'}</p>
                 </div>
                 <SwitchButton checked={provider.enabled} label={provider.enabled ? 'Enabled' : 'Disabled'} onClick={() => updateProvider(meta.id, { enabled: !provider.enabled })} />
               </div>
 
               <div className="space-y-4 p-5">
+                {meta.id === 'facebook' && <div className="flex flex-wrap gap-2">
+                  <SwitchButton checked={provider.browserEnabled} label="Browser Pixel" onClick={() => updateProvider(meta.id, { browserEnabled: !provider.browserEnabled })} />
+                  <SwitchButton checked={provider.capiEnabled} label="Server CAPI" onClick={() => updateProvider(meta.id, { capiEnabled: !provider.capiEnabled })} />
+                  <SwitchButton checked={provider.debugMode} label="Test mode" onClick={() => updateProvider(meta.id, { debugMode: !provider.debugMode })} />
+                  <p className="w-full text-sm text-gray-500">Use the same Pixel / Dataset ID for both channels. Test mode requires a Test Event Code. Saved secrets stay masked; clear a field to remove its secret.</p>
+                </div>}
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <AdminField label={meta.publicIdLabel}>
+                  <AdminField label={meta.id === 'facebook' ? 'Pixel / Dataset ID' : meta.publicIdLabel}>
                     <input className={adminInputClass} value={provider.publicId} onChange={(event) => updateProvider(meta.id, { publicId: event.target.value })} placeholder="Paste ID here" />
                   </AdminField>
-                  <AdminField label="Event source / dataset ID">
+                  {meta.id !== 'facebook' && <AdminField label="Event source / dataset ID">
                     <input className={adminInputClass} value={provider.eventSourceId} onChange={(event) => updateProvider(meta.id, { eventSourceId: event.target.value })} placeholder="Optional" />
-                  </AdminField>
+                  </AdminField>}
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -221,9 +261,9 @@ export function TrackingAdminClient() {
                       <input type="password" className={`${adminInputClass} pl-9`} value={provider.accessToken} onChange={(event) => updateProvider(meta.id, { accessToken: event.target.value })} placeholder="Backend only" />
                     </div>
                   </AdminField>
-                  <AdminField label="API secret">
+                  {meta.id !== 'facebook' && <AdminField label="API secret">
                     <input type="password" className={adminInputClass} value={provider.apiSecret} onChange={(event) => updateProvider(meta.id, { apiSecret: event.target.value })} placeholder="Google MP or platform secret" />
-                  </AdminField>
+                  </AdminField>}
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-3">
@@ -235,19 +275,19 @@ export function TrackingAdminClient() {
                 <div className="rounded-lg border border-gray-200 p-4">
                   <div className="mb-3 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-500">
                     <Server size={14} />
-                    Advanced CAPI fallback
+                    {meta.id === 'facebook' ? 'Meta Test Events' : 'Advanced CAPI fallback'}
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <AdminField label="Custom event endpoint">
+                    {meta.id !== 'facebook' && <AdminField label="Custom event endpoint">
                       <input className={adminInputClass} value={provider.customEndpoint} onChange={(event) => updateProvider(meta.id, { customEndpoint: event.target.value })} placeholder="https://api.platform.com/..." />
-                    </AdminField>
+                    </AdminField>}
                     <AdminField label="Test event code">
                       <input className={adminInputClass} value={provider.testEventCode} onChange={(event) => updateProvider(meta.id, { testEventCode: event.target.value })} placeholder="Optional" />
                     </AdminField>
                   </div>
-                  <AdminField label="Custom headers JSON">
+                  {meta.id !== 'facebook' && <AdminField label="Custom headers JSON">
                     <textarea className={`${adminInputClass} mt-3 min-h-20 font-mono text-xs`} value={provider.customHeadersJson} onChange={(event) => updateProvider(meta.id, { customHeadersJson: event.target.value })} placeholder='{"Authorization":"Bearer token"}' />
-                  </AdminField>
+                  </AdminField>}
                 </div>
               </div>
             </article>

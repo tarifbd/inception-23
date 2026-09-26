@@ -74,13 +74,7 @@ export function HeroWrapper({ content }: { content: HomepageContent['hero'] }) {
     );
   });
 
-  const firstAnimation = slides.find((slide) => !slide.visualType || slide.visualType === 'lottie');
-
   return (
-    <>
-      <link rel="preload" href="/wasm/dotlottie-player.wasm" as="fetch" type="application/wasm" crossOrigin="anonymous" />
-      {firstAnimation ? <link rel="preload" href={firstAnimation.visualUrl || firstAnimation.lottie} as="fetch" crossOrigin="anonymous" /> : null}
-      <HeroCarousel slides={slides} copyPanels={copyPanels} footerLabel={content.footerLabel} />
-    </>
+    <HeroCarousel slides={slides} copyPanels={copyPanels} footerLabel={content.footerLabel} />
   );
 }

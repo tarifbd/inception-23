@@ -53,3 +53,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .next-production/
+.next-lighthouse/
+
+# Local notebook checkpoints and diagnostic output
+.ipynb_checkpoints/
+/ts_error.txt
+/0

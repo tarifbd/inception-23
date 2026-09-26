@@ -1,4 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { after, NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
+import { recordLead, safeDrainMeta } from '@/lib/meta/server';
+import { isSameOriginMutation } from '@/lib/admin/auth';
 import { db } from '@/lib/db';
 import { requirePermission } from '@/lib/admin/rbac';
 import { assertString, readJson } from '@/lib/api/http';
@@ -22,6 +25,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginMutation(request)) return new Response(null, { status: 403 });
   const rateLimit = checkRateLimit(request, {
     key: 'newsletter',
     limit: 10,
@@ -50,14 +54,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await db.newsletterSubscriber.upsert({
-      where: { email },
-      update: {},
-      create: { email },
-    });
+    let tracking;
+    try {
+      const subscriber = await db.newsletterSubscriber.create({ data: { email } });
+      tracking = await recordLead(request, body.tracking, subscriber.id, email, 'newsletter', true, subscriber.subscribedAt);
+    } catch (error) {
+      if (!(error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')) throw error;
+      // Already subscribed: success for the visitor, no new acquisition event.
+    }
+    after(safeDrainMeta);
 
     return NextResponse.json(
-      { success: true, message: 'Subscription received.' },
+      { success: true, message: 'Subscription received.', tracking },
       { status: 201, headers: rateLimit.headers },
     );
   } catch (error) {

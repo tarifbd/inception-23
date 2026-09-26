@@ -1,3 +1,4 @@
+import { enqueueMeta } from '@/lib/meta/server';
 import { createHash } from 'crypto';
 import { safeExternalHttpsUrl } from '@/lib/security/url';
 import type { TrackingEventPayload, TrackingProviderConfig, TrackingSettings } from '@/lib/tracking';
@@ -88,34 +89,6 @@ async function sendGoogle(provider: TrackingProviderConfig, payload: TrackingEve
   return { provider: provider.id, sent: response.ok, status: response.status };
 }
 
-async function sendFacebook(provider: TrackingProviderConfig, payload: TrackingEventPayload, eventName: string) {
-  if (!provider.publicId || !provider.accessToken) return { provider: provider.id, sent: false, error: 'Missing Meta Pixel ID or CAPI token' };
-  const event = {
-    event_name: eventName,
-    event_time: Math.floor(Date.now() / 1000),
-    event_id: payload.eventId,
-    action_source: 'website',
-    event_source_url: payload.url,
-    user_data: {
-      client_user_agent: payload.userAgent,
-      em: hashValue(payload.email),
-      ph: hashValue(payload.phone),
-    },
-    custom_data: {
-      value: payload.value,
-      currency: payload.currency,
-      ...(payload.customData || {}),
-    },
-  };
-  const body: Record<string, unknown> = { data: [event] };
-  if (provider.testEventCode) body.test_event_code = provider.testEventCode;
-  const response = await postJson(
-    `https://graph.facebook.com/v20.0/${encodeURIComponent(provider.publicId)}/events?access_token=${encodeURIComponent(provider.accessToken)}`,
-    body,
-  );
-  return { provider: provider.id, sent: response.ok, status: response.status };
-}
-
 async function sendTikTok(provider: TrackingProviderConfig, payload: TrackingEventPayload, eventName: string) {
   if (!provider.publicId || !provider.accessToken) return { provider: provider.id, sent: false, error: 'Missing TikTok Pixel ID or Events API token' };
   const response = await postJson(
@@ -174,7 +147,7 @@ async function sendCustom(provider: TrackingProviderConfig, payload: TrackingEve
 }
 
 export async function dispatchTrackingEvent(settings: TrackingSettings, payload: TrackingEventPayload): Promise<DispatchResult[]> {
-  if (!settings.enabled || !settings.serverSideEnabled) return [];
+  if (!settings.enabled || !settings.serverSideEnabled || settings.consentMode === 'denied') return [];
   const eventName = payload.eventName || 'PageView';
   const results = await Promise.all(
     trackingProviders.map(async ({ id }) => {
@@ -182,12 +155,15 @@ export async function dispatchTrackingEvent(settings: TrackingSettings, payload:
       if (!provider.enabled || !providerSupportsEvent(provider, eventName)) return { provider: id, sent: false, error: 'Disabled or event not enabled' };
       try {
         if (provider.id === 'google') return await sendGoogle(provider, payload, eventName);
-        if (provider.id === 'facebook') return await sendFacebook(provider, payload, eventName);
+        if (provider.id === 'facebook') {
+          const queued = await enqueueMeta(settings, payload);
+          return { provider: id, sent: false, queued, error: undefined };
+        }
         if (provider.id === 'tiktok') return await sendTikTok(provider, payload, eventName);
         if (provider.customEndpoint) return await sendCustom(provider, payload, eventName);
         return { provider: provider.id, sent: false, error: 'Client pixel only unless custom endpoint is added' };
-      } catch (error) {
-        return { provider: provider.id, sent: false, error: error instanceof Error ? error.message : 'Dispatch failed' };
+      } catch {
+        return { provider: provider.id, sent: false, error: 'Dispatch failed' };
       }
     }),
   );

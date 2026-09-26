@@ -78,7 +78,11 @@ export function isSameOriginMutation(request: NextRequest) {
   if (!origin) return true;
 
   try {
-    return new URL(origin).origin === request.nextUrl.origin;
+    const supplied = new URL(origin);
+    // NextURL normalizes loopback IPs to localhost. Compare the actual HTTP Host
+    // so a same-origin request made to 127.0.0.1 is not incorrectly rejected.
+    return supplied.host === (request.headers.get('host') || request.nextUrl.host)
+      && supplied.protocol === request.nextUrl.protocol;
   } catch {
     return false;
   }

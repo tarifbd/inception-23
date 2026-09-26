@@ -1,4 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { after, NextRequest, NextResponse } from 'next/server';
+import { sha256 } from '@/lib/meta/core';
+import { recordLead, requestTracking, safeDrainMeta } from '@/lib/meta/server';
+import { isSameOriginMutation } from '@/lib/admin/auth';
 import { db } from '@/lib/db';
 import { assertString, optionalString, readJson } from '@/lib/api/http';
 import { checkRateLimit } from '@/lib/security/rate-limit';
@@ -8,6 +11,7 @@ function isEmail(value: string) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginMutation(request)) return new Response(null, { status: 403 });
   const rateLimit = checkRateLimit(request, {
     key: 'contact',
     limit: 5,
@@ -41,18 +45,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const submission = await db.contactSubmission.create({
-      data: {
+    const requestKey = typeof body.requestKey === 'string' && /^[a-f0-9-]{36}$/i.test(body.requestKey) ? body.requestKey : undefined;
+    const requestHash = sha256(JSON.stringify({ name, email, company, serviceInterest, message }));
+    const data = {
         name,
         email,
         company,
         serviceInterest,
         message,
-      },
-    });
+        requestKey,
+        requestHash,
+        metaConsent: requestTracking(request, body.tracking).consent,
+    };
+    const submission = requestKey
+      ? await db.contactSubmission.upsert({ where: { requestKey }, update: {}, create: data })
+      : await db.contactSubmission.create({ data });
+    if (submission.requestHash !== requestHash) return NextResponse.json({ error: 'Submission key already used for different form data.' }, { status: 409 });
+    const tracking = await recordLead(request, body.tracking, submission.id, submission.email, 'inquiry', submission.metaConsent, submission.createdAt);
+    after(safeDrainMeta);
 
     return NextResponse.json(
-      { success: true, submissionId: submission.id },
+      { success: true, submissionId: submission.id, tracking },
       { status: 201, headers: rateLimit.headers },
     );
   } catch (error) {

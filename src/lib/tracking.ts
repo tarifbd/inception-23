@@ -1,5 +1,6 @@
 import { revalidateTag, unstable_cache } from 'next/cache';
 import { db } from '@/lib/db';
+import { seal, unseal } from '@/lib/meta/secrets';
 
 export const trackingSettingKey = 'tracking.integrations.v1';
 
@@ -23,6 +24,9 @@ export type TrackingProviderConfig = {
   id: TrackingProviderId;
   label: string;
   enabled: boolean;
+  browserEnabled: boolean;
+  capiEnabled: boolean;
+  debugMode: boolean;
   publicId: string;
   accessToken: string;
   apiSecret: string;
@@ -44,7 +48,7 @@ export type TrackingSettings = {
 
 export type PublicTrackingProvider = Pick<
   TrackingProviderConfig,
-  'id' | 'label' | 'enabled' | 'publicId' | 'eventSourceId' | 'sendPageView' | 'sendLead' | 'sendContact'
+  'id' | 'label' | 'enabled' | 'browserEnabled' | 'capiEnabled' | 'publicId' | 'eventSourceId' | 'sendPageView' | 'sendLead' | 'sendContact'
 >;
 
 export type PublicTrackingSettings = {
@@ -66,6 +70,10 @@ export type TrackingEventPayload = {
   value?: number;
   currency?: string;
   customData?: Record<string, unknown>;
+  eventTime?: number;
+  clientIp?: string;
+  fbp?: string;
+  fbc?: string;
 };
 
 export const defaultTrackingSettings: TrackingSettings = {
@@ -77,6 +85,9 @@ export const defaultTrackingSettings: TrackingSettings = {
       id: provider.id,
       label: provider.label,
       enabled: false,
+      browserEnabled: true,
+      capiEnabled: true,
+      debugMode: false,
       publicId: '',
       accessToken: '',
       apiSecret: '',
@@ -116,6 +127,9 @@ export function normalizeTrackingSettings(input: unknown): TrackingSettings {
       id: provider.id,
       label: provider.label,
       enabled: asBoolean(previous.enabled, fallback.enabled),
+      browserEnabled: asBoolean(previous.browserEnabled, true),
+      capiEnabled: asBoolean(previous.capiEnabled, true),
+      debugMode: asBoolean(previous.debugMode, false),
       publicId: asString(previous.publicId),
       accessToken: asString(previous.accessToken),
       apiSecret: asString(previous.apiSecret),
@@ -146,8 +160,13 @@ export const getTrackingSettings = unstable_cache(
     if (!setting) return defaultTrackingSettings;
 
     try {
-      return normalizeTrackingSettings(JSON.parse(setting.value));
+      const settings = normalizeTrackingSettings(JSON.parse(setting.value));
+      for (const provider of Object.values(settings.providers)) {
+        for (const field of secretFields) provider[field] = unseal(provider[field]);
+      }
+      return settings;
     } catch {
+      console.error('Tracking settings unavailable: check stored configuration and TRACKING_ENCRYPTION_KEY.');
       return defaultTrackingSettings;
     }
   },
@@ -157,10 +176,14 @@ export const getTrackingSettings = unstable_cache(
 
 export async function saveTrackingSettings(settings: TrackingSettings) {
   const payload = normalizeTrackingSettings(settings);
+  const stored = structuredClone(payload);
+  for (const provider of Object.values(stored.providers)) {
+    for (const field of secretFields) provider[field] = seal(provider[field]);
+  }
   await db.siteSetting.upsert({
     where: { key: trackingSettingKey },
-    update: { value: JSON.stringify(payload), group: 'tracking' },
-    create: { key: trackingSettingKey, value: JSON.stringify(payload), group: 'tracking' },
+    update: { value: JSON.stringify(stored), group: 'tracking' },
+    create: { key: trackingSettingKey, value: JSON.stringify(stored), group: 'tracking' },
   });
   revalidateTag(trackingCacheTag);
   return payload;
@@ -174,10 +197,12 @@ export function toPublicTrackingSettings(settings: TrackingSettings): PublicTrac
     providers: trackingProviders
       .map((provider) => settings.providers[provider.id])
       .filter((provider) => provider.enabled && provider.publicId)
-      .map(({ id, label, enabled, publicId, eventSourceId, sendPageView, sendLead, sendContact }) => ({
+      .map(({ id, label, enabled, browserEnabled, capiEnabled, publicId, eventSourceId, sendPageView, sendLead, sendContact }) => ({
         id,
         label,
         enabled,
+        browserEnabled,
+        capiEnabled,
         publicId,
         eventSourceId,
         sendPageView,
@@ -185,6 +210,16 @@ export function toPublicTrackingSettings(settings: TrackingSettings): PublicTrac
         sendContact,
       })),
   };
+}
+
+export const secretFields = ['accessToken', 'apiSecret', 'customHeadersJson'] as const;
+export const secretMask = '••••••••';
+export function maskedTrackingSettings(settings: TrackingSettings) {
+  const masked = structuredClone(settings);
+  for (const provider of Object.values(masked.providers)) {
+    for (const field of secretFields) provider[field] = provider[field] ? secretMask : '';
+  }
+  return masked;
 }
 
 export function providerSupportsEvent(provider: TrackingProviderConfig, eventName: string) {

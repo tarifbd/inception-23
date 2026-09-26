@@ -449,7 +449,7 @@ function ServiceStory({
           Main service {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
         </div>
 
-        <p data-service-copy-part className="mt-3 text-[11px] font-semibold text-slate-500 dark:text-slate-400 sm:mt-4">
+        <p data-service-copy-part className="mt-3 text-[11px] font-semibold text-slate-600 dark:text-slate-400 sm:mt-4">
           {service.eyebrow}
         </p>
         <h3 data-service-copy-part className="mt-2 max-w-2xl font-serif text-[2.25rem] font-bold leading-[1.02] text-brand-950 sm:text-[3rem] dark:text-white lg:mt-3 lg:text-[4.65rem]">
@@ -476,7 +476,7 @@ function ServiceStory({
           className="mt-4 hidden border-l-2 pl-4 [@media(min-height:760px)]:block lg:mt-6 lg:block lg:pl-5"
           style={{ borderColor: service.accent }}
         >
-          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">{service.proof}</p>
+          <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">{service.proof}</p>
           <p className="mt-1 max-w-lg text-xs font-semibold leading-5 text-slate-700 dark:text-slate-200 lg:mt-2 lg:text-sm lg:leading-6">
             {service.outcome}
           </p>

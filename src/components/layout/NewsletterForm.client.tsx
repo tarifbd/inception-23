@@ -1,5 +1,7 @@
 'use client';
 
+import { submitTrackedForm } from '@/lib/meta/browser';
+
 import { FormEvent, useState } from 'react';
 import { Send } from 'lucide-react';
 import { pushSiteToast } from '@/components/ui/ToastProvider';
@@ -14,11 +16,7 @@ export function NewsletterForm() {
 
     setStatus('submitting');
     try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      const response = await submitTrackedForm('/api/newsletter', { email });
 
       if (!response.ok) throw new Error('Newsletter request failed');
       setEmail('');

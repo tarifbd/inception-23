@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { setBrowserTracking, captureMetaClick, trackPublicAction } from '@/lib/meta/browser';
 import { usePathname } from 'next/navigation';
 import type { PublicTrackingProvider, PublicTrackingSettings, TrackingProviderId } from '@/lib/tracking';
 
@@ -82,6 +83,8 @@ function initFacebook(provider: PublicTrackingProvider) {
     window._fbq = fbq;
     injectScript('tracking-facebook-sdk', 'https://connect.facebook.net/en_US/fbevents.js');
   }
+  window.fbq?.('set', 'autoConfig', false, provider.publicId);
+  window.fbq?.('consent', 'grant');
   window.fbq?.('init', provider.publicId);
 }
 
@@ -187,7 +190,6 @@ const initializers: Record<TrackingProviderId, (provider: PublicTrackingProvider
 function fireClientPageView(provider: PublicTrackingProvider) {
   if (!provider.sendPageView) return;
   if (provider.id === 'google') window.gtag?.('event', 'page_view', { page_location: window.location.href });
-  if (provider.id === 'facebook') window.fbq?.('track', 'PageView');
   if (provider.id === 'linkedin') window.lintrk?.('track');
   if (provider.id === 'tiktok') window.ttq?.page?.();
   if (provider.id === 'x') window.twq?.('event', 'PageView');
@@ -198,11 +200,13 @@ function fireClientPageView(provider: PublicTrackingProvider) {
   if (provider.id === 'quora') window.qp?.('track', 'ViewContent');
 }
 
+const initializedProviders = new Set<string>();
+
 export function TrackingScripts() {
   const pathname = usePathname();
   const [settings, setSettings] = useState<PublicTrackingSettings | null>(null);
   const [consent, setConsent] = useState<'granted' | 'denied' | null>(null);
-  const loadedProviderIds = useRef(new Set<string>());
+
   const previousUrl = useRef('');
 
   useEffect(() => {
@@ -237,62 +241,75 @@ export function TrackingScripts() {
       setConsent('denied');
       return;
     }
-    const saved = window.localStorage.getItem('inception23:analytics-consent');
+    let saved: string | null = null;
+    try { saved = window.localStorage.getItem('inception23:analytics-consent'); } catch {}
     setConsent(saved === 'granted' || saved === 'denied' ? saved : null);
   }, [settings]);
 
   useEffect(() => {
-    if (!settings?.enabled || consent !== 'granted') return;
+    const isPublic = !/^\/(admin|api|auth)(\/|$)/.test(pathname);
+    setBrowserTracking(settings, consent === 'granted' && isPublic);
+    if (!settings?.enabled || consent !== 'granted' || !isPublic) {
+      window.fbq?.('consent', 'revoke');
+      return;
+    }
+    captureMetaClick();
     settings.providers.forEach((provider) => {
-      if (loadedProviderIds.current.has(provider.id)) return;
+      if (!provider.browserEnabled) return;
+      const key = `${provider.id}:${provider.publicId}`;
+      if (initializedProviders.has(key)) return;
       initializers[provider.id](provider);
-      loadedProviderIds.current.add(provider.id);
+      initializedProviders.add(key);
     });
-  }, [consent, settings]);
+    window.fbq?.('consent', 'grant');
+  }, [consent, settings, pathname]);
 
   useEffect(() => {
-    if (!settings?.enabled || consent !== 'granted') return;
-    const url = window.location.href;
+    if (!settings?.enabled || consent !== 'granted' || /^\/(admin|api|auth)(\/|$)/.test(pathname)) return;
+    const url = `${location.origin}${pathname}`;
     if (previousUrl.current === url) return;
     previousUrl.current = url;
-
-    settings.providers.forEach(fireClientPageView);
-    if (settings.serverSideEnabled) {
-      const beaconSent = navigator.sendBeacon?.(
-        '/api/tracking/event',
-        new Blob([
-          JSON.stringify({
-            eventName: 'PageView',
-            eventId: crypto.randomUUID?.() || `${Date.now()}`,
-            url,
-            referrer: document.referrer,
-            consent: 'granted',
-          }),
-        ], { type: 'application/json' }),
-      ) ?? false;
-      if (!beaconSent) {
-        void fetch('/api/tracking/event', {
-          method: 'POST',
-          keepalive: true,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            eventName: 'PageView',
-            eventId: `${Date.now()}`,
-            url,
-            referrer: document.referrer,
-            consent: 'granted',
-          }),
-        });
-      }
-    }
+    settings.providers.filter(p => p.browserEnabled).forEach(fireClientPageView);
+    trackPublicAction('PageView');
   }, [consent, pathname, settings]);
 
-  if (!settings?.enabled || settings.consentMode !== 'manual' || consent !== null) return null;
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === 'inception23:analytics-consent' && settings?.consentMode === 'manual') {
+        const choice = event.newValue === 'granted' ? 'granted' : 'denied';
+        setBrowserTracking(settings, choice === 'granted');
+        setConsent(choice);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [settings]);
+
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      if (!event.isTrusted) return;
+      const anchor = (event.target as Element)?.closest?.('a[href]');
+      const href = anchor?.getAttribute('href') || '';
+      if (href.startsWith('mailto:')) trackPublicAction('Contact', 'email');
+      else if (href.startsWith('tel:')) trackPublicAction('Contact', 'phone');
+      else if (/^https:\/\/(wa\.me|api\.whatsapp\.com)\//.test(href)) trackPublicAction('Contact', 'whatsapp');
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
 
   const updateConsent = (choice: 'granted' | 'denied') => {
-    window.localStorage.setItem('inception23:analytics-consent', choice);
+    try { window.localStorage.setItem('inception23:analytics-consent', choice); } catch {}
+    setBrowserTracking(settings, choice === 'granted');
+    if (choice === 'denied') {
+      window.fbq?.('consent', 'revoke');
+      for (const name of ['_fbp', '_fbc']) document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax`;
+    }
     setConsent(choice);
   };
+
+  if (!settings?.enabled || settings.consentMode !== 'manual' || pathname.startsWith('/admin')) return null;
+  if (consent !== null) return <button type="button" className="fixed bottom-2 left-2 z-[90] rounded bg-white px-3 py-2 text-xs text-slate-800 shadow" onClick={() => { updateConsent('denied'); setConsent(null); }}>Privacy preferences</button>;
 
   return (
     <section
@@ -302,7 +319,7 @@ export function TrackingScripts() {
       <div className="max-w-2xl">
         <p className="m-0 text-sm font-semibold text-[var(--color-ink)]">Your privacy, your choice</p>
         <p className="mb-0 mt-1 text-sm leading-6">
-          We use optional analytics to understand site performance. Necessary site functions work either way.
+          With your permission, we use analytics and Meta advertising measurement, including hashed email after successful forms. Necessary site functions work either way.
         </p>
       </div>
       <div className="flex shrink-0 gap-2">

@@ -193,7 +193,6 @@ export function HeroCarousel({
           <div className="relative h-[min(280px,74vw)] w-[min(280px,74vw)] max-w-full sm:h-[340px] sm:w-[340px] md:h-[380px] md:w-[380px] lg:h-[min(700px,70svh)] lg:w-[min(700px,100%)]">
             {slides.map((slide, index) => {
               const isActive = index === safeSlide;
-              const isNext = index === (safeSlide + 1) % slides.length;
               return (
                 <div
                   key={slide.id}
@@ -202,7 +201,7 @@ export function HeroCarousel({
                     isActive ? 'z-10 opacity-100 scale-100' : 'pointer-events-none z-0 opacity-0 scale-[0.985]'
                   }`}
                 >
-                  {isActive || isNext ? (
+                  {isActive ? (
                     <HeroVisual
                       slide={slide}
                       paused={paused || !isActive}

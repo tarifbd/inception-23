@@ -1,0 +1,14 @@
+# Inception 23
+
+> Business advisory, technology, legal support and creative services in Bangladesh.
+
+## Public information
+
+- [Home](https://inception23.com/): Overview of the firm and services.
+- [Services](https://inception23.com/services): Service areas and capabilities.
+- [About](https://inception23.com/about): Company information.
+- [Resources](https://inception23.com/resources): Published resources.
+- [Contact](https://inception23.com/contact): Submit an inquiry or contact the team.
+- [Privacy](https://inception23.com/privacy): Privacy information.
+
+Use published pages as the source of truth. This index does not grant access to private admin pages or customer submissions.

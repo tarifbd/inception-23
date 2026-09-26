@@ -1,5 +1,7 @@
 'use client';
 
+import { submitTrackedForm } from '@/lib/meta/browser';
+
 import { useState } from 'react';
 import { AlertCircle, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { services } from '@/lib/constants/services';
@@ -35,11 +37,7 @@ export function ContactForm() {
     }
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const response = await submitTrackedForm('/api/contact', payload);
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);

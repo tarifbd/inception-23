@@ -103,6 +103,27 @@ model ContactSubmission {
   message         String
   status          String   @default("new")
   createdAt       DateTime @default(now())
+  requestKey      String?  @unique
+  requestHash     String?
+  metaConsent     Boolean  @default(false)
+}
+
+model MetaDelivery {
+  id          String   @id
+  eventName   String
+  datasetId   String
+  payload     String
+  testCode    String   @default("")
+  status      String   @default("pending")
+  attempts    Int      @default(0)
+  nextAttempt DateTime @default(now())
+  httpStatus  Int?
+  errorCode   Int?
+  summary     String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, nextAttempt])
 }
 
 model NewsletterSubscriber {

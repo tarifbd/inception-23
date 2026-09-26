@@ -1,5 +1,7 @@
 'use client';
 
+import { submitTrackedForm } from '@/lib/meta/browser';
+
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -136,7 +138,7 @@ function CustomSelect({
         aria-haspopup="listbox"
         aria-describedby={hint && hintId ? hintId : undefined}
       >
-        <span className={selected ? 'min-w-0 truncate text-slate-800' : 'min-w-0 truncate text-slate-400'}>
+        <span className={selected ? 'min-w-0 truncate text-slate-800' : 'min-w-0 truncate text-slate-600'}>
           {selected?.label ?? placeholder}
         </span>
         <ChevronDown size={18} className={`shrink-0 text-slate-500 transition ${active ? 'rotate-180' : ''}`} />
@@ -270,7 +272,8 @@ export function ContactBriefSection({
     setState('submitting');
     setMessage('');
 
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const name = String(formData.get('name') || '').trim();
     const email = String(formData.get('email') || '').trim();
     const phone = String(formData.get('phone') || '').trim();
@@ -291,10 +294,7 @@ export function ContactBriefSection({
 
     const selectedCategory = serviceCategories.find((category) => category.key === mainService);
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const response = await submitTrackedForm('/api/contact', {
           name,
           email,
           company,
@@ -307,7 +307,6 @@ export function ContactBriefSection({
             '',
             project,
           ].join('\n'),
-        }),
       });
 
       if (!response.ok) {
@@ -319,7 +318,7 @@ export function ContactBriefSection({
         return;
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setServiceKey('');
       setSubService('');
       setBudget('');

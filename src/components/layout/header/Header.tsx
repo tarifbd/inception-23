@@ -111,7 +111,6 @@ export function Header({ navigation, menuItems }: { navigation?: CollectionRecor
             <Link
               href="/"
               className="mx-1 hidden min-w-0 flex-1 flex-col items-center justify-center overflow-hidden text-center leading-none focus:outline-none focus:ring-4 focus:ring-brand-700/15 min-[360px]:flex sm:mx-2 lg:hidden"
-              aria-label="Inception 23 home"
             >
               <span className="block max-w-full truncate text-[0.7rem] font-black uppercase tracking-[0.16em] text-brand-950 dark:text-white min-[380px]:text-[0.78rem] min-[380px]:tracking-[0.2em] sm:text-[0.9rem]">
                 Inception 23
