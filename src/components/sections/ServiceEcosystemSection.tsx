@@ -51,6 +51,8 @@ export function ServiceEcosystemSection({
   );
   const [viewMode, setViewMode] = useState<'mobile' | 'desktop'>('mobile');
   const mobileSectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const mobileTabsRef = useRef<HTMLDivElement>(null);
+  const [mobileStickyTop, setMobileStickyTop] = useState(150);
   const activeCategory =
     ecosystemCategories.find((category) => category.key === activeKey) ??
     ecosystemCategories[0];
@@ -71,6 +73,27 @@ export function ServiceEcosystemSection({
   }, [activeKey, ecosystemCategories]);
 
   useEffect(() => {
+    if (viewMode !== 'mobile') return;
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const sectionNav = document.querySelector<HTMLElement>("nav[aria-label='Homepage sections']");
+    const updateStickyTop = () => {
+      const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
+      const navHeight = sectionNav?.getBoundingClientRect().height ?? 0;
+      const navTop = sectionNav ? Number.parseFloat(getComputedStyle(sectionNav).top) || 0 : 0;
+      setMobileStickyTop(Math.ceil(Math.max(headerBottom, navHeight ? navTop + navHeight : 0)));
+    };
+    const observer = new ResizeObserver(updateStickyTop);
+    if (header) observer.observe(header);
+    if (sectionNav) observer.observe(sectionNav);
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateStickyTop);
+    };
+  }, [viewMode]);
+
+  useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 1023px)');
     let frame = 0;
 
@@ -79,7 +102,7 @@ export function ServiceEcosystemSection({
       if (!mobileQuery.matches) return;
 
       let currentKey = ecosystemCategories[0]?.key;
-      const activationLine = Math.min(220, window.innerHeight * 0.34);
+      const activationLine = mobileStickyTop + (mobileTabsRef.current?.offsetHeight ?? 0) + 24;
 
       ecosystemCategories.forEach((category) => {
         const element = mobileSectionRefs.current[category.key];
@@ -103,7 +126,7 @@ export function ServiceEcosystemSection({
       window.removeEventListener('resize', scheduleUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [ecosystemCategories]);
+  }, [ecosystemCategories, mobileStickyTop, viewMode]);
 
   const handleMobileCategoryChange = (key: ServiceKey) => {
     setActiveKey(key);
@@ -111,7 +134,8 @@ export function ServiceEcosystemSection({
     if (!element) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const top = element.getBoundingClientRect().top + window.scrollY - 164;
+    const top = element.getBoundingClientRect().top + window.scrollY
+      - mobileStickyTop - (mobileTabsRef.current?.offsetHeight ?? 0) - 16;
     window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
   };
 
@@ -139,8 +163,9 @@ export function ServiceEcosystemSection({
 
         {viewMode === 'mobile' ? (
         <div>
-          <div className="sticky top-16 z-30 -mx-5 mt-8 border-y border-slate-200 bg-slate-50/92 px-5 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#111018]/92 sm:-mx-6 sm:px-6">
+          <div ref={mobileTabsRef} style={{ top: mobileStickyTop }} className="sticky z-30 -mx-5 mt-8 border-y border-slate-200 bg-slate-50/92 px-2 py-1 backdrop-blur-xl dark:border-white/10 dark:bg-[#111018]/92 sm:-mx-6 sm:px-4">
             <ServiceCategoryTabs
+              compact
               categories={ecosystemCategories}
               activeKey={activeCategory.key}
               onChange={handleMobileCategoryChange}

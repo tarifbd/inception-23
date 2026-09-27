@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, type PointerEvent } from 'react';
+import { useEffect, useRef, useMemo, useState, type PointerEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -123,6 +123,34 @@ export function FeaturedSolutionsSection({
 }) {
   const [activeService, setActiveService] = useState<ServiceKey>('it');
   const reduceMotion = useReducedMotion();
+  const tabbarRef = useRef<HTMLDivElement>(null);
+  const [stickyTop, setStickyTop] = useState(150);
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const nav = document.querySelector<HTMLElement>("nav[aria-label='Homepage sections']");
+    const measure = () => {
+      const navHeight = nav?.getBoundingClientRect().height ?? 0;
+      const navTop = nav ? Number.parseFloat(getComputedStyle(nav).top) || 0 : 0;
+      setStickyTop(Math.ceil(Math.max(header?.getBoundingClientRect().bottom ?? 0, navHeight ? navTop + navHeight : 0)));
+    };
+    const observer = new ResizeObserver(measure);
+    if (header) observer.observe(header);
+    if (nav) observer.observe(nav);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => { observer.disconnect(); window.removeEventListener('resize', measure); };
+  }, []);
+
+  useEffect(() => {
+    const list = tabbarRef.current;
+    const selected = list?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!list || !selected) return;
+    const outer = list.getBoundingClientRect();
+    const inner = selected.getBoundingClientRect();
+    if (inner.left < outer.left || inner.right > outer.right) {
+      list.scrollTo({ left: list.scrollLeft + inner.left - outer.left - (outer.width - inner.width) / 2 });
+    }
+  }, [activeService]);
   const displaySolutions = (cmsSolutions?.length ? cmsSolutions : solutions) as Solution[];
   const displayCategories = (categories?.length ? categories : serviceCategories) as ServiceCategory[];
   const activeTheme = serviceThemes[activeService];
@@ -174,6 +202,10 @@ export function FeaturedSolutionsSection({
   const handleServiceChange = (service: ServiceKey) => {
     if (service === activeService) return;
 
+    const panel = document.getElementById(`solution-panel-${activeService}`);
+    if (panel && panel.getBoundingClientRect().top < stickyTop + (tabbarRef.current?.offsetHeight ?? 0)) {
+      window.scrollTo({ top: window.scrollY + panel.getBoundingClientRect().top - stickyTop - (tabbarRef.current?.offsetHeight ?? 0) - 16, behavior: 'instant' });
+    }
     const updateService = () => setActiveService(service);
 
     if (reduceMotion || typeof document === 'undefined') {
@@ -217,7 +249,7 @@ export function FeaturedSolutionsSection({
       id="solutions"
       aria-label={content.label}
       motionVariant="from-left"
-      className="bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_52%,#f8fafc_100%)] text-brand-950 dark:bg-[linear-gradient(180deg,#070b12_0%,#0b111d_52%,#070b12_100%)] dark:text-white"
+      className="!overflow-visible bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_52%,#f8fafc_100%)] text-brand-950 dark:bg-[linear-gradient(180deg,#070b12_0%,#0b111d_52%,#070b12_100%)] dark:text-white"
     >
       <div
         data-featured-solutions
@@ -226,7 +258,7 @@ export function FeaturedSolutionsSection({
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-[-8%] top-[-6rem] h-[32rem] opacity-80 blur-3xl"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] opacity-80 blur-3xl"
           style={{
             background:
               'radial-gradient(circle at var(--solutions-cursor-x, 70%) var(--solutions-cursor-y, 20%), rgba(14,165,233,0.24), transparent 18rem), radial-gradient(circle at 18% 34%, rgba(20,184,166,0.18), transparent 16rem), radial-gradient(circle at 86% 60%, rgba(244,63,94,0.14), transparent 18rem)',
@@ -260,12 +292,14 @@ export function FeaturedSolutionsSection({
         </div>
 
         <div
+          ref={tabbarRef}
+          style={{ top: stickyTop }}
           data-solution-tabbar
           role="tablist"
           aria-label="Case study service filters"
-          className="relative mt-10 grid overflow-hidden border border-slate-200 bg-white/82 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.045] md:grid-cols-4"
+          className="sticky z-40 mt-8 flex gap-1 overflow-x-auto overscroll-x-contain rounded-lg border border-slate-200 bg-white/95 p-1 shadow-sm backdrop-blur-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:border-white/10 dark:bg-night-950/95 lg:grid lg:grid-cols-4"
         >
-          {displayCategories.map((category, index) => {
+          {displayCategories.map((category) => {
             const theme = serviceThemes[category.key];
             const selected = activeService === category.key;
 
@@ -278,10 +312,10 @@ export function FeaturedSolutionsSection({
                 aria-selected={selected}
                 aria-controls={`solution-panel-${category.key}`}
                 onClick={() => handleServiceChange(category.key)}
-                whileHover={reduceMotion ? undefined : { y: -3 }}
+                whileHover={reduceMotion ? undefined : { y: -1 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-                className={`group relative min-h-[112px] border-b border-slate-200 p-4 text-left transition duration-300 focus:outline-none focus-visible:z-10 focus-visible:ring-4 ${theme.ring} md:border-b-0 md:border-r md:last:border-r-0 dark:border-white/10 ${
-                  selected ? 'bg-white dark:bg-white/[0.08]' : 'hover:bg-slate-50/90 dark:hover:bg-white/[0.06]'
+                className={`group relative flex h-10 shrink-0 items-center gap-2 rounded-md px-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset ${theme.ring} lg:h-16 lg:px-4 ${
+                  selected ? `${theme.bgSoft} ${theme.text}` : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-white/5'
                 }`}
               >
                 {selected ? (
@@ -292,26 +326,14 @@ export function FeaturedSolutionsSection({
                   />
                 ) : null}
 
-                <span className="flex items-start justify-between gap-4">
-                  <span className={`text-[10px] font-black tracking-[0.18em] ${selected ? theme.text : 'text-slate-400 dark:text-slate-500'}`}>
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md transition duration-300 group-hover:-translate-y-0.5 ${selected ? theme.icon : `${theme.bgSoft} ${theme.text}`}`}>
-                    <LandingIcon name={category.icon} size={18} strokeWidth={1.9} />
-                  </span>
+                <LandingIcon name={category.icon} size={18} strokeWidth={1.9} className="shrink-0" />
+                <span className="whitespace-nowrap text-xs font-semibold lg:whitespace-normal lg:text-sm">
+                  <span className="lg:hidden">{category.key === 'consultancy' ? 'Business Advisory' : category.shortTitle}</span>
+                  <span className="hidden lg:inline">{category.shortTitle}</span>
                 </span>
-
-                <span className="mt-5 block text-sm font-black leading-snug text-brand-950 dark:text-white">
-                  {category.shortTitle}
+                <span aria-label={`${solutionCounts[category.key]} stories`} className="ml-auto hidden rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-white/10 dark:text-slate-300 lg:block">
+                  {solutionCounts[category.key]}
                 </span>
-                <StatBadge
-                  label="stories"
-                  value={solutionCounts[category.key]}
-                  size="sm"
-                  className="mt-2"
-                  valueClassName={`!text-sm ${selected ? theme.text : 'text-slate-500 dark:text-slate-400'}`}
-                  labelClassName="!text-[10px] text-slate-500 dark:text-slate-400"
-                />
               </motion.button>
             );
           })}
